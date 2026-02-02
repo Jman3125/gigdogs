@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "MyAgent",
-    "slug": "MyAgent",
+    "slug": "myagent",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -43,6 +43,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "104b37f7-0855-46df-a137-85c282acf6a2"
+      }
+    },
+    "owner": "jman2376"
   }
 }
