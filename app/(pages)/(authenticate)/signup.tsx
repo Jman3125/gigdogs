@@ -1,10 +1,11 @@
 //Sign up Page
-import LabelWrapper from "@/components/label-wrapper";
+import { LabelWrapper } from "@/components/label-wrapper";
+import { SearchLocation } from "@/components/search-location";
 import { ThemeText } from "@/components/theme-text";
-import { Genres, Hours, Minutes } from "@/models/band";
-import signup from "@/scripts/sign-up";
+import signup from "@/hooks/signup";
+import { Genres } from "@/models/band";
 import * as ImagePicker from "expo-image-picker";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
@@ -31,6 +32,9 @@ export default function Singup() {
   //For password
   const [password, setPassword] = useState("");
 
+  //For Location
+  const [location, setLocation] = useState("");
+
   //For Genre picker selection
   const [openGenre, setOpenGenre] = useState(false);
   const [selectedGenre, selectGenre] = useState("");
@@ -39,39 +43,39 @@ export default function Singup() {
   //For bio
   const [bio, setBio] = useState("");
 
+  //For Phone
+  const [phone, setPhone] = useState("");
+
   //For Price per hour
   const [price, setPrice] = useState("");
 
-  //For hours setlist picker selection
-  const [openHours, setOpenHours] = useState(false);
-  const [selectedHour, selectHour] = useState(0);
-  const [hours, setHours] = useState(Hours);
+  //For hours
+  const [hours, setHours] = useState("");
+
+  //For minutes
+  const [minutes, setMinutes] = useState("");
 
   //For instagram username
   const [instagram, setInstagram] = useState("");
 
-  //For minutes setlist picker selection
-  const [openMinutes, setOpenMinutes] = useState(false);
-  const [selectedMinute, selectMinute] = useState(0);
-  const [minutes, setMinutes] = useState(Minutes);
-
   //For Image File Upload
   const [image, setImage] = useState<string | null>(null);
 
-  function submit() {
+  const submit = () => {
     try {
       const result = signup(
-        Math.random().toString(),
         bandName,
         email,
         password,
+        location,
         selectedGenre,
         parseFloat(price),
         bio,
         image || "",
-        selectedHour,
-        selectedMinute,
+        parseInt(hours),
+        parseInt(minutes),
         instagram,
+        phone,
       );
 
       if (result instanceof Error) {
@@ -79,14 +83,14 @@ export default function Singup() {
         return;
       }
 
-      navigator.back();
+      navigator.replace("/");
     } catch (error) {
       Alert.alert(
         "Error",
         "An unexpected error occurred. Please contact support.",
       );
     }
-  }
+  };
 
   const pickImage = async () => {
     // Request permission
@@ -111,10 +115,15 @@ export default function Singup() {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView nestedScrollEnabled={true}>
+      <ScrollView>
+        <Button title="return" onPress={() => navigator.back()} />
         <ThemeText type="title" style={styles.title}>
           Add Band
         </ThemeText>
+
+        <LabelWrapper label="Already registered?">
+          <Link href="/login">Login</Link>
+        </LabelWrapper>
 
         <LabelWrapper label="Band Name">
           <TextInput
@@ -154,6 +163,8 @@ export default function Singup() {
           />
         </LabelWrapper>
 
+        <SearchLocation location={location} setLocation={setLocation} />
+
         <LabelWrapper label="Genre">
           <DropDownPicker
             open={openGenre}
@@ -163,7 +174,7 @@ export default function Singup() {
             setValue={selectGenre}
             setItems={setGenres}
             placeholder="Select a genre"
-            zIndex={1000}
+            listMode="MODAL"
             style={styles.picker}
           />
         </LabelWrapper>
@@ -179,6 +190,19 @@ export default function Singup() {
             value={bio}
             onChangeText={(value) => {
               setBio(value);
+            }}
+          />
+        </LabelWrapper>
+
+        <LabelWrapper label="Phone Number">
+          <TextInput
+            placeholder="1234567890"
+            inputMode="numeric"
+            style={styles.input}
+            placeholderTextColor={"#464141cb"}
+            value={phone}
+            onChangeText={(value) => {
+              setPhone(value);
             }}
           />
         </LabelWrapper>
@@ -200,29 +224,33 @@ export default function Singup() {
         </LabelWrapper>
 
         <LabelWrapper label="How long can you play for?">
-          <DropDownPicker
-            open={openHours}
-            value={selectedHour}
-            items={hours}
-            setOpen={setOpenHours}
-            setValue={selectHour}
-            setItems={setHours}
-            placeholder="Hours"
-            zIndex={1000}
-            style={styles.picker}
-          />
+          <LabelWrapper label="Hours">
+            <TextInput
+              placeholder="Hours"
+              inputMode="numeric"
+              style={styles.input}
+              placeholderTextColor={"#464141cb"}
+              value={hours}
+              onChangeText={(value) => {
+                setHours(value);
+              }}
+              maxLength={1}
+            />
+          </LabelWrapper>
 
-          <DropDownPicker
-            open={openMinutes}
-            value={selectedMinute}
-            items={minutes}
-            setOpen={setOpenMinutes}
-            setValue={selectMinute}
-            setItems={setMinutes}
-            placeholder="Minutes"
-            zIndex={999}
-            style={styles.picker}
-          />
+          <LabelWrapper label="Minutes">
+            <TextInput
+              placeholder="Minutes"
+              inputMode="numeric"
+              style={styles.input}
+              placeholderTextColor={"#464141cb"}
+              value={minutes}
+              onChangeText={(value) => {
+                setMinutes(value);
+              }}
+              maxLength={2}
+            />
+          </LabelWrapper>
         </LabelWrapper>
 
         <LabelWrapper label="Instagram">

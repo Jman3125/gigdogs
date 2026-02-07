@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { ThemeText } from "./theme-text";
 
-export default function LabelWrapper({
+export function LabelWrapper({
   label,
   children,
 }: {

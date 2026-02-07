@@ -2,7 +2,7 @@ import { Link } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { ThemeText } from "./theme-text";
 
-type Band = {
+type Props = {
   id: string;
   picture: string;
   name: string;
@@ -18,36 +18,29 @@ export function BandDisplay({
   minPrice,
   picture,
   isUser,
-}: Band) {
+}: Props) {
   return (
     <View style={styles.container}>
-      {/* Change the element if it's the signed in bands layout being displayed */}
-      {isUser && (
-        <>
-          <ThemeText type="defaultSemiBold">Your Name: {name}</ThemeText>
-          <ThemeText type="default">Type: {genre}</ThemeText>
-          <ThemeText type="default">Minimum Price: {minPrice}</ThemeText>
-          <Link href="./account">
-            <ThemeText type="link">Edit Account</ThemeText>
-          </Link>
-        </>
-      )}
+      <ThemeText type="defaultSemiBold">Your Name: {name}</ThemeText>
+      <ThemeText type="default">Type: {genre}</ThemeText>
+      <ThemeText type="default">Minimum Price: {minPrice}</ThemeText>
 
-      {/* This is not the users band, used to display all bands for viewing */}
+      {/* Change the action button if it's the signed in bands layout being displayed */}
+      {isUser && (
+        <Link href="./account">
+          <ThemeText type="link">Edit Account</ThemeText>
+        </Link>
+      )}
+      {/* This is not the users band, used action button for all other bands*/}
       {!isUser && (
-        <>
-          <ThemeText type="defaultSemiBold">Name: {name}</ThemeText>
-          <ThemeText type="default">Type: {genre}</ThemeText>
-          <ThemeText type="default">Minimum Price: {minPrice}</ThemeText>
-          <Link
-            href={{
-              pathname: "/band",
-              params: { id: id },
-            }}
-          >
-            <ThemeText type="link">See More</ThemeText>
-          </Link>
-        </>
+        <Link
+          href={{
+            pathname: "/band-view",
+            params: { id: id },
+          }}
+        >
+          <ThemeText type="link">See More</ThemeText>
+        </Link>
       )}
     </View>
   );
