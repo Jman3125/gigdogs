@@ -1,7 +1,16 @@
+import { colors } from "@/utilities/colors";
 import { StyleSheet, Text, TextProps } from "react-native";
 
 export type ThemeTextProps = TextProps & {
-  type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link";
+  type?:
+    | "default"
+    | "title"
+    | "defaultSemiBold"
+    | "subtitle"
+    | "link"
+    | "error"
+    | "subtitle"
+    | "header";
 };
 
 export function ThemeText({
@@ -17,6 +26,9 @@ export function ThemeText({
         type === "title" ? styles.title : undefined,
         type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
         type === "link" ? styles.link : undefined,
+        type === "error" ? styles.error : undefined,
+        type === "subtitle" ? styles.subtitle : undefined,
+        type === "header" ? styles.header : undefined,
       ]}
       {...rest}
     />
@@ -33,7 +45,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 45,
     fontWeight: "bold",
-    lineHeight: 50,
+    lineHeight: 45,
+  },
+
+  subtitle: {
+    fontSize: 30,
+    fontWeight: "600",
+    lineHeight: 35,
   },
 
   defaultSemiBold: {
@@ -45,5 +63,17 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     fontSize: 16,
     color: "#0a7ea4",
+  },
+  error: {
+    color: colors.error,
+    backgroundColor: "#eb2424a9",
+    borderRadius: 5,
+    padding: 15,
+    fontWeight: 500,
+  },
+  header: {
+    fontWeight: 600,
+    fontSize: 30,
+    lineHeight: 35,
   },
 });

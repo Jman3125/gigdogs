@@ -1,12 +1,24 @@
-import { Tabs } from "expo-router";
+import { colors } from "@/utilities/colors";
+import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
-    <Tabs
-      screenOptions={{ headerShown: false, tabBarStyle: { display: "none" } }}
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.primary,
+        },
+      }}
     >
-      <Tabs.Screen name="index" />
-      <Tabs.Screen name="(pages)" />
-    </Tabs>
+      <Stack.Screen name="(main)/index" />
+
+      <Stack.Screen name="(main)/band-view" />
+
+      <Stack.Screen name="(account)/account-info" />
+
+      <Stack.Screen name="(account)/signup" />
+      <Stack.Screen name="(account)/login" />
+      <Stack.Screen name="(more)/about" />
+    </Stack>
   );
 }
