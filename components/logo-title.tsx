@@ -1,3 +1,4 @@
+//The logo and GigDogs title in the header
 import { Image, StyleSheet, View } from "react-native";
 import { ThemeText } from "./theme-text";
 
@@ -8,8 +9,8 @@ export default function LogoTitle() {
         source={require("../assets/images/logo.png")}
         style={styles.logo}
       />
-      <ThemeText type="header" style={styles.text}>
-        Gig Dogs
+      <ThemeText type="logo" style={styles.text}>
+        GigDogs
       </ThemeText>
     </View>
   );

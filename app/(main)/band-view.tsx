@@ -1,11 +1,12 @@
-//Navigates to this page after a user clicks 'See More' on a bands profile
+//Navigates to this page after a user clicks 'View' on a bands profile. adds band ID to url to get specific data.
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import LogoTitle from "@/components/logo-title";
+import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
 import { Band } from "@/models/band";
 import { colors } from "@/utilities/colors";
-import { getAllBands } from "@/utilities/firebase/fetch-data";
+import { getOneBand } from "@/utilities/firebase/fetch-data";
 import { getGenre } from "@/utilities/getGenreLabel";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -22,20 +23,22 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function BandView() {
+  //router
   const navigator = useRouter();
 
   // Going to match the id to a band and get attributes so I don't pass them all through URL
-  const { id } = useLocalSearchParams();
-
+  const { id } = useLocalSearchParams<{ id: string }>();
   // Find the band in the db that matches the id passed through the URL params
-  const [bandsData, setData] = useState<Band[]>([]);
+  const [bandData, setData] = useState<Band>();
   const [loading, setLoading] = useState(true);
 
+  //show error on failure
   const [error, setError] = useState("");
 
-  const fetchData = async () => {
+  //fetch the selected bands data
+  const fetchBandData = async () => {
     try {
-      const data = await getAllBands();
+      const data = await getOneBand(id);
       setData(data);
       setLoading(false);
     } catch (error: any) {
@@ -48,23 +51,28 @@ export default function BandView() {
     }
   };
 
+  //fetch bands data on load
   useEffect(() => {
-    fetchData();
+    fetchBandData();
   }, []);
 
+  // Send email with pre-format to bands email
   const handleEmail = () => {
     Linking.openURL(
-      `mailto:${matched?.email}?subject='Booking' Inquiry&body=Hi ${matched?.bandName}, I found you band on Gig Dogs and was interested in booking your band for my upcoming event on (EVENT DATE). I will need you guys to play for (SET TIME) at (EVENT LOCATION). Let me know if this works for you!`,
+      `mailto:${bandData?.email}?subject=Booking&Inquiry&body=Hi ${bandData?.bandName}, I found your band on GigDogs and was interested in booking you for my upcoming event on EVENT DATE. I will need you to play for SET TIME at EVENT LOCATION. Let me know if this works for you!`,
     );
   };
-
+  //Send text sms pre-format to bands phone number
   const handlePhone = () => {
     Linking.openURL(
-      `sms:${matched?.phone}?body=Hi ${matched?.bandName}, I found you band on Gig Dogs and was interested in booking your band for my upcoming event on (EVENT DATE). I will need you guys to play for (SET TIME) at (EVENT LOCATION). Let me know if this works for you!`,
+      `sms:${bandData?.phone}?body=Hi ${bandData?.bandName}, I found your band on GigDogs and was interested in booking you for my upcoming event on EVENT DATE. I will need you to play for SET TIME at EVENT LOCATION. Let me know if this works for you!`,
     );
   };
 
-  const matched = bandsData.find((item) => item.id === id);
+  //Open bands instagram account
+  const linkInstagram = () => {
+    Linking.openURL(`https://instagram.com/${bandData?.instagram}`);
+  };
 
   return (
     <SafeAreaView style={styles.viewContainer} edges={["bottom"]}>
@@ -94,42 +102,42 @@ export default function BandView() {
               Error: {error}
             </ThemeText>
           )}
-          <ThemeText type="title">{matched?.bandName}</ThemeText>
-          <ThemeText type="defaultSemiBold">{matched?.bio}</ThemeText>
+          <ThemeText type="title">{bandData?.bandName}</ThemeText>
+          <ThemeText type="defaultSemiBold">{bandData?.bio}</ThemeText>
 
           <View style={styles.profileContainerMain}>
             <ThemeText type="subtitle">Info</ThemeText>
-            <Image source={{ uri: matched?.picture }} style={styles.image} />
+            <Image source={{ uri: bandData?.picture }} style={styles.image} />
 
             <View style={styles.profileContainerSub}>
               <View>
                 <LabelWrapper label="Genre:">
                   <ThemeText type="defaultSemiBold">
-                    {getGenre(matched?.genre || "All")}
+                    {getGenre(bandData?.genre || "All")}
                   </ThemeText>
                 </LabelWrapper>
 
                 <LabelWrapper label="Price Per Hour:">
                   <ThemeText type="defaultSemiBold">
-                    ${matched?.pricePerHour}
+                    ${bandData?.pricePerHour}
                   </ThemeText>
                 </LabelWrapper>
 
                 <LabelWrapper label="Max Play Time:">
                   <ThemeText type="defaultSemiBold">
-                    {matched?.hours} Hours, {matched?.minutes} Minutes
+                    {bandData?.hours} Hours, {bandData?.minutes} Minutes
                   </ThemeText>
                 </LabelWrapper>
 
                 <LabelWrapper label="Instagram:">
-                  <ThemeText type="defaultSemiBold">
-                    {matched?.instagram}
-                  </ThemeText>
+                  <Pressable onPress={linkInstagram}>
+                    <ThemeText type="link">{bandData?.instagram}</ThemeText>
+                  </Pressable>
                 </LabelWrapper>
               </View>
             </View>
             <LabelWrapper label="Location">
-              <ThemeText type="defaultSemiBold">{matched?.location}</ThemeText>
+              <ThemeText type="defaultSemiBold">{bandData?.location}</ThemeText>
             </LabelWrapper>
             <View style={styles.contactContainer}>
               <Pressable onPress={handlePhone} style={styles.contactButton}>
@@ -138,9 +146,9 @@ export default function BandView() {
               <Pressable onPress={handleEmail} style={styles.contactButton}>
                 <ThemeText type="defaultSemiBold">Email</ThemeText>
               </Pressable>
-              <ThemeText type="default">
-                *By proceeding to contact you agree to Gig Dogs terms and
-                conditions
+              <ThemeText type="caption">
+                *By proceeding to contact you agree to GigDogs{" "}
+                <TermsPrivacyLinks />
               </ThemeText>
             </View>
           </View>
@@ -154,6 +162,7 @@ const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
     padding: 15,
+    marginTop: 15,
   },
   profileContainerMain: {
     padding: 15,
@@ -168,7 +177,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 6,
-
     // Android
     elevation: 6,
   },
@@ -176,7 +184,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-
   image: {
     position: "absolute",
     top: 10,

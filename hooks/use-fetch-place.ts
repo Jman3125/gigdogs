@@ -1,3 +1,4 @@
+//Used for searching locations. Hits mapbox api to get city names
 export function useFetchPlace() {
   const fetchPlace = async (text: string) => {
     try {

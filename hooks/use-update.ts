@@ -4,6 +4,8 @@ import { uploadImageAsync } from "@/utilities/upload-image";
 import { updateEmail } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 
+//update user account
+
 export function useUpdate() {
   const update = async (
     bandName: string,
@@ -50,6 +52,8 @@ export function useUpdate() {
       }
       let imageURL = picture; // default to existing URL
 
+      //if it's a new image being uploaded or existing one
+      //file:// tells me it's a file from device not firebase.
       if (picture.startsWith("file://")) {
         imageURL = await uploadImageAsync(picture, user.uid);
       }

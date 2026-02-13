@@ -16,25 +16,30 @@ export interface Band {
   location: string;
 }
 
+//Genres
+
 export const Genres = [
   { label: "Alternative Rock", value: "alternative_rock" },
   { label: "Blues", value: "blues" },
-  { label: "Classical", value: "classical" },
+  { label: "Pop Rock", value: "pop_rock" },
   { label: "Rock", value: "rock" },
   { label: "Country", value: "country" },
+  { label: "Indie Rock", value: "indie_rock" },
   { label: "EDM", value: "edm" },
   { label: "Folk", value: "folk" },
+  { label: "Metal", value: "metal" },
+  { label: "Emo", value: "emo" },
   { label: "Funk", value: "funk" },
+  { label: "Rap", value: "rap" },
   { label: "Gospel", value: "gospel" },
+  { label: "Classical", value: "classical" },
   { label: "Hip-Hop", value: "hiphop" },
-  { label: "Indie Rock", value: "indie_rock" },
   { label: "Jazz", value: "jazz" },
   { label: "Latin", value: "latin" },
-  { label: "Metal", value: "metal" },
   { label: "Pop", value: "pop" },
   { label: "Punk", value: "punk" },
   { label: "R&B", value: "rnb" },
-  { label: "Rap", value: "rap" },
   { label: "Reggae", value: "reggae" },
   { label: "Soul", value: "soul" },
+  { label: "Other", value: "other" },
 ];

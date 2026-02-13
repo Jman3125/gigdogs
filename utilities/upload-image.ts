@@ -1,4 +1,5 @@
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+//upload profile image to firebase storage with uid identifier
 
 export const uploadImageAsync = async (uri: string, uid: string) => {
   // Convert URI to blob
@@ -7,7 +8,7 @@ export const uploadImageAsync = async (uri: string, uid: string) => {
 
   // Create storage ref
   const storage = getStorage();
-  const storageRef = ref(storage, `profileImages/${uid}.jpg`);
+  const storageRef = ref(storage, `bandImages/${uid}/${uid}.jpg`);
 
   // Upload blob
   await uploadBytes(storageRef, blob);

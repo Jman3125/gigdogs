@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 120,
-    aspectRatio: 1.8, // width = height * 1.5
     resizeMode: "contain",
+    marginLeft: 15,
   },
 });

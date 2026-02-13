@@ -1,10 +1,11 @@
-//This is where bands can edit their information once signed in
+//This is where artists can access and edit their information once signed in
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import LogoTitle from "@/components/logo-title";
 import SearchLocation from "@/components/search-location";
 import { ThemeText } from "@/components/theme-text";
 import { auth } from "@/config/firebaseConfig";
+import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useLogout } from "@/hooks/use-logout";
 import { useUpdate } from "@/hooks/use-update";
@@ -13,7 +14,7 @@ import { colors } from "@/utilities/colors";
 import { fetchAuthBand } from "@/utilities/firebase/fetch-auth-band";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -29,14 +30,22 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account() {
+  //Will use context after update to update home feed so user sees changes
+  const { setReload } = useContext(ReloadFeedContext);
+
+  //loading state
   const [loading, setLoading] = useState(true);
 
+  //For picked image
   const { pickImage } = useImagePicker();
 
+  // update firebase hook
   const { update } = useUpdate();
 
+  //log out firebase hook
   const { logout } = useLogout();
 
+  //FIELDS
   //For band name
   const [bandName, setBandName] = useState("");
 
@@ -99,6 +108,7 @@ export default function Account() {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const bandAuthData = await fetchAuthBandData(user.uid);
+        //Set all fields to populate input fields
         setSignedInBand(bandAuthData);
         setBandName(bandAuthData?.bandName);
         setEmail(bandAuthData?.email);
@@ -124,17 +134,21 @@ export default function Account() {
     return unsubscribe;
   }, []);
 
+  // navigator
   const navigator = useRouter();
 
+  // handle logout function
   const handleLogout = async () => {
     try {
       await logout();
+      //return to feed
       navigator.dismissAll();
     } catch (error: any) {
       Alert.alert("Error", error.message);
     }
   };
 
+  //submit updates and return to feed.
   const submit = async () => {
     try {
       await update(
@@ -150,6 +164,8 @@ export default function Account() {
         instagram,
         phone,
       );
+      //reload home page
+      setReload(true);
       navigator.dismissAll();
     } catch (error: any) {
       Alert.alert("Error", error.message);
@@ -157,6 +173,7 @@ export default function Account() {
     }
   };
 
+  // user selected an image.
   const onPickImage = async () => {
     const uri = await pickImage();
     if (uri) {
@@ -181,6 +198,7 @@ export default function Account() {
           ),
         }}
       />
+      {/* show loading state */}
       {loading && <Loading />}
       {!loading && (
         <KeyboardAvoidingView
@@ -236,12 +254,12 @@ export default function Account() {
                 />
               </LabelWrapper>
 
-              <LabelWrapper label="Bio">
+              <LabelWrapper label="Bio" footnote="Max Length: 280">
                 <TextInput
                   placeholder="Tell us a little about yourself"
                   multiline
                   numberOfLines={5}
-                  maxLength={500}
+                  maxLength={280}
                   style={styles.multiline}
                   placeholderTextColor={"#464141cb"}
                   value={bio}
@@ -353,9 +371,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
-  title: {
-    marginBottom: 20,
-  },
   input: {
     height: 50,
     width: "100%",
@@ -417,6 +432,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 10,
   },
+  // logout button text
   text: {
     color: "white",
   },

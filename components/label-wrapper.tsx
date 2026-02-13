@@ -1,3 +1,4 @@
+//Wrap a child element with a header and optional footer. Used on input fields for example.
 import { StyleSheet, View } from "react-native";
 import { ThemeText } from "./theme-text";
 
@@ -15,7 +16,7 @@ export function LabelWrapper({
       <ThemeText type="default">{label}</ThemeText>
       {children}
       {footnote ? (
-        <ThemeText type="default" style={styles.footnote}>
+        <ThemeText type="caption" style={styles.footnote}>
           {footnote}
         </ThemeText>
       ) : null}

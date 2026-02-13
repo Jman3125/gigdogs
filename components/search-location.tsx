@@ -1,3 +1,4 @@
+//A text field where users can search for a city with autocomplete.
 import { useFetchPlace } from "@/hooks/use-fetch-place";
 import { colors } from "@/utilities/colors";
 import { useState } from "react";
@@ -11,37 +12,47 @@ import {
 } from "react-native";
 import { ThemeText } from "./theme-text";
 
+//To pass from parent view
 type Props = {
   city: string;
   setCity: (value: string) => void;
 };
 
 export default function SearchLocation({ city, setCity }: Props) {
+  //Used for autocomplete population
   const [autocompleteCities, setAutocompleteCities] = useState<string[]>([]);
+  //If error fetching cities
   const [autocompleteErr, setAutocompleteErr] = useState("");
 
+  //Fetch place api hook
   const { fetchPlace } = useFetchPlace();
 
+  //User is searching, update the state variable
   const handleCityChange = async (text: string) => {
     setCity(text);
-
+    //ensure string is not empty
     if (!text.trim()) {
       setAutocompleteCities([]);
       return;
     }
 
+    //get the response from hook
     const res = await fetchPlace(text);
 
+    //if there is a return from hook
     if (res?.features) {
+      //Populate autocomplete cities to matching names. Opens dropdown
       setAutocompleteCities(
         res.features.map((place: { place_name: string }) => place.place_name),
       );
     }
-
+    //if error
     setAutocompleteErr(res?.error ?? "");
   };
 
+  //User selected a city from the dropdown.
   const handleSelect = (selectedCity: string) => {
+    //set the text field value
     setCity(selectedCity);
     setAutocompleteCities([]); // close dropdown
   };

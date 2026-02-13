@@ -4,6 +4,8 @@ import { uploadImageAsync } from "@/utilities/upload-image";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
+//Process user signup
+
 export function useSignup() {
   const signup = async (
     bandName: string,
@@ -53,6 +55,7 @@ export function useSignup() {
         password,
       );
 
+      //Create user uid
       const uid = userCredential.user.uid;
 
       const generateID = () => {

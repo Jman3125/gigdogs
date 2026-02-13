@@ -1,3 +1,4 @@
+//Image picker. Gets photo access permission and crops image
 import * as ImagePicker from "expo-image-picker";
 import { Alert } from "react-native";
 

@@ -4,6 +4,8 @@ function isValidEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 
+//Validate Update Fields
+
 export function validateUpdateFields(
   bandName: string,
   email: string,

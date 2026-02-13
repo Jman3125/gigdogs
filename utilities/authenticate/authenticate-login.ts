@@ -4,6 +4,7 @@ function isValidEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 
+//Validate Login Fields
 export function validateLoginFields(email: string, password: string) {
   //ensure no fields are empty
 

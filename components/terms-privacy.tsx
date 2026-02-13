@@ -1,10 +1,11 @@
+//View terms and privacy policy links.
 import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export function TermsPrivacyLinks() {
   return (
     <View style={styles.container}>
-      <Link href="./terms" asChild>
+      <Link href="/terms" asChild>
         <Pressable>
           <Text style={styles.link}>Terms</Text>
         </Pressable>
@@ -12,7 +13,7 @@ export function TermsPrivacyLinks() {
 
       <Text style={styles.separator}> & </Text>
 
-      <Link href="./privacy" asChild>
+      <Link href="/privacy" asChild>
         <Pressable>
           <Text style={styles.link}>Privacy Policy</Text>
         </Pressable>

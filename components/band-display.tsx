@@ -1,6 +1,7 @@
+//Show band profile on feed page
 import { colors } from "@/utilities/colors";
 import { Link } from "expo-router";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Image, Linking, Pressable, StyleSheet, View } from "react-native";
 import { ThemeText } from "./theme-text";
 
 type Props = {
@@ -10,7 +11,6 @@ type Props = {
   genre: string;
   minPrice: number;
   location: string;
-  isUser: boolean;
 };
 
 export function BandDisplay({
@@ -20,8 +20,13 @@ export function BandDisplay({
   minPrice,
   picture,
   location,
-  isUser,
 }: Props) {
+  //User wants to report content
+  const handleEmail = () => {
+    Linking.openURL(
+      `mailto:gigdogscontact@gmail.com?subject=Report&Inquiry&body=Please give the account name and problem so we can review it as soon as possible.`,
+    );
+  };
   return (
     <View style={styles.container}>
       <ThemeText type="default">{location}</ThemeText>
@@ -35,25 +40,17 @@ export function BandDisplay({
           </ThemeText>
 
           {/* Change the action button if it's the signed in bands layout being displayed */}
-          {isUser && (
+          <Link
+            href={{ pathname: "/(main)/band-view", params: { id } }}
+            asChild
+          >
             <Pressable style={styles.button}>
               <ThemeText type="defaultSemiBold">View</ThemeText>
             </Pressable>
-          )}
-          {/* This is not the users band, used action button for all other bands*/}
-          {!isUser && (
-            <Link
-              href={{
-                pathname: "/band-view",
-                params: { id },
-              }}
-              asChild
-            >
-              <Pressable style={styles.button}>
-                <ThemeText type="defaultSemiBold">View</ThemeText>
-              </Pressable>
-            </Link>
-          )}
+          </Link>
+          <Pressable onPress={handleEmail}>
+            <ThemeText type="link">Report</ThemeText>
+          </Pressable>
         </View>
 
         <Image source={{ uri: picture }} style={styles.image} />
