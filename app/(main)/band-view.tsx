@@ -10,7 +10,7 @@ import { getOneBand } from "@/utilities/firebase/fetch-data";
 import { getGenre } from "@/utilities/getGenreLabel";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -36,7 +36,7 @@ export default function BandView() {
   const [error, setError] = useState("");
 
   //fetch the selected bands data
-  const fetchBandData = async () => {
+  const fetchBandData = useCallback(async () => {
     try {
       const data = await getOneBand(id);
       setData(data);
@@ -49,19 +49,13 @@ export default function BandView() {
         "Failed to fetch artist data. Please try again later.",
       );
     }
-  };
+  }, [id]);
 
   //fetch bands data on load
   useEffect(() => {
     fetchBandData();
-  }, []);
+  }, [fetchBandData]);
 
-  // Send email with pre-format to bands email
-  const handleEmail = () => {
-    Linking.openURL(
-      `mailto:${bandData?.email}?subject=Booking&Inquiry&body=Hi ${bandData?.bandName}, I found your band on GigDogs and was interested in booking you for my upcoming event on EVENT DATE. I will need you to play for SET TIME at EVENT LOCATION. Let me know if this works for you!`,
-    );
-  };
   //Send text sms pre-format to bands phone number
   const handlePhone = () => {
     Linking.openURL(
@@ -142,9 +136,6 @@ export default function BandView() {
             <View style={styles.contactContainer}>
               <Pressable onPress={handlePhone} style={styles.contactButton}>
                 <ThemeText type="defaultSemiBold">Message</ThemeText>
-              </Pressable>
-              <Pressable onPress={handleEmail} style={styles.contactButton}>
-                <ThemeText type="defaultSemiBold">Email</ThemeText>
               </Pressable>
               <ThemeText type="caption">
                 *By proceeding to contact you agree to GigDogs{" "}

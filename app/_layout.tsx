@@ -1,3 +1,4 @@
+import Loading from "@/components/loading";
 import { colors } from "@/utilities/colors";
 import {
   Ubuntu_300Light,
@@ -21,6 +22,11 @@ export default function RootLayout() {
     DynaPuff_500Medium,
   });
   const [reload, setReload] = useState(false);
+
+  if (!loaded) {
+    return <Loading />; // or <Loading /> if you want a spinner
+  }
+
   return (
     <ReloadFeedContext.Provider value={{ reload, setReload }}>
       <Stack
@@ -34,7 +40,8 @@ export default function RootLayout() {
 
         <Stack.Screen name="(main)/band-view" />
 
-        <Stack.Screen name="(account)/account-info" />
+        <Stack.Screen name="(account)/account" />
+        <Stack.Screen name="(account)/credentials-reset" />
 
         <Stack.Screen name="(account)/signup" />
         <Stack.Screen name="(account)/login" />

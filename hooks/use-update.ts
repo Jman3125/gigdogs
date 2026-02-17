@@ -1,15 +1,12 @@
 import { auth, db } from "@/config/firebaseConfig";
 import { validateUpdateFields } from "@/utilities/authenticate/authenticate-update";
 import { uploadImageAsync } from "@/utilities/upload-image";
-import { updateEmail } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 
 //update user account
-
 export function useUpdate() {
   const update = async (
     bandName: string,
-    email: string,
     location: string,
     genre: string,
     pricePerHour: number,
@@ -25,7 +22,6 @@ export function useUpdate() {
     // Validate fields
     const result = validateUpdateFields(
       bandName,
-      email,
       location,
       genre,
       pricePerHour,
@@ -47,9 +43,6 @@ export function useUpdate() {
         throw new Error("User not authenticated.");
       }
 
-      if (email !== user.email) {
-        await updateEmail(user, email);
-      }
       let imageURL = picture; // default to existing URL
 
       //if it's a new image being uploaded or existing one
@@ -60,7 +53,6 @@ export function useUpdate() {
 
       await updateDoc(doc(db, "users", user.uid), {
         bandName,
-        email,
         location,
         genre,
         pricePerHour,

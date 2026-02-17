@@ -6,9 +6,11 @@ import Loading from "@/components/loading";
 import LogoTitle from "@/components/logo-title";
 import SearchLocation from "@/components/search-location";
 import { ThemeText } from "@/components/theme-text";
+import VerifyEmailAlert from "@/components/verify-email-alert";
 import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { Band } from "@/models/band";
+import { CheckVerification } from "@/utilities/authenticate/verify-email";
 import { getAllBands } from "@/utilities/firebase/fetch-data";
 import { getGenre } from "@/utilities/getGenreLabel";
 import { shuffleArray } from "@/utilities/shuffleArray";
@@ -21,6 +23,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -47,6 +50,16 @@ export default function Index() {
   //Show error
   const [error, setError] = useState("");
 
+  //Show alert for user to update their email address
+  const [verifyEmail, setVerifyEmail] = useState(false);
+
+  //To toggle search filters from city search to band name search
+  //false for city true for band name search
+  const [filter, toggleFilter] = useState(false);
+
+  //used to keep state of band name search
+  const [bandName, setBandName] = useState("");
+
   //Fetch all of the bands data to dipslay in feed
   const fetchData = async () => {
     try {
@@ -62,6 +75,30 @@ export default function Index() {
       );
     }
   };
+
+  //Use effect function that watches to see if user has not verified email and shows
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const check = async () => {
+        const result = await CheckVerification();
+        if (isActive && !result.valid) {
+          setVerifyEmail(true); // show your banner
+        } else {
+          setVerifyEmail(false); // hide it
+        }
+      };
+      //I don't want to set false if user does not exist
+      if (auth.currentUser) {
+        check();
+      }
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
 
   // 1. Define the function outside the effect
   const loadAllData = useCallback(async () => {
@@ -102,12 +139,28 @@ export default function Index() {
     }, [reload, loadAllData]),
   );
 
+  //User wants to change search filter
+  const changeSearchFilter = () => {
+    //User changes from city search to bandname search or vice versa
+    toggleFilter(!filter);
+    //Clear all searches
+    setBandName("");
+    setCity("");
+  };
+
   //Used to repopulate bands that match entered location
   const filterData = (band: Band) => {
     const matchesLocation =
-      city === "" || band.location.toLowerCase().includes(city.toLowerCase());
+      city === "" ||
+      band.location.toLowerCase().includes(city.toLowerCase().trimEnd());
+    const matchesName =
+      bandName === "" ||
+      band.bandName.toLowerCase().includes(bandName.toLowerCase().trimEnd());
 
     if (!matchesLocation) {
+      return null;
+    }
+    if (!matchesName) {
       return null;
     }
     //return bands in BandDisplay format that match city search
@@ -125,83 +178,107 @@ export default function Index() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
+    <>
       {loading && <Loading />}
-
       {!loading && (
-        <View style={styles.viewContainer}>
-          <Stack.Screen
-            options={{
-              headerTitle: () => <LogoTitle />,
-              headerRight: () =>
-                // If use is signed in show account button, if not show add band button
-                signedIn ? (
-                  <Ionicons
-                    name="person-circle-outline"
-                    size={38}
-                    color="white"
-                    onPress={() => navigator.navigate("/account-info")}
-                  />
-                ) : (
-                  <TouchableOpacity
-                    style={styles.headerButton}
-                    onPress={() => navigator.navigate("./signup")}
-                  >
-                    <Ionicons name="add" size={24} color="white" />
-                    <ThemeText
-                      type="defaultSemiBold"
-                      style={styles.headerButtonText}
+        <SafeAreaView style={styles.container} edges={["bottom"]}>
+          <View style={styles.viewContainer}>
+            <Stack.Screen
+              options={{
+                headerTitle: () => <LogoTitle />,
+                headerRight: () =>
+                  // If use is signed in show account button, if not show add band button
+                  signedIn ? (
+                    <Ionicons
+                      name="person-circle-outline"
+                      size={38}
+                      color="white"
+                      onPress={() => navigator.navigate("/account")}
+                    />
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.headerButton}
+                      onPress={() => navigator.navigate("./signup")}
                     >
-                      Band
-                    </ThemeText>
+                      <Ionicons name="add" size={24} color="white" />
+                      <ThemeText
+                        type="defaultSemiBold"
+                        style={styles.headerButtonText}
+                      >
+                        Band
+                      </ThemeText>
+                    </TouchableOpacity>
+                  ),
+                headerLeft: () => (
+                  <TouchableOpacity
+                    onPress={() => navigator.navigate("./about")}
+                  >
+                    <Ionicons
+                      name="information-circle-outline"
+                      size={38}
+                      color="white"
+                    />
                   </TouchableOpacity>
                 ),
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigator.navigate("./about")}>
-                  <Ionicons
-                    name="information-circle-outline"
-                    size={38}
-                    color="white"
-                  />
-                </TouchableOpacity>
-              ),
-            }}
-          />
-          <View style={styles.headerContainer}>
-            {/* header above flatlist, search bar, page header, report content overlay */}
-            <ThemeText type="title" style={{ marginTop: 20 }}>
-              Find Bands
-            </ThemeText>
+              }}
+            />
+            <View style={styles.headerContainer}>
+              {verifyEmail && (
+                <VerifyEmailAlert email={`${auth.currentUser?.email}`} />
+              )}
+              {/* header above flatlist, search bar, page header, report content overlay */}
+              <ThemeText type="title" style={{ marginTop: 20 }}>
+                Find Bands
+              </ThemeText>
 
-            {/* Search Filter */}
-            <ThemeText type="defaultSemiBold">Search Your City</ThemeText>
+              {/* Search Filter */}
+              <View style={styles.searchFilterHeaders}>
+                <ThemeText type="defaultSemiBold">
+                  {" "}
+                  {filter ? "Search by band name" : "Search Your City"}
+                </ThemeText>
+                <ThemeText onPress={() => changeSearchFilter()} type="caption">
+                  {filter ? "Search By City" : "Search by band name"}
+                </ThemeText>
+              </View>
 
-            <SearchLocation city={city} setCity={setCity} />
+              {/* If filter state is false, show city search */}
+              {!filter && <SearchLocation city={city} setCity={setCity} />}
+              {/* Search for specific band name */}
+              {filter && (
+                <TextInput
+                  value={bandName}
+                  onChangeText={setBandName}
+                  style={styles.input}
+                  placeholder="Enter Band name"
+                />
+              )}
+            </View>
+
+            <FlatList
+              data={bandsData}
+              keyExtractor={(band) => band.id}
+              renderItem={({ item: band }) => filterData(band)}
+              keyboardShouldPersistTaps="always"
+              style={styles.flatListContainer}
+              ListEmptyComponent={<BlankSearch />}
+              ListHeaderComponent={
+                <KeyboardAvoidingView
+                  behavior={Platform.OS === "ios" ? "padding" : "height"}
+                >
+                  {error && (
+                    <ThemeText type="error">
+                      There was an error loading data please try again later,{" "}
+                      {error}
+                    </ThemeText>
+                  )}
+                </KeyboardAvoidingView>
+              }
+            />
           </View>
-
-          <FlatList
-            data={bandsData}
-            keyExtractor={(band) => band.id}
-            renderItem={({ item: band }) => filterData(band)}
-            keyboardShouldPersistTaps="always"
-            style={styles.flatListContainer}
-            ListEmptyComponent={<BlankSearch />}
-            ListHeaderComponent={
-              <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-              >
-                {error && (
-                  <ThemeText type="error">
-                    There was an error loading data please try again later,{" "}
-                    {error}
-                  </ThemeText>
-                )}
-              </KeyboardAvoidingView>
-            }
-          />
-        </View>
+        </SafeAreaView>
       )}
-    </SafeAreaView>
+    </>
   );
 }
 
@@ -234,8 +311,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginRight: 5,
+    width: "auto",
   },
   headerButtonText: {
     color: "white",
+  },
+  searchFilterHeaders: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  input: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    backgroundColor: "white",
+    marginTop: 5,
+    marginBottom: 25,
   },
 });
