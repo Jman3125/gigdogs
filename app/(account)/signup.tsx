@@ -51,6 +51,9 @@ export default function Singup() {
   //For password
   const [password, setPassword] = useState("");
 
+  //For password confirmation
+  const [password2, setPassword2] = useState("");
+
   //For Location
   const [city, setCity] = useState("");
 
@@ -99,10 +102,11 @@ export default function Singup() {
         bandName,
         email,
         password,
+        password2,
         city,
         selectedGenre,
         parseFloat(price),
-        bio,
+        bio.trimEnd().trimStart(),
         image || "",
         parseInt(hours),
         parseInt(minutes),
@@ -112,18 +116,29 @@ export default function Singup() {
         isCheckedTerms,
         isCheckedInfo,
       );
-      setLoading(false);
-
-      //reload home page
-      setReload(true);
-
-      navigator.dismissAll();
+      //Alert the user a verification link has been sent.
+      Alert.alert(
+        "Please verify your email",
+        "An email verification link has been sent to you.",
+        [
+          {
+            text: "Ok",
+            onPress: async () => {
+              setLoading(false);
+              setReload(true);
+              navigator.dismissAll();
+            },
+          },
+        ],
+      );
     } catch (error: any) {
       setLoading(false);
       Alert.alert("Error", error.message);
       setError(error.message);
     }
   };
+
+  //For picking the profile image
   const onPickImage = async () => {
     const uri = await pickImage();
     if (uri) {
@@ -199,7 +214,7 @@ export default function Singup() {
 
               <LabelWrapper
                 label="Password"
-                footnote="Must be at least 8 characters"
+                footnote="Must be at least 6 characters"
               >
                 <TextInput
                   secureTextEntry={true}
@@ -213,6 +228,24 @@ export default function Singup() {
                   autoCapitalize="none"
                 />
               </LabelWrapper>
+
+              <LabelWrapper
+                label="Confirm Password"
+                footnote="Passwords must match"
+              >
+                <TextInput
+                  secureTextEntry={true}
+                  style={styles.input}
+                  value={password2}
+                  placeholder="Confirm password"
+                  placeholderTextColor={colors.placeholder}
+                  onChangeText={(value) => {
+                    setPassword2(value);
+                  }}
+                  autoCapitalize="none"
+                />
+              </LabelWrapper>
+
               <LabelWrapper label="Your City">
                 <SearchLocation city={city} setCity={setCity} />
               </LabelWrapper>
@@ -233,7 +266,7 @@ export default function Singup() {
 
               <LabelWrapper label="Bio" footnote="Max Length: 280">
                 <TextInput
-                  placeholder="Tell us more about the yourself and any important details"
+                  placeholder="Tell us more about you and any important details people should know"
                   multiline
                   numberOfLines={5}
                   maxLength={280}

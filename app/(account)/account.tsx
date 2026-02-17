@@ -1,4 +1,5 @@
 //This is where artists can access and edit their information once signed in
+import BandProfileLink from "@/components/band-profile-link";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import LogoTitle from "@/components/logo-title";
@@ -13,7 +14,7 @@ import { Genres } from "@/models/band";
 import { colors } from "@/utilities/colors";
 import { fetchAuthBand } from "@/utilities/firebase/fetch-auth-band";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import {
   Alert,
@@ -48,9 +49,6 @@ export default function Account() {
   //FIELDS
   //For band name
   const [bandName, setBandName] = useState("");
-
-  //For email
-  const [email, setEmail] = useState("");
 
   //For Location
   const [city, setCity] = useState("");
@@ -111,7 +109,6 @@ export default function Account() {
         //Set all fields to populate input fields
         setSignedInBand(bandAuthData);
         setBandName(bandAuthData?.bandName);
-        setEmail(bandAuthData?.email);
         setCity(bandAuthData?.location);
         selectGenre(bandAuthData?.genre);
         setBio(bandAuthData?.bio);
@@ -150,21 +147,21 @@ export default function Account() {
 
   //submit updates and return to feed.
   const submit = async () => {
+    setLoading(true);
     try {
       await update(
         bandName,
-        email,
         city,
         selectedGenre,
         price,
-        bio,
+        bio.trimEnd().trimStart(),
         image,
         hours,
         minutes,
         instagram,
         phone,
       );
-      //reload home page
+      setLoading(false);
       setReload(true);
       navigator.dismissAll();
     } catch (error: any) {
@@ -192,7 +189,7 @@ export default function Account() {
             >
               <Ionicons name="chevron-back" size={24} color="white" />
               <ThemeText type="defaultSemiBold" style={styles.headerText}>
-                Sign In
+                Feed
               </ThemeText>
             </Pressable>
           ),
@@ -205,10 +202,12 @@ export default function Account() {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
           <ScrollView>
-            <ThemeText type="title">
+            <ThemeText type="subtitle" style={styles.title}>
               Welcome, {signedInBand?.bandName || ""}
             </ThemeText>
-
+            <LabelWrapper label="Shareable Profile Link">
+              <BandProfileLink userId={signedInBand.id} />
+            </LabelWrapper>
             <ThemeText type="subtitle">Edit Account</ThemeText>
             <View>
               <LabelWrapper label="Band Name">
@@ -223,17 +222,15 @@ export default function Account() {
                   }}
                 />
               </LabelWrapper>
-              <LabelWrapper label="Email">
-                <TextInput
-                  placeholder="123@music.com"
-                  inputMode="email"
-                  style={styles.input}
-                  placeholderTextColor={"#464141cb"}
-                  value={email}
-                  onChangeText={(value) => {
-                    setEmail(value);
-                  }}
-                />
+              <LabelWrapper label="Update Email & Password">
+                <Link href="/credentials-reset" asChild>
+                  <Pressable style={styles.emailPasswordLink}>
+                    <ThemeText type="defaultSemiBold">
+                      Email & Password
+                    </ThemeText>
+                    <Ionicons name="chevron-forward" size={25} colo="white" />
+                  </Pressable>
+                </Link>
               </LabelWrapper>
 
               <LabelWrapper label="Your City">
@@ -371,6 +368,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
+  title: {
+    marginBottom: 10,
+  },
   input: {
     height: 50,
     width: "100%",
@@ -435,5 +435,13 @@ const styles = StyleSheet.create({
   // logout button text
   text: {
     color: "white",
+  },
+  emailPasswordLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    backgroundColor: colors.secondary,
+    padding: 10,
+    borderRadius: 10,
   },
 });

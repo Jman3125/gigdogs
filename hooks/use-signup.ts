@@ -1,7 +1,10 @@
 import { auth, db } from "@/config/firebaseConfig";
 import { validateSignupFields } from "@/utilities/authenticate/authenticate-signup";
 import { uploadImageAsync } from "@/utilities/upload-image";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 //Process user signup
@@ -11,6 +14,7 @@ export function useSignup() {
     bandName: string,
     email: string,
     password: string,
+    password2: string,
     location: string,
     genre: string,
     pricePerHour: number,
@@ -29,6 +33,7 @@ export function useSignup() {
       bandName,
       email,
       password,
+      password2,
       location,
       genre,
       pricePerHour,
@@ -54,6 +59,9 @@ export function useSignup() {
         email,
         password,
       );
+
+      //send email verification
+      await sendEmailVerification(userCredential.user);
 
       //Create user uid
       const uid = userCredential.user.uid;

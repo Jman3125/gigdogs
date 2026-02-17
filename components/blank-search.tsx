@@ -14,8 +14,8 @@ export default function BlankSearch() {
         No results found
       </ThemeText>
       <ThemeText type="default" style={styles.text}>
-        Gig Dogs is a new app with only a few locations so far. Help us expand
-        by gettings bands to sign up in your area!
+        GigDogs is a new app with only a few locations so far. Help us expand by
+        gettings bands to sign up in your area!
       </ThemeText>
     </View>
   );

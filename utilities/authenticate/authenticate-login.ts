@@ -8,6 +8,10 @@ function isValidEmail(email: string): boolean {
 export function validateLoginFields(email: string, password: string) {
   //ensure no fields are empty
 
+  if (!isValidEmail(email)) {
+    return { valid: false, message: "Please enter a valid email." };
+  }
+
   if (!email.trim()) {
     return { valid: false, message: "Please add an email." };
   }

@@ -1,14 +1,7 @@
-// Utility function to validate email format
-function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
 //Validate Update Fields
 
 export function validateUpdateFields(
   bandName: string,
-  email: string,
   location: string,
   genre: string,
   pricePerHour: number,
@@ -22,10 +15,6 @@ export function validateUpdateFields(
   //ensure no fields are empty
   if (!bandName.trim()) {
     return { valid: false, message: "Please add your band name." };
-  }
-
-  if (!email.trim()) {
-    return { valid: false, message: "Please add an email." };
   }
 
   if (!location.trim()) {
@@ -61,10 +50,6 @@ export function validateUpdateFields(
 
   if (!instagram.trim()) {
     return { valid: false, message: "Please add an Instagram username." };
-  }
-
-  if (!isValidEmail(email)) {
-    return { valid: false, message: "Invalid email format." };
   }
 
   return { valid: true };

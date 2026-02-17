@@ -10,6 +10,7 @@ export function validateSignupFields(
   bandName: string,
   email: string,
   password: string,
+  password2: string,
   location: string,
   genre: string,
   pricePerHour: number,
@@ -39,6 +40,10 @@ export function validateSignupFields(
 
   if (!password.trim()) {
     return { valid: false, message: "Please add a password." };
+  }
+
+  if (password !== password2) {
+    return { valid: false, message: "Passwords do not match." };
   }
 
   if (!location.trim()) {
