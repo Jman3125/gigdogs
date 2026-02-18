@@ -1,4 +1,4 @@
-import { auth, db } from "@/config/firebaseConfig";
+import { auth } from "@/config/firebaseConfig";
 import { validateUserEmailUpdate } from "@/utilities/authenticate/authenticate-email-update";
 import { validateLoginFields } from "@/utilities/authenticate/authenticate-login";
 import { getAllBands } from "@/utilities/firebase/fetch-data";
@@ -7,10 +7,12 @@ import {
   reauthenticateWithCredential,
   verifyBeforeUpdateEmail,
 } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
+import { useLogout } from "./use-logout";
 
 //Update user email
 export function useUpdateEmail() {
+  //Logout function that will be implemented on email change
+  const { logout } = useLogout();
   //Pass the new email, if user needs to be reauthenticated then do that here and update email
   const updateEmail = async (
     newEmail: string,
@@ -60,9 +62,7 @@ export function useUpdateEmail() {
     try {
       //Send email update verification
       await verifyBeforeUpdateEmail(user, newEmail);
-      await updateDoc(doc(db, "users", user.uid), {
-        newEmail,
-      });
+      await logout();
     } catch (error: any) {
       const errorCode = error.code;
 

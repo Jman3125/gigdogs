@@ -3,6 +3,7 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import LogoTitle from "@/components/logo-title";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
+import { colors } from "@/utilities/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useRouter } from "expo-router";
 import { Linking, Pressable, ScrollView, StyleSheet, View } from "react-native";
@@ -38,9 +39,9 @@ export default function About() {
           }}
         />
         <View style={styles.infoContainer}>
-          <ThemeText type="logo">Welcome to GigDogs</ThemeText>
+          <ThemeText type="logoLarge">GigDogs</ThemeText>
           <View style={styles.section}>
-            <ThemeText type="subtitle">What is it?</ThemeText>
+            <ThemeText type="logo">What is it?</ThemeText>
             <ThemeText type="defaultSemiBold">
               GigDogs is an app that makes live music more accessible to the
               everyday person.
@@ -53,7 +54,7 @@ export default function About() {
           </View>
 
           <View style={styles.section}>
-            <ThemeText type="subtitle">Our Goal</ThemeText>
+            <ThemeText type="logo">Our Goal</ThemeText>
             <ThemeText type="defaultSemiBold">
               Our goal is to foster connection.
             </ThemeText>
@@ -65,7 +66,7 @@ export default function About() {
           </View>
 
           <View style={styles.section}>
-            <ThemeText type="subtitle">{"Who's it for?"}</ThemeText>
+            <ThemeText type="logo">{"Who's it for?"}</ThemeText>
             <ThemeText type="defaultSemiBold">Communities.</ThemeText>
             <ThemeText type="default">
               {
@@ -76,27 +77,32 @@ export default function About() {
 
           <View style={styles.section}>
             <LabelWrapper label="Please send us any feedback!">
-              <Pressable onPress={handleEmail}>
-                <ThemeText type="link">Contact Us</ThemeText>
-              </Pressable>
+              <View style={styles.horizontalWrap}>
+                <Ionicons name="mail-outline" size={22} color={"black"} />
+                <Pressable onPress={handleEmail}>
+                  <ThemeText type="link">Contact Us</ThemeText>
+                </Pressable>
+              </View>
             </LabelWrapper>
 
             <ThemeText type="defaultSemiBold">
               <LabelWrapper label="Follow us on Instagram">
-                <Pressable onPress={() => linkInstagram()}>
-                  <ThemeText type="link">gig_dogs</ThemeText>
-                </Pressable>
+                <View style={styles.horizontalWrap}>
+                  <Ionicons name="logo-instagram" size={22} color={"black"} />
+                  <Pressable onPress={() => linkInstagram()}>
+                    <ThemeText type="link">gig_dogs</ThemeText>
+                  </Pressable>
+                </View>
               </LabelWrapper>
             </ThemeText>
           </View>
 
           <View style={styles.section}>
             <ThemeText type="subtitle">Welcome!</ThemeText>
+            <ThemeText type="default">
+              View our <TermsPrivacyLinks />
+            </ThemeText>
           </View>
-
-          <ThemeText type="default">
-            View our <TermsPrivacyLinks />
-          </ThemeText>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -120,5 +126,21 @@ const styles = StyleSheet.create({
   },
   section: {
     marginTop: 20,
+    padding: 15,
+    width: "100%",
+    backgroundColor: colors.primary,
+    borderRadius: 5,
+    // iOS
+    shadowColor: colors.secondary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 6,
+    // Android
+    elevation: 6,
+  },
+  horizontalWrap: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
   },
 });

@@ -232,11 +232,14 @@ export default function Index() {
             {/* Search Filter */}
             <View style={styles.searchFilterHeaders}>
               <ThemeText type="defaultSemiBold">
-                {" "}
-                {filter ? "Search by band name" : "Search Your City"}
+                {filter ? "Search By Name" : "Search Your City"}
               </ThemeText>
-              <ThemeText onPress={() => changeSearchFilter()} type="caption">
-                {filter ? "Search By City" : "Search by band name"}
+              <ThemeText
+                onPress={() => changeSearchFilter()}
+                type="default"
+                style={styles.searchFilterHeadersRight}
+              >
+                {filter ? "Search By City" : "Search By Name"}
               </ThemeText>
             </View>
 
@@ -249,7 +252,7 @@ export default function Index() {
                 onChangeText={setBandName}
                 placeholderTextColor={colors.placeholder}
                 style={styles.input}
-                placeholder="Enter Band name"
+                placeholder="Enter Band Name"
               />
             )}
           </View>
@@ -318,6 +321,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  searchFilterHeadersRight: {
+    backgroundColor: "#bebebe96",
+    paddingLeft: 5,
+    paddingRight: 5,
+    borderRadius: 5,
   },
   input: {
     height: 50,

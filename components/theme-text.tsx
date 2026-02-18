@@ -12,7 +12,8 @@ export type ThemeTextProps = TextProps & {
     | "link"
     | "error"
     | "logo"
-    | "caption";
+    | "caption"
+    | "logoLarge";
 };
 
 export function ThemeText({
@@ -63,5 +64,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     fontFamily: "Ubuntu_300Light",
+  },
+  logoLarge: {
+    fontSize: 45,
+    fontFamily: "DynaPuff_500Medium",
   },
 });
