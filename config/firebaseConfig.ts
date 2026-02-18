@@ -1,14 +1,12 @@
 /* eslint-disable prettier/prettier */
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
 import {
   // @ts-ignore: getReactNativePersistence exists in the RN bundle
   // but is often missing from public TypeScript definitions.
-  AsyncStorage,
-  // @ts-ignore: getReactNativePersistence exists in the RN bundle
-  getReactNativePersistence
+  getReactNativePersistence,
+  initializeAuth,
 } from "firebase/auth";
-
-import { initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
