@@ -36,7 +36,7 @@ export default function RootLayout() {
           },
         }}
       >
-        <Stack.Screen name="(main)/index" />
+        <Stack.Screen name="(main)/index" options={{ title: "Loading" }} />
 
         <Stack.Screen name="(main)/band-view" />
 

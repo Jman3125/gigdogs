@@ -11,6 +11,7 @@ import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { Band } from "@/models/band";
 import { CheckVerification } from "@/utilities/authenticate/verify-email";
+import { colors } from "@/utilities/colors";
 import { getAllBands } from "@/utilities/firebase/fetch-data";
 import { getGenre } from "@/utilities/getGenreLabel";
 import { shuffleArray } from "@/utilities/shuffleArray";
@@ -178,107 +179,104 @@ export default function Index() {
   };
 
   return (
-    <>
+    <SafeAreaView style={styles.container} edges={["bottom"]}>
       {loading && <Loading />}
       {!loading && (
-        <SafeAreaView style={styles.container} edges={["bottom"]}>
-          <View style={styles.viewContainer}>
-            <Stack.Screen
-              options={{
-                headerTitle: () => <LogoTitle />,
-                headerRight: () =>
-                  // If use is signed in show account button, if not show add band button
-                  signedIn ? (
-                    <Ionicons
-                      name="person-circle-outline"
-                      size={38}
-                      color="white"
-                      onPress={() => navigator.navigate("/account")}
-                    />
-                  ) : (
-                    <TouchableOpacity
-                      style={styles.headerButton}
-                      onPress={() => navigator.navigate("./signup")}
-                    >
-                      <Ionicons name="add" size={24} color="white" />
-                      <ThemeText
-                        type="defaultSemiBold"
-                        style={styles.headerButtonText}
-                      >
-                        Band
-                      </ThemeText>
-                    </TouchableOpacity>
-                  ),
-                headerLeft: () => (
+        <View style={styles.viewContainer}>
+          <Stack.Screen
+            options={{
+              headerTitle: () => <LogoTitle />,
+              headerRight: () =>
+                // If use is signed in show account button, if not show add band button
+                signedIn ? (
+                  <Ionicons
+                    name="person-circle-outline"
+                    size={38}
+                    color="white"
+                    onPress={() => navigator.navigate("/account")}
+                  />
+                ) : (
                   <TouchableOpacity
-                    onPress={() => navigator.navigate("./about")}
+                    style={styles.headerButton}
+                    onPress={() => navigator.navigate("./signup")}
                   >
-                    <Ionicons
-                      name="information-circle-outline"
-                      size={38}
-                      color="white"
-                    />
+                    <Ionicons name="add" size={24} color="white" />
+                    <ThemeText
+                      type="defaultSemiBold"
+                      style={styles.headerButtonText}
+                    >
+                      Band
+                    </ThemeText>
                   </TouchableOpacity>
                 ),
-              }}
-            />
-            <View style={styles.headerContainer}>
-              {verifyEmail && (
-                <VerifyEmailAlert email={`${auth.currentUser?.email}`} />
-              )}
-              {/* header above flatlist, search bar, page header, report content overlay */}
-              <ThemeText type="title" style={{ marginTop: 20 }}>
-                Find Bands
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => navigator.navigate("./about")}>
+                  <Ionicons
+                    name="information-circle-outline"
+                    size={38}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              ),
+            }}
+          />
+          <View style={styles.headerContainer}>
+            {verifyEmail && (
+              <VerifyEmailAlert email={`${auth.currentUser?.email}`} />
+            )}
+            {/* header above flatlist, search bar, page header, report content overlay */}
+            <ThemeText type="title" style={{ marginTop: 20 }}>
+              Find Bands
+            </ThemeText>
+
+            {/* Search Filter */}
+            <View style={styles.searchFilterHeaders}>
+              <ThemeText type="defaultSemiBold">
+                {" "}
+                {filter ? "Search by band name" : "Search Your City"}
               </ThemeText>
-
-              {/* Search Filter */}
-              <View style={styles.searchFilterHeaders}>
-                <ThemeText type="defaultSemiBold">
-                  {" "}
-                  {filter ? "Search by band name" : "Search Your City"}
-                </ThemeText>
-                <ThemeText onPress={() => changeSearchFilter()} type="caption">
-                  {filter ? "Search By City" : "Search by band name"}
-                </ThemeText>
-              </View>
-
-              {/* If filter state is false, show city search */}
-              {!filter && <SearchLocation city={city} setCity={setCity} />}
-              {/* Search for specific band name */}
-              {filter && (
-                <TextInput
-                  value={bandName}
-                  onChangeText={setBandName}
-                  style={styles.input}
-                  placeholder="Enter Band name"
-                />
-              )}
+              <ThemeText onPress={() => changeSearchFilter()} type="caption">
+                {filter ? "Search By City" : "Search by band name"}
+              </ThemeText>
             </View>
 
-            <FlatList
-              data={bandsData}
-              keyExtractor={(band) => band.id}
-              renderItem={({ item: band }) => filterData(band)}
-              keyboardShouldPersistTaps="always"
-              style={styles.flatListContainer}
-              ListEmptyComponent={<BlankSearch />}
-              ListHeaderComponent={
-                <KeyboardAvoidingView
-                  behavior={Platform.OS === "ios" ? "padding" : "height"}
-                >
-                  {error && (
-                    <ThemeText type="error">
-                      There was an error loading data please try again later,{" "}
-                      {error}
-                    </ThemeText>
-                  )}
-                </KeyboardAvoidingView>
-              }
-            />
+            {/* If filter state is false, show city search */}
+            {!filter && <SearchLocation city={city} setCity={setCity} />}
+            {/* Search for specific band name */}
+            {filter && (
+              <TextInput
+                value={bandName}
+                onChangeText={setBandName}
+                placeholderTextColor={colors.placeholder}
+                style={styles.input}
+                placeholder="Enter Band name"
+              />
+            )}
           </View>
-        </SafeAreaView>
+
+          <FlatList
+            data={bandsData}
+            keyExtractor={(band) => band.id}
+            renderItem={({ item: band }) => filterData(band)}
+            keyboardShouldPersistTaps="always"
+            style={styles.flatListContainer}
+            ListEmptyComponent={<BlankSearch />}
+            ListHeaderComponent={
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+              >
+                {error && (
+                  <ThemeText type="error">
+                    There was an error loading data please try again later,{" "}
+                    {error}
+                  </ThemeText>
+                )}
+              </KeyboardAvoidingView>
+            }
+          />
+        </View>
       )}
-    </>
+    </SafeAreaView>
   );
 }
 
