@@ -137,7 +137,7 @@ export default function Index() {
         );
         setReload(false);
       }
-    }, [reload, loadAllData]),
+    }, [reload, loadAllData, setReload]),
   );
 
   //User wants to change search filter
