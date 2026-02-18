@@ -19,7 +19,7 @@ export interface Band {
 //Genres
 
 export const Genres = [
-  { label: "Alternative Rock", value: "alternative_rock" },
+  { label: "Alt Rock", value: "alternative_rock" },
   { label: "Blues", value: "blues" },
   { label: "Pop Rock", value: "pop_rock" },
   { label: "Rock", value: "rock" },
