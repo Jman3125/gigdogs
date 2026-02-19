@@ -150,33 +150,17 @@ export default function Index() {
   };
 
   //Used to repopulate bands that match entered location
-  const filterData = (band: Band) => {
+  const filteredBands = bandsData.filter((band) => {
     const matchesLocation =
       city === "" ||
       band.location.toLowerCase().includes(city.toLowerCase().trimEnd());
+
     const matchesName =
       bandName === "" ||
       band.bandName.toLowerCase().includes(bandName.toLowerCase().trimEnd());
 
-    if (!matchesLocation) {
-      return null;
-    }
-    if (!matchesName) {
-      return null;
-    }
-    //return bands in BandDisplay format that match city search
-    return (
-      <BandDisplay
-        id={band.id}
-        name={band.bandName}
-        //Get genre switches value form db to label which is just uppercase genre
-        genre={getGenre(band.genre)}
-        minPrice={band.pricePerHour}
-        picture={band.picture}
-        location={band.location}
-      />
-    );
-  };
+    return matchesLocation && matchesName;
+  });
 
   return (
     <SafeAreaView style={styles.container} edges={["bottom"]}>
@@ -258,9 +242,18 @@ export default function Index() {
           </View>
 
           <FlatList
-            data={bandsData}
+            data={filteredBands}
             keyExtractor={(band) => band.id}
-            renderItem={({ item: band }) => filterData(band)}
+            renderItem={({ item }) => (
+              <BandDisplay
+                id={item.id}
+                name={item.bandName}
+                genre={getGenre(item.genre)}
+                minPrice={item.pricePerHour}
+                picture={item.picture}
+                location={item.location}
+              />
+            )}
             keyboardShouldPersistTaps="always"
             style={styles.flatListContainer}
             ListEmptyComponent={<BlankSearch />}
