@@ -65,7 +65,9 @@ export default function BandView() {
 
   //Open bands instagram account
   const linkInstagram = () => {
-    Linking.openURL(`https://instagram.com/${bandData?.instagram}`);
+    Linking.openURL(
+      `https://instagram.com/${bandData?.instagram.trimEnd().toLowerCase()}`,
+    );
   };
 
   return (
@@ -119,7 +121,9 @@ export default function BandView() {
 
                 <LabelWrapper label="Max Play Time:">
                   <ThemeText type="defaultSemiBold">
-                    {bandData?.hours} Hours, {bandData?.minutes} Minutes
+                    {bandData?.hours} Hours
+                    {bandData?.minutes !== 0 &&
+                      `, ${bandData?.minutes} Minutes`}
                   </ThemeText>
                 </LabelWrapper>
 

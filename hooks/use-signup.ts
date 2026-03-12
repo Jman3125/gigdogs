@@ -61,7 +61,9 @@ export function useSignup() {
       );
 
       //send email verification
+      console.log("sendEmailVerification: starting for user", userCredential.user.uid);
       await sendEmailVerification(userCredential.user);
+      console.log("sendEmailVerification: success - verification email sent");
 
       //Create user uid
       const uid = userCredential.user.uid;
@@ -94,6 +96,11 @@ export function useSignup() {
 
       return { success: true };
     } catch (error: any) {
+      console.error("Signup error:", {
+        code: error.code,
+        message: error.message,
+        fullError: error,
+      });
       throw new Error(error.message || "Signup failed");
     }
   };

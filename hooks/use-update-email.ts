@@ -61,9 +61,16 @@ export function useUpdateEmail() {
     //User is now reauthenticated if this is the second time trying to update email and they got the requires-recent-login error
     try {
       //Send email update verification
+      console.log("verifyBeforeUpdateEmail: starting for user", user.uid, "with new email", newEmail);
       await verifyBeforeUpdateEmail(user, newEmail);
+      console.log("verifyBeforeUpdateEmail: success - verification email sent");
       await logout();
     } catch (error: any) {
+      console.error("verifyBeforeUpdateEmail: error", {
+        code: error.code,
+        message: error.message,
+        fullError: error,
+      });
       const errorCode = error.code;
 
       if (errorCode === "auth/requires-recent-login") {

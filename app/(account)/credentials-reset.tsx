@@ -8,7 +8,6 @@ import { useUpdateEmail } from "@/hooks/use-update-email";
 import { colors } from "@/utilities/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack, useRouter } from "expo-router";
-import { sendPasswordResetEmail } from "firebase/auth";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -80,19 +79,6 @@ export default function CredentialsReset() {
     const user = auth.currentUser;
     setNewEmail(`${user?.email}`);
   }, []);
-
-  //send password reset link
-  const changePassword = async () => {
-    try {
-      await sendPasswordResetEmail(auth, email!);
-      Alert.alert(
-        "Email Sent",
-        `A password reset has been sent to the email: ${email}, verifying will log you out of your account.`,
-      );
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
-    }
-  };
 
   return (
     <SafeAreaView style={styles.container} edges={["bottom"]}>
@@ -184,11 +170,10 @@ export default function CredentialsReset() {
 
           {error ? <ThemeText type="error">{error}</ThemeText> : null}
           <LabelWrapper label="Change Password">
-            <Pressable style={styles.button} onPress={() => changePassword()}>
-              <ThemeText type="defaultSemiBold">
-                Send Password Reset Link
-              </ThemeText>
-            </Pressable>
+            <ThemeText type="defaultSemiBold">
+              To change your password, logout and click the forgot password
+              button on the login page.
+            </ThemeText>
           </LabelWrapper>
         </ScrollView>
       )}
