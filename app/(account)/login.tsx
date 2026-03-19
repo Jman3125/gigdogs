@@ -99,7 +99,7 @@ export default function Login() {
                 >
                   <Ionicons name="chevron-back" size={24} color="white" />
                   <ThemeText type="defaultSemiBold" style={styles.headerText}>
-                    Sign In
+                    Sign Up
                   </ThemeText>
                 </Pressable>
               ),

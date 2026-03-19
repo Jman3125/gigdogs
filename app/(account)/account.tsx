@@ -1,4 +1,5 @@
 //This is where artists can access and edit their information once signed in
+import BandProfileLink from "@/components/band-profile-link";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import LogoTitle from "@/components/logo-title";
@@ -204,9 +205,13 @@ export default function Account() {
             <ThemeText type="subtitle" style={styles.title}>
               Welcome, {signedInBand?.bandName || ""}
             </ThemeText>
-            {/* <LabelWrapper label="Shareable Profile Link">
+            <LabelWrapper
+              label="GigDogs Profile Link"
+              isBold={true}
+              footnote="Tap to copy"
+            >
               <BandProfileLink userId={signedInBand.id} />
-            </LabelWrapper> */}
+            </LabelWrapper>
             <ThemeText type="subtitle">Edit Account</ThemeText>
             <View>
               <LabelWrapper label="Band Name">

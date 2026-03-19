@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
 
   infoContainer: {
     flexDirection: "column",
-    alignItems: "baseline",
+    alignItems: "center",
   },
   section: {
     marginTop: 20,
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.secondary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.5,
-    shadowRadius: 6,
+    shadowRadius: 10,
     // Android
     elevation: 6,
   },

@@ -63,13 +63,24 @@ export default function BandView() {
     );
   };
 
+  const handleEmail = () => {
+    Linking.openURL(
+      `mailto:${bandData?.email}?subject=GigDogs Booking Inquiry&body=Hi ${bandData?.bandName}, I found your band on GigDogs and was interested in booking you for my upcoming event on EVENT DATE. I will need you to play for SET TIME at EVENT LOCATION. Let me know if this works for you!`,
+    );
+  };
+
   //Open bands instagram account
   const linkInstagram = () => {
     Linking.openURL(
       `https://instagram.com/${bandData?.instagram.trimEnd().toLowerCase()}`,
     );
   };
-
+  //User wants to report content
+  const handleReport = () => {
+    Linking.openURL(
+      `mailto:gigdogscontact@gmail.com?subject=Report&Inquiry&body=Please give the account name and problem so we can review it as soon as possible.`,
+    );
+  };
   return (
     <SafeAreaView style={styles.viewContainer} edges={["bottom"]}>
       <Stack.Screen
@@ -98,10 +109,18 @@ export default function BandView() {
               Error: {error}
             </ThemeText>
           )}
-          <ThemeText type="title">{bandData?.bandName}</ThemeText>
-          <ThemeText type="defaultSemiBold">{bandData?.bio}</ThemeText>
+          <View style={styles.headerContainer}>
+            <ThemeText
+              type="title"
+              style={styles.bandName}
+              numberOfLines={(bandData?.bandName?.length ?? 0) < 20 ? 1 : 2}
+              adjustsFontSizeToFit
+            >
+              {bandData?.bandName}
+            </ThemeText>
+          </View>
 
-          <View style={styles.profileContainerMain}>
+          <View style={styles.infoContainerMain}>
             <ThemeText type="subtitle">Info</ThemeText>
             <Image source={{ uri: bandData?.picture }} style={styles.image} />
 
@@ -121,12 +140,14 @@ export default function BandView() {
 
                 <LabelWrapper label="Max Play Time:">
                   <ThemeText type="defaultSemiBold">
-                    {bandData?.hours} Hours
+                    {bandData?.hours} Hour{(bandData?.hours ?? 0) > 1 && "s"}
                     {bandData?.minutes !== 0 &&
                       `, ${bandData?.minutes} Minutes`}
                   </ThemeText>
                 </LabelWrapper>
-
+                <LabelWrapper label="Bio">
+                  <ThemeText type="defaultSemiBold">{bandData?.bio}</ThemeText>
+                </LabelWrapper>
                 <LabelWrapper label="Instagram:">
                   <Pressable onPress={linkInstagram}>
                     <ThemeText type="link">{bandData?.instagram}</ThemeText>
@@ -134,6 +155,7 @@ export default function BandView() {
                 </LabelWrapper>
               </View>
             </View>
+
             <LabelWrapper label="Location">
               <ThemeText type="defaultSemiBold">{bandData?.location}</ThemeText>
             </LabelWrapper>
@@ -141,10 +163,19 @@ export default function BandView() {
               <Pressable onPress={handlePhone} style={styles.contactButton}>
                 <ThemeText type="defaultSemiBold">Message</ThemeText>
               </Pressable>
+              <Pressable
+                onPress={handleEmail}
+                style={styles.contactButtonSecondary}
+              >
+                <ThemeText type="defaultSemiBold">Email</ThemeText>
+              </Pressable>
               <ThemeText type="caption">
                 *By proceeding to contact you agree to GigDogs{" "}
                 <TermsPrivacyLinks />
               </ThemeText>
+              <Pressable onPress={handleReport} style={styles.report}>
+                <ThemeText type="link">Report Account</ThemeText>
+              </Pressable>
             </View>
           </View>
         </ScrollView>
@@ -157,13 +188,17 @@ const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
     padding: 15,
-    marginTop: 15,
   },
-  profileContainerMain: {
+  headerContainer: {
+    width: "100%",
+    height: "auto",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  infoContainerMain: {
     padding: 15,
     borderRadius: 10,
     flexDirection: "column",
-    marginTop: 15,
     marginBottom: 15,
     position: "relative",
     backgroundColor: "#ffffffff",
@@ -199,6 +234,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 25,
   },
+  contactButtonSecondary: {
+    width: "100%",
+    height: 50,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    borderRadius: 25,
+  },
   headerButton: {
     alignItems: "center",
     marginRight: 10,
@@ -206,5 +250,11 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: "white",
+  },
+  bandName: {
+    fontSize: 35,
+  },
+  report: {
+    marginTop: 15,
   },
 });

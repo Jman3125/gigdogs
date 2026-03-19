@@ -1,7 +1,7 @@
 //Show band profile on feed page
 import { colors } from "@/utilities/colors";
-import { Link } from "expo-router";
-import { Image, Linking, Pressable, StyleSheet, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import { ThemeText } from "./theme-text";
 
 type Props = {
@@ -21,56 +21,56 @@ export function BandDisplay({
   picture,
   location,
 }: Props) {
-  //User wants to report content
-  const handleEmail = () => {
-    Linking.openURL(
-      `mailto:gigdogscontact@gmail.com?subject=Report&Inquiry&body=Please give the account name and problem so we can review it as soon as possible.`,
-    );
+  const router = useRouter();
+
+  const openProfile = () => {
+    router.push({
+      pathname: "/(main)/band-view",
+      params: { id },
+    });
   };
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={openProfile}>
       <ThemeText type="default">{location}</ThemeText>
       <ThemeText type="subtitle">{name}</ThemeText>
 
       <View style={styles.infoContainer}>
         <View style={styles.left}>
-          <ThemeText type="defaultSemiBold">Genre: {genre}</ThemeText>
-          <ThemeText type="defaultSemiBold">
-            Price Per Hour: ${minPrice}
+          <ThemeText type="default">
+            Genre: <ThemeText type="defaultSemiBold">{genre}</ThemeText>
+          </ThemeText>
+          <ThemeText type="default">
+            Price Per Hour:{" "}
+            <ThemeText type="defaultSemiBold">${minPrice}</ThemeText>
           </ThemeText>
 
           {/* Change the action button if it's the signed in bands layout being displayed */}
-          <Link
-            href={{ pathname: "/(main)/band-view", params: { id } }}
-            asChild
-          >
-            <Pressable style={styles.button}>
-              <ThemeText type="defaultSemiBold">View</ThemeText>
-            </Pressable>
-          </Link>
-          <Pressable onPress={handleEmail}>
-            <ThemeText type="link">Report</ThemeText>
-          </Pressable>
+          <View style={styles.button}>
+            <ThemeText type="defaultSemiBold">See More</ThemeText>
+          </View>
         </View>
 
         <Image source={{ uri: picture }} style={styles.image} />
       </View>
-    </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-    marginBottom: 15,
+    marginBottom: 25,
     borderRadius: 10,
     flexDirection: "column",
     backgroundColor: "#ffffffff",
+    borderColor: "#444444",
+    borderWidth: 1.5,
+
     // iOS
-    shadowColor: "#000",
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
-    shadowRadius: 6,
+    shadowRadius: 25,
 
     // Android
     elevation: 6,
@@ -88,11 +88,10 @@ const styles = StyleSheet.create({
   image: { width: 180, height: 180, borderRadius: 10 },
   button: {
     backgroundColor: colors.secondary,
+    justifyContent: "center",
     alignItems: "center",
-    paddingLeft: 35,
-    paddingRight: 35,
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderRadius: 5,
+    borderRadius: 10,
+    width: "100%",
+    height: 45,
   },
 });
