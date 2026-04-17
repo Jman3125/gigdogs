@@ -1,12 +1,12 @@
 import { db } from "@/config/firebaseConfig";
-import { Band } from "@/models/band";
+import { Artist } from "@/models/artist";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
 //To get data on all bands to scroll through and view. Will use on index page
 export async function getAllBands() {
   try {
     const artistCollection = await getDocs(collection(db, "users"));
-    const artistData = artistCollection.docs.map((doc) => doc.data() as Band);
+    const artistData = artistCollection.docs.map((doc) => doc.data() as Artist);
     return artistData;
   } catch (error: any) {
     throw new Error(error.message);
@@ -30,7 +30,7 @@ export async function getOneBand(id: string) {
     return {
       id: bandDoc.id,
       ...data,
-    } as Band;
+    } as Artist;
   } catch (error: any) {
     throw new Error(error.message);
   }

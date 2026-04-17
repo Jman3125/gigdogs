@@ -85,7 +85,7 @@ export default function Login() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
+    <SafeAreaView style={styles.container} edges={[]}>
       {loading && <Loading />}
       {!loading && (
         <View>

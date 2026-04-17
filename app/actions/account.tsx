@@ -2,7 +2,6 @@
 import BandProfileLink from "@/components/band-profile-link";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
-import LogoTitle from "@/components/logo-title";
 import SearchLocation from "@/components/search-location";
 import { ThemeText } from "@/components/theme-text";
 import { auth } from "@/config/firebaseConfig";
@@ -10,11 +9,11 @@ import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useLogout } from "@/hooks/use-logout";
 import { useUpdate } from "@/hooks/use-update";
-import { Genres } from "@/models/band";
+import { Genres } from "@/models/artist";
 import { colors } from "@/utilities/colors";
 import { fetchAuthBand } from "@/utilities/firebase/fetch-auth-band";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Link, Stack, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import {
   Alert,
@@ -178,23 +177,7 @@ export default function Account() {
     }
   };
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
-      <Stack.Screen
-        options={{
-          headerTitle: () => <LogoTitle />,
-          headerLeft: () => (
-            <Pressable
-              style={styles.headerButton}
-              onPress={() => navigator.back()}
-            >
-              <Ionicons name="chevron-back" size={24} color="white" />
-              <ThemeText type="defaultSemiBold" style={styles.headerText}>
-                Feed
-              </ThemeText>
-            </Pressable>
-          ),
-        }}
-      />
+    <SafeAreaView style={styles.container} edges={[]}>
       {/* show loading state */}
       {loading && <Loading />}
       {!loading && (
@@ -227,7 +210,7 @@ export default function Account() {
                 />
               </LabelWrapper>
               <LabelWrapper label="Update Email & Password">
-                <Link href="/credentials-reset" asChild>
+                <Link href="/actions/credentials-reset" asChild>
                   <Pressable style={styles.emailPasswordLink}>
                     <ThemeText type="defaultSemiBold">
                       Email & Password
@@ -402,14 +385,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 5,
     alignItems: "center",
-  },
-  headerButton: {
-    alignItems: "center",
-    marginRight: 10,
-    flexDirection: "row",
-  },
-  headerText: {
-    color: "white",
   },
   horizontalWrap: {
     flexDirection: "row",

@@ -1,18 +1,17 @@
 //Sign up Page
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
-import LogoTitle from "@/components/logo-title";
 import SearchLocation from "@/components/search-location";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useSignup } from "@/hooks/use-signup";
-import { Genres } from "@/models/band";
+import { Genres } from "@/models/artist";
 import { colors } from "@/utilities/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Checkbox } from "expo-checkbox";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
 import {
   Alert,
@@ -147,37 +146,10 @@ export default function Singup() {
   };
 
   return (
-    <SafeAreaView edges={["bottom"]} style={styles.container}>
+    <SafeAreaView style={styles.container} edges={[]}>
       {loading && <Loading />}
       {!loading && (
         <View>
-          <Stack.Screen
-            options={{
-              headerTitle: () => <LogoTitle />,
-              headerRight: () => (
-                <Pressable
-                  style={styles.headerButtonRight}
-                  onPress={() => navigator.navigate("./login")}
-                >
-                  <ThemeText type="defaultSemiBold" style={styles.headerText}>
-                    Login
-                  </ThemeText>
-                  <Ionicons name="chevron-forward" size={24} color="white" />
-                </Pressable>
-              ),
-              headerLeft: () => (
-                <Pressable
-                  style={styles.headerButtonLeft}
-                  onPress={() => navigator.back()}
-                >
-                  <Ionicons name="chevron-back" size={24} color="white" />
-                  <ThemeText type="defaultSemiBold" style={styles.headerText}>
-                    Feed
-                  </ThemeText>
-                </Pressable>
-              ),
-            }}
-          />
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
@@ -419,17 +391,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-  },
-  headerButtonLeft: {
-    alignItems: "center",
-    marginRight: 10,
-    flexDirection: "row",
-  },
-  headerButtonRight: {
-    alignItems: "center",
-    marginLeft: 10,
-
-    flexDirection: "row",
   },
   headerText: {
     color: "white",

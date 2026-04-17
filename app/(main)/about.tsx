@@ -1,17 +1,13 @@
 //About GigDogs page
 import { LabelWrapper } from "@/components/label-wrapper";
-import LogoTitle from "@/components/logo-title";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
 import { colors } from "@/utilities/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack, useRouter } from "expo-router";
 import { Linking, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function About() {
-  const navigator = useRouter();
-
   const handleEmail = () => {
     Linking.openURL(`mailto:gigdogscontact@gmail.com`);
   };
@@ -20,24 +16,8 @@ export default function About() {
     Linking.openURL(`https://instagram.com/gig_dogs`);
   };
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
+    <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView>
-        <Stack.Screen
-          options={{
-            headerTitle: () => <LogoTitle />,
-            headerLeft: () => (
-              <Pressable
-                style={styles.headerButton}
-                onPress={() => navigator.back()}
-              >
-                <Ionicons name="chevron-back" size={24} color="white" />
-                <ThemeText type="default" style={styles.headerText}>
-                  Back
-                </ThemeText>
-              </Pressable>
-            ),
-          }}
-        />
         <View style={styles.infoContainer}>
           <ThemeText type="logoLarge">GigDogs</ThemeText>
           <View style={styles.section}>

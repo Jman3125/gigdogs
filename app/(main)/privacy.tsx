@@ -1,31 +1,11 @@
-import LogoTitle from "@/components/logo-title";
 import { ThemeText } from "@/components/theme-text";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack, useRouter } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Privacy() {
-  const navigator = useRouter();
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
+    <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView>
-        <Stack.Screen
-          options={{
-            headerTitle: () => <LogoTitle />,
-            headerLeft: () => (
-              <Pressable
-                style={styles.headerButton}
-                onPress={() => navigator.back()}
-              >
-                <Ionicons name="chevron-back" size={24} color="white" />
-                <ThemeText style={styles.headerText} type="defaultSemiBold">
-                  Back
-                </ThemeText>
-              </Pressable>
-            ),
-          }}
-        />
         <View style={{ padding: 20, gap: 12 }}>
           <ThemeText type="title">PRIVACY POLICY</ThemeText>
 

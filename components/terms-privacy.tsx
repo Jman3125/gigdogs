@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   link: {
-    color: "#208cf8",
-    fontWeight: "600",
+    color: "#0a7ea4",
+    fontSize: 16,
   },
   separator: {
     color: "black",

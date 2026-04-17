@@ -1,13 +1,11 @@
 //Page for user to change their password and email, navigate here through the account settings page
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
-import LogoTitle from "@/components/logo-title";
 import { ThemeText } from "@/components/theme-text";
 import { auth } from "@/config/firebaseConfig";
 import { useUpdateEmail } from "@/hooks/use-update-email";
 import { colors } from "@/utilities/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -81,27 +79,10 @@ export default function CredentialsReset() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
+    <SafeAreaView style={styles.container} edges={[]}>
       {loading && <Loading />}
       {!loading && (
         <ScrollView>
-          <Stack.Screen
-            options={{
-              headerTitle: () => <LogoTitle />,
-              headerLeft: () => (
-                <Pressable
-                  style={styles.headerButton}
-                  onPress={() => navigator.back()}
-                >
-                  <Ionicons name="chevron-back" size={24} color="white" />
-                  <ThemeText type="defaultSemiBold" style={styles.headerText}>
-                    Account
-                  </ThemeText>
-                </Pressable>
-              ),
-            }}
-          />
-
           <ThemeText type="title" style={styles.title}>
             Credentials
           </ThemeText>

@@ -1,15 +1,11 @@
 //Navigates to this page after a user clicks 'View' on a bands profile. adds band ID to url to get specific data.
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
-import LogoTitle from "@/components/logo-title";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
-import { Band } from "@/models/band";
+import { MockData, Venue } from "@/models/venue";
 import { colors } from "@/utilities/colors";
-import { getOneBand } from "@/utilities/firebase/fetch-data";
-import { getGenre } from "@/utilities/getGenreLabel";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
@@ -22,24 +18,21 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function BandView() {
-  //router
-  const navigator = useRouter();
-
+export default function VenueView() {
   // Going to match the id to a band and get attributes so I don't pass them all through URL
   const { id } = useLocalSearchParams<{ id: string }>();
   // Find the band in the db that matches the id passed through the URL params
-  const [bandData, setData] = useState<Band>();
+  const [venue, setData] = useState<Venue>();
   const [loading, setLoading] = useState(true);
 
   //show error on failure
   const [error, setError] = useState("");
 
   //fetch the selected bands data
-  const fetchBandData = useCallback(async () => {
+  const fetchvenue = useCallback(async () => {
     try {
-      const data = await getOneBand(id);
-      setData(data);
+      //const data = await getOneBand(parentVenueId);
+      setData(MockData.venues.find((venue) => venue.id === id));
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
@@ -53,26 +46,34 @@ export default function BandView() {
 
   //fetch bands data on load
   useEffect(() => {
-    fetchBandData();
-  }, [fetchBandData]);
+    fetchvenue();
+  }, [fetchvenue]);
 
-  //Send text sms pre-format to bands phone number
-  const handlePhone = () => {
-    Linking.openURL(
-      `sms:${bandData?.phone}?body=Hi ${bandData?.bandName}, I found your band on GigDogs and was interested in booking you for my upcoming event on EVENT DATE. I will need you to play for SET TIME at EVENT LOCATION. Let me know if this works for you!`,
-    );
+  const openBookingForm = () => {
+    console.log("Open booking form");
   };
 
-  const handleEmail = () => {
-    Linking.openURL(
-      `mailto:${bandData?.email}?subject=GigDogs Booking Inquiry&body=Hi ${bandData?.bandName}, I found your band on GigDogs and was interested in booking you for my upcoming event on EVENT DATE. I will need you to play for SET TIME at EVENT LOCATION. Let me know if this works for you!`,
-    );
+  const openEmail = () => {
+    Linking.openURL(`mailto:${venue?.email}?subject=GigDogs Booking Inquiry`);
   };
 
-  //Open bands instagram account
+  //Open venues instagram account
   const linkInstagram = () => {
     Linking.openURL(
-      `https://instagram.com/${bandData?.instagram.trimEnd().toLowerCase()}`,
+      `https://instagram.com/${venue?.instagram?.trimEnd().toLowerCase()}`,
+    );
+  };
+  //open venues facebook account
+  const linkFacebook = () => {
+    Linking.openURL(
+      `https://instagram.com/${venue?.instagram?.trimEnd().toLowerCase()}`,
+    );
+  };
+
+  //Open venues website
+  const linkWebsite = () => {
+    Linking.openURL(
+      `https://instagram.com/${venue?.instagram?.trimEnd().toLowerCase()}`,
     );
   };
   //User wants to report content
@@ -82,23 +83,7 @@ export default function BandView() {
     );
   };
   return (
-    <SafeAreaView style={styles.viewContainer} edges={["bottom"]}>
-      <Stack.Screen
-        options={{
-          headerTitle: () => <LogoTitle />,
-          headerLeft: () => (
-            <Pressable
-              style={styles.headerButton}
-              onPress={() => navigator.back()}
-            >
-              <Ionicons name="chevron-back" size={24} color="white" />
-              <ThemeText type="defaultSemiBold" style={styles.headerText}>
-                Feed
-              </ThemeText>
-            </Pressable>
-          ),
-        }}
-      />
+    <SafeAreaView style={styles.viewContainer} edges={[]}>
       {loading && <Loading />}
 
       {!loading && (
@@ -112,66 +97,67 @@ export default function BandView() {
           <View style={styles.headerContainer}>
             <ThemeText
               type="title"
-              style={styles.bandName}
-              numberOfLines={(bandData?.bandName?.length ?? 0) < 20 ? 1 : 2}
+              style={styles.venueNameStyle}
+              numberOfLines={(venue?.venueName?.length ?? 0) < 20 ? 1 : 2}
               adjustsFontSizeToFit
             >
-              {bandData?.bandName}
+              {venue?.venueName}
             </ThemeText>
           </View>
 
           <View style={styles.infoContainerMain}>
             <ThemeText type="subtitle">Info</ThemeText>
-            <Image source={{ uri: bandData?.picture }} style={styles.image} />
+            <Image source={{ uri: venue?.venueImage }} style={styles.image} />
 
             <View style={styles.profileContainerSub}>
-              <View>
-                <LabelWrapper label="Genre:">
-                  <ThemeText type="defaultSemiBold">
-                    {getGenre(bandData?.genre || "All")}
-                  </ThemeText>
-                </LabelWrapper>
+              <LabelWrapper label="Phone:">
+                <ThemeText type="defaultSemiBold">${venue?.phone}</ThemeText>
+              </LabelWrapper>
 
-                <LabelWrapper label="Price Per Hour:">
-                  <ThemeText type="defaultSemiBold">
-                    ${bandData?.pricePerHour}
-                  </ThemeText>
-                </LabelWrapper>
+              <LabelWrapper label="Email:">
+                <Pressable onPress={openEmail}>
+                  <ThemeText type="defaultSemiBold">${venue?.email}</ThemeText>
+                </Pressable>
+              </LabelWrapper>
 
-                <LabelWrapper label="Max Play Time:">
-                  <ThemeText type="defaultSemiBold">
-                    {bandData?.hours} Hour{(bandData?.hours ?? 0) > 1 && "s"}
-                    {bandData?.minutes !== 0 &&
-                      `, ${bandData?.minutes} Minutes`}
-                  </ThemeText>
-                </LabelWrapper>
-                <LabelWrapper label="Bio">
-                  <ThemeText type="defaultSemiBold">{bandData?.bio}</ThemeText>
-                </LabelWrapper>
+              {venue?.instagram && (
                 <LabelWrapper label="Instagram:">
                   <Pressable onPress={linkInstagram}>
-                    <ThemeText type="link">{bandData?.instagram}</ThemeText>
+                    <ThemeText type="link">{venue?.instagram}</ThemeText>
                   </Pressable>
                 </LabelWrapper>
-              </View>
+              )}
+              {venue?.facebook && (
+                <LabelWrapper label="Facebook:">
+                  <Pressable onPress={linkFacebook}>
+                    <ThemeText type="link">{venue?.facebook}</ThemeText>
+                  </Pressable>
+                </LabelWrapper>
+              )}
+              {venue?.website && (
+                <LabelWrapper label="Website:">
+                  <Pressable onPress={linkWebsite}>
+                    <ThemeText type="link">{venue?.website}</ThemeText>
+                  </Pressable>
+                </LabelWrapper>
+              )}
+
+              <LabelWrapper label="State">
+                <ThemeText type="defaultSemiBold">{venue?.state}</ThemeText>
+              </LabelWrapper>
+
+              <LabelWrapper label="Address">
+                <ThemeText type="defaultSemiBold">{venue?.address}</ThemeText>
+              </LabelWrapper>
             </View>
 
-            <LabelWrapper label="Location">
-              <ThemeText type="defaultSemiBold">{bandData?.location}</ThemeText>
-            </LabelWrapper>
             <View style={styles.contactContainer}>
-              <Pressable onPress={handlePhone} style={styles.contactButton}>
-                <ThemeText type="defaultSemiBold">Message</ThemeText>
+              <Pressable onPress={openBookingForm} style={styles.contactButton}>
+                <ThemeText type="defaultSemiBold">Book Now</ThemeText>
               </Pressable>
-              <Pressable
-                onPress={handleEmail}
-                style={styles.contactButtonSecondary}
-              >
-                <ThemeText type="defaultSemiBold">Email</ThemeText>
-              </Pressable>
+
               <ThemeText type="caption">
-                *By proceeding to contact you agree to GigDogs{" "}
-                <TermsPrivacyLinks />
+                By proceeding to book you agree to GigDogs <TermsPrivacyLinks />
               </ThemeText>
               <Pressable onPress={handleReport} style={styles.report}>
                 <ThemeText type="link">Report Account</ThemeText>
@@ -211,7 +197,7 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   profileContainerSub: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
   },
   image: {
@@ -251,7 +237,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: "white",
   },
-  bandName: {
+  venueNameStyle: {
     fontSize: 35,
   },
   report: {

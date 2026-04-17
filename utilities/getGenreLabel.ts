@@ -1,4 +1,4 @@
-import { Genres } from "@/models/band";
+import { Genres } from "@/models/artist";
 
 export function getGenre(value: string): string {
   //Get label so that genres are not in lowercase from db

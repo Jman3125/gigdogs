@@ -1,5 +1,5 @@
 import Loading from "@/components/loading";
-import { colors } from "@/utilities/colors";
+import { useAuthState } from "@/hooks/use-auth-state";
 import {
   Ubuntu_300Light,
   Ubuntu_400Regular,
@@ -7,13 +7,16 @@ import {
   Ubuntu_700Bold,
   useFonts,
 } from "@expo-google-fonts/ubuntu";
+import { FontAwesome } from "@expo/vector-icons";
+
+import { colors } from "@/utilities/colors";
+import { DynaPuff_500Medium } from "@expo-google-fonts/dynapuff";
+import { Tabs } from "expo-router";
 
 import { ReloadFeedContext } from "@/context/reload-feed";
-import { DynaPuff_500Medium } from "@expo-google-fonts/dynapuff";
-import { Stack } from "expo-router";
 import { useState } from "react";
 
-export default function RootLayout() {
+const TabsLayout = () => {
   const [loaded] = useFonts({
     Ubuntu_300Light,
     Ubuntu_400Regular,
@@ -21,32 +24,62 @@ export default function RootLayout() {
     Ubuntu_700Bold,
     DynaPuff_500Medium,
   });
+
+  const { isSignedIn, loading } = useAuthState();
+
   const [reload, setReload] = useState(false);
 
-  if (!loaded) {
-    return <Loading />; // or <Loading /> if you want a spinner
+  if (!loaded || loading) {
+    return <Loading />;
   }
-
   return (
     <ReloadFeedContext.Provider value={{ reload, setReload }}>
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: colors.primary,
-          },
-        }}
-      >
-        <Stack.Screen name="(main)/index" options={{ title: "Loading" }} />
-
-        <Stack.Screen name="(main)/band-view" />
-
-        <Stack.Screen name="(account)/account" />
-        <Stack.Screen name="(account)/credentials-reset" />
-
-        <Stack.Screen name="(account)/signup" />
-        <Stack.Screen name="(account)/login" />
-        <Stack.Screen name="(more)/about" />
-      </Stack>
+      <Tabs>
+        <Tabs.Screen
+          name="(main)"
+          options={{
+            title: "Feed",
+            headerShown: false,
+            headerStyle: {
+              backgroundColor: colors.primary,
+            },
+            tabBarIcon: ({ color }) => (
+              <FontAwesome name="home" size={24} color={color} />
+            ),
+            tabBarActiveTintColor: colors.primary,
+            tabBarInactiveTintColor: colors.placeholder,
+          }}
+        />
+        <Tabs.Screen
+          name="actions"
+          options={{
+            title: "Offers",
+            headerShown: false,
+            href: isSignedIn ? "/actions" : null,
+            tabBarIcon: ({ color }) => (
+              <FontAwesome name="send" size={24} color={color} />
+            ),
+            tabBarActiveTintColor: colors.primary,
+            tabBarInactiveTintColor: colors.placeholder,
+            tabBarBadge: 2,
+          }}
+        />
+        <Tabs.Screen
+          name="auth"
+          options={{
+            title: "Band",
+            headerShown: false,
+            href: isSignedIn ? null : "/auth",
+            tabBarIcon: ({ color }) => (
+              <FontAwesome name="plus" size={24} color={color} />
+            ),
+            tabBarActiveTintColor: colors.primary,
+            tabBarInactiveTintColor: colors.placeholder,
+          }}
+        />
+      </Tabs>
     </ReloadFeedContext.Provider>
   );
-}
+};
+
+export default TabsLayout;

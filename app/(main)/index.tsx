@@ -1,22 +1,16 @@
 // Main feed page
 
-import { BandDisplay } from "@/components/band-display";
 import BlankSearch from "@/components/blank-search";
 import Loading from "@/components/loading";
-import LogoTitle from "@/components/logo-title";
-import SearchLocation from "@/components/search-location";
+import { OfferCell } from "@/components/offer-cell";
 import { ThemeText } from "@/components/theme-text";
 import VerifyEmailAlert from "@/components/verify-email-alert";
 import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
-import { Band } from "@/models/band";
+import { States } from "@/models/artist";
+import { MockData, Venue } from "@/models/venue";
 import { CheckVerification } from "@/utilities/authenticate/verify-email";
-import { colors } from "@/utilities/colors";
-import { getAllBands } from "@/utilities/firebase/fetch-data";
-import { getGenre } from "@/utilities/getGenreLabel";
-import { shuffleArray } from "@/utilities/shuffleArray";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack, useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import {
   Alert,
@@ -24,26 +18,26 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   //Will use context to know when user updated account to reload feed
   const { reload, setReload } = useContext(ReloadFeedContext);
-  //Router
-  const navigator = useRouter();
 
   //State of if user is signed in
-  const [signedIn, updateSignedIn] = useState(false);
+  //const [_, updateSignedIn] = useState(false);
 
-  //City search bar input state
-  const [city, setCity] = useState("");
+  //For State selection Drop down picker
+  //For Genre picker selection
+  const [openState, setOpenState] = useState(false);
+  const [states, setStates] = useState(States);
+  const [state, setState] = useState("xyz");
 
   //state to populate bands
-  const [bandsData, setData] = useState<Band[]>([]);
+  const [venuesData, setData] = useState<Venue[]>([]);
 
   //loading state
   const [loading, setLoading] = useState(true);
@@ -54,20 +48,17 @@ export default function Index() {
   //Show alert for user to update their email address
   const [verifyEmail, setVerifyEmail] = useState(false);
 
-  //To toggle search filters from city search to band name search
-  //false for city true for band name search
-  const [filter, toggleFilter] = useState(false);
-
-  //used to keep state of band name search
-  const [bandName, setBandName] = useState("");
-
-  //Fetch all of the bands data to dipslay in feed
-  const fetchData = async () => {
+  //Fetch all of the offers from selected state to display
+  const fetchOffers = async (state: string) => {
     try {
-      const data = await getAllBands();
+      //const data = await getAllBands();
       //Shuffle the data so it's not in same order every load
-      const shuffledData = shuffleArray(data);
-      setData(shuffledData);
+      //JACK - THIS IS HOW YOU POPULATE VENUES
+      //const shuffledData = shuffleArray(data);
+      //setData(shuffledData);
+
+      //Now just set data to mock data venues that are in teh same states as state
+      setData(MockData.venues.filter((venue) => venue.state === state));
     } catch (error: any) {
       setError(error.message);
       Alert.alert(
@@ -85,7 +76,7 @@ export default function Index() {
       const check = async () => {
         const result = await CheckVerification();
         if (isActive && !result.valid) {
-          setVerifyEmail(true); // show your banner
+          setVerifyEmail(true); // show banner
         } else {
           setVerifyEmail(false); // hide it
         }
@@ -101,157 +92,120 @@ export default function Index() {
     }, []),
   );
 
-  // 1. Define the function outside the effect
-  const loadAllData = useCallback(async () => {
+  // Define the function outside the effect
+  const loadOffersFromState = useCallback(async (state: string) => {
     try {
       setLoading(true);
-      await fetchData();
+      await fetchOffers(state);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  //set up auth listener
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      updateSignedIn(!!user);
-    });
-
-    return unsubscribe; // cleanup properly
-  }, []);
-
   //On page load get all data
   useEffect(() => {
     //will be the initial data load
-    loadAllData();
-  }, [loadAllData]);
+    loadOffersFromState(state);
+    console.log({ state });
+  }, [state]);
+
+  //set up auth listener
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged((user) => {
+  //     updateSignedIn(!!user);
+  //   });
+
+  //   return unsubscribe; // cleanup properly
+  // }, []);
 
   //if user updated account refresh page with context variable
   useFocusEffect(
     useCallback(() => {
+      //If we needed to manually refresh main feed from another page
       if (reload) {
-        loadAllData();
+        loadOffersFromState(state);
         Alert.alert(
           "Success",
           "See your information in the feed. Thanks for using GigDogs!",
         );
         setReload(false);
       }
-    }, [reload, loadAllData, setReload]),
+    }, [reload, loadOffersFromState, setReload]),
   );
 
-  //User wants to change search filter
-  const changeSearchFilter = () => {
-    //User changes from city search to bandname search or vice versa
-    toggleFilter(!filter);
-    //Clear all searches
-    setBandName("");
-    setCity("");
-  };
-
   //Used to repopulate bands that match entered location
-  const filteredBands = bandsData.filter((band) => {
-    const matchesLocation =
-      city === "" ||
-      band.location.toLowerCase().includes(city.toLowerCase().trimEnd());
+  // const filteredVenues = venuesData.filter((venue) => {
+  //   const matchesLocation = state === "" || venue.state == state;
 
-    const matchesName =
-      bandName === "" ||
-      band.bandName.toLowerCase().includes(bandName.toLowerCase().trimEnd());
+  //   return matchesLocation;
+  // });
 
-    return matchesLocation && matchesName;
-  });
+  //This will go through each venue and return the offers from that venue to display in the feed
+  const venuesOffers = venuesData.flatMap((venue) =>
+    venue.offers.map((offer) => {
+      return {
+        ...offer,
+        venueId: venue.id,
+        venueName: venue.venueName,
+        venueImage: venue.venueImage,
+        state: venue.state,
+        address: venue.address,
+        email: venue.email,
+        phone: venue.phone,
+        website: venue.website,
+        instagram: venue.instagram,
+        facebook: venue.facebook,
+      };
+    }),
+  );
 
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
+    <SafeAreaView style={styles.container} edges={[]}>
       {loading && <Loading />}
       {!loading && (
         <View style={styles.viewContainer}>
-          <Stack.Screen
-            options={{
-              headerTitle: () => <LogoTitle />,
-              headerRight: () =>
-                // If use is signed in show account button, if not show add band button
-                signedIn ? (
-                  <Ionicons
-                    name="person-circle-outline"
-                    size={38}
-                    color="white"
-                    onPress={() => navigator.navigate("/account")}
-                  />
-                ) : (
-                  <TouchableOpacity
-                    style={styles.headerButton}
-                    onPress={() => navigator.navigate("./signup")}
-                  >
-                    <Ionicons name="add" size={24} color="white" />
-                    <ThemeText
-                      type="defaultSemiBold"
-                      style={styles.headerButtonText}
-                    >
-                      Band
-                    </ThemeText>
-                  </TouchableOpacity>
-                ),
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigator.navigate("./about")}>
-                  <Ionicons
-                    name="information-circle-outline"
-                    size={38}
-                    color="white"
-                  />
-                </TouchableOpacity>
-              ),
-            }}
-          />
           <View style={styles.headerContainer}>
             {verifyEmail && (
               <VerifyEmailAlert email={`${auth.currentUser?.email}`} />
             )}
             {/* header above flatlist, search bar, page header, report content overlay */}
             <ThemeText type="title" style={{ marginTop: 20 }}>
-              Find Bands
+              Find Gigs
             </ThemeText>
 
             {/* Search Filter */}
             <View style={styles.searchFilterHeaders}>
-              <ThemeText type="defaultSemiBold">
-                {filter ? "Search By Name" : "Search Your City"}
-              </ThemeText>
-              <ThemeText
-                onPress={() => changeSearchFilter()}
-                type="default"
-                style={styles.searchFilterHeadersRight}
-              >
-                {filter ? "Search By City" : "Search By Name"}
-              </ThemeText>
+              <ThemeText type="defaultSemiBold">Enter a State</ThemeText>
             </View>
 
-            {/* If filter state is false, show city search */}
-            {!filter && <SearchLocation city={city} setCity={setCity} />}
-            {/* Search for specific band name */}
-            {filter && (
-              <TextInput
-                value={bandName}
-                onChangeText={setBandName}
-                placeholderTextColor={colors.placeholder}
-                style={styles.input}
-                placeholder="Enter Band Name"
-              />
-            )}
+            {/* Filter search */}
+            <DropDownPicker
+              open={openState}
+              value={state}
+              items={states}
+              setOpen={setOpenState}
+              setValue={setState}
+              setItems={setStates}
+              placeholder="Choose State"
+              // listMode="MODAL"
+              style={styles.picker}
+            />
           </View>
 
           <FlatList
-            data={filteredBands}
-            keyExtractor={(band) => band.id}
+            data={venuesOffers}
+            keyExtractor={(offer) => offer.id}
             renderItem={({ item }) => (
-              <BandDisplay
-                id={item.id}
-                name={item.bandName}
-                genre={getGenre(item.genre)}
-                minPrice={item.pricePerHour}
-                picture={item.picture}
-                location={item.location}
+              <OfferCell
+                parentVenueId={item.venueId}
+                offerId={item.id}
+                name={item.venueName}
+                picture={item.venueImage}
+                date={item.date}
+                time={item.time}
+                offerAmount={item.offerAmount}
+                //Just get the length of applied artists
+                artistsApplied={item.appliedArtists.length}
               />
             )}
             keyboardShouldPersistTaps="always"
@@ -307,9 +261,6 @@ const styles = StyleSheet.create({
     marginRight: 5,
     width: "auto",
   },
-  headerButtonText: {
-    color: "white",
-  },
   searchFilterHeaders: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -330,5 +281,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 5,
     marginBottom: 25,
+  },
+  picker: {
+    width: 200,
+    marginBottom: 15,
   },
 });
