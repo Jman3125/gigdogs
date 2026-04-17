@@ -1,7 +1,7 @@
 //Navigates to this page after a user clicks 'View' on a bands profile. adds band ID to url to get specific data.
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
-import { TermsPrivacyLinks } from "@/components/terms-privacy";
+import { OfferCell } from "@/components/offer-cell";
 import { ThemeText } from "@/components/theme-text";
 import { MockData, Venue } from "@/models/venue";
 import { colors } from "@/utilities/colors";
@@ -9,6 +9,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
+  FlatList,
   Image,
   Linking,
   Pressable,
@@ -48,6 +49,10 @@ export default function VenueView() {
   useEffect(() => {
     fetchvenue();
   }, [fetchvenue]);
+
+  //Offers this venue has
+  //Get all of the artists on the offer object
+  const venueOffers = venue?.offers ?? [];
 
   const openBookingForm = () => {
     console.log("Open booking form");
@@ -151,17 +156,46 @@ export default function VenueView() {
               </LabelWrapper>
             </View>
 
-            <View style={styles.contactContainer}>
-              <Pressable onPress={openBookingForm} style={styles.contactButton}>
-                <ThemeText type="defaultSemiBold">Book Now</ThemeText>
-              </Pressable>
+            <Pressable onPress={handleReport} style={styles.report}>
+              <ThemeText type="link">Report Account</ThemeText>
+            </Pressable>
 
-              <ThemeText type="caption">
-                By proceeding to book you agree to GigDogs <TermsPrivacyLinks />
-              </ThemeText>
-              <Pressable onPress={handleReport} style={styles.report}>
-                <ThemeText type="link">Report Account</ThemeText>
-              </Pressable>
+            <View>
+              <ThemeText type="subtitle">Offers from this Venue</ThemeText>
+              <FlatList
+                data={venueOffers}
+                keyExtractor={(offer) => offer.id}
+                renderItem={({ item }) => (
+                  <OfferCell
+                    parentVenueId={item.venue?.id || ""}
+                    offerId={item.id}
+                    name={item.eventName}
+                    picture={item.venue?.venueImage || ""}
+                    date={item.date}
+                    time={item.time}
+                    offerAmount={item.offerAmount}
+                    //Just get the length of applied artists
+                    artistsApplied={item.appliedArtists.length}
+                  />
+                )}
+                keyboardShouldPersistTaps="always"
+                style={styles.flatListContainer}
+                ListEmptyComponent={
+                  <View>
+                    <ThemeText type="error">This venue has no offers</ThemeText>
+                  </View>
+                }
+                ListHeaderComponent={
+                  <View>
+                    {error && (
+                      <ThemeText type="error">
+                        There was an error loading data please try again later,{" "}
+                        {error}
+                      </ThemeText>
+                    )}
+                  </View>
+                }
+              />
             </View>
           </View>
         </ScrollView>
@@ -242,5 +276,10 @@ const styles = StyleSheet.create({
   },
   report: {
     marginTop: 15,
+  },
+
+  //For list of offers the venue has
+  flatListContainer: {
+    flex: 1,
   },
 });

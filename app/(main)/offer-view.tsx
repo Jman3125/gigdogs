@@ -1,14 +1,17 @@
 //Navigates to this page after a user clicks 'View' on a bands profile. adds band ID to url to get specific data.
+import { ArtistCell } from "@/components/artist-cell";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
+import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
 import { MockData } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
+  FlatList,
   Image,
   Linking,
   Pressable,
@@ -29,6 +32,9 @@ export default function OfferView() {
   const [offerData, setOfferData] = useState<Offer>();
   const [loading, setLoading] = useState(true);
 
+  //This is the list of artists that have applied for the offer
+  const [appliedArtistsData, setAppliedArtistsData] = useState<Artist[]>();
+
   //show error on failure
   const [error, setError] = useState("");
 
@@ -47,6 +53,9 @@ export default function OfferView() {
   useEffect(() => {
     fetchvenue();
   }, [fetchvenue]);
+
+  //Get all of the artists on the offer object
+  const appliedArtists = offerData?.appliedArtists ?? [];
 
   const openBookingForm = () => {
     console.log("Open booking form");
@@ -136,6 +145,40 @@ export default function OfferView() {
                 <ThemeText type="link">Report Offer</ThemeText>
               </Pressable>
             </View>
+
+            {/* Bands that have applied for the offer */}
+            <View>
+              <ThemeText type="subtitle">Applied Bands</ThemeText>
+              <FlatList
+                data={appliedArtists}
+                keyExtractor={(artist) => artist.id}
+                renderItem={({ item }) => (
+                  <ArtistCell
+                    id={item.id}
+                    name={item.bandName}
+                    genre={item.genre}
+                    picture={item.picture}
+                  />
+                )}
+                keyboardShouldPersistTaps="always"
+                style={styles.flatListContainer}
+                ListEmptyComponent={
+                  <View>
+                    <ThemeText type="error">No bands have applied</ThemeText>
+                  </View>
+                }
+                ListHeaderComponent={
+                  <View>
+                    {error && (
+                      <ThemeText type="error">
+                        There was an error loading data please try again later,{" "}
+                        {error}
+                      </ThemeText>
+                    )}
+                  </View>
+                }
+              />
+            </View>
           </View>
         </ScrollView>
       )}
@@ -215,5 +258,9 @@ const styles = StyleSheet.create({
   },
   report: {
     marginTop: 15,
+  },
+  //This is for the applied bands on the offer
+  flatListContainer: {
+    flex: 1,
   },
 });

@@ -12,14 +12,7 @@ import { MockData, Venue } from "@/models/venue";
 import { CheckVerification } from "@/utilities/authenticate/verify-email";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
-import {
-  Alert,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -212,16 +205,14 @@ export default function Index() {
             style={styles.flatListContainer}
             ListEmptyComponent={<BlankSearch />}
             ListHeaderComponent={
-              <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-              >
+              <View>
                 {error && (
                   <ThemeText type="error">
                     There was an error loading data please try again later,{" "}
                     {error}
                   </ThemeText>
                 )}
-              </KeyboardAvoidingView>
+              </View>
             }
           />
         </View>
