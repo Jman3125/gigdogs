@@ -1,14 +1,12 @@
 //Login Page
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
-import LogoTitle from "@/components/logo-title";
 import { ThemeText } from "@/components/theme-text";
 import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { useLogin } from "@/hooks/use-login";
 import { colors } from "@/utilities/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { useContext, useState } from "react";
 import {
@@ -21,7 +19,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Login() {
+export default function VenueLogin() {
   //Will use context after login to update home feed so user sees changes
   const { setReload } = useContext(ReloadFeedContext);
   //router
@@ -89,25 +87,8 @@ export default function Login() {
       {loading && <Loading />}
       {!loading && (
         <View>
-          <Stack.Screen
-            options={{
-              headerTitle: () => <LogoTitle />,
-              headerLeft: () => (
-                <Pressable
-                  style={styles.headerButton}
-                  onPress={() => navigator.back()}
-                >
-                  <Ionicons name="chevron-back" size={24} color="white" />
-                  <ThemeText type="defaultSemiBold" style={styles.headerText}>
-                    Sign Up
-                  </ThemeText>
-                </Pressable>
-              ),
-            }}
-          />
-
           <ThemeText type="title" style={styles.title}>
-            Login
+            Venue Login
           </ThemeText>
 
           <LabelWrapper label="Email">

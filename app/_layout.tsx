@@ -67,7 +67,7 @@ const TabsLayout = () => {
         <Tabs.Screen
           name="auth"
           options={{
-            title: "Band",
+            title: "Account",
             headerShown: false,
             href: isSignedIn ? null : "/auth",
             tabBarIcon: ({ color }) => (

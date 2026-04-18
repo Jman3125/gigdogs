@@ -4,18 +4,17 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
-import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
 import { MockData } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
+  Alert,
   FlatList,
   Image,
   Linking,
   Pressable,
-  ScrollView,
   StyleSheet,
   View,
 } from "react-native";
@@ -32,12 +31,6 @@ export default function OfferView() {
   const [offerData, setOfferData] = useState<Offer>();
   const [loading, setLoading] = useState(true);
 
-  //This is the list of artists that have applied for the offer
-  const [appliedArtistsData, setAppliedArtistsData] = useState<Artist[]>();
-
-  //show error on failure
-  const [error, setError] = useState("");
-
   //fetch the selected bands data
   const fetchvenue = useCallback(async () => {
     if (!parentVenueId || !offerId) return;
@@ -45,6 +38,13 @@ export default function OfferView() {
     const venue = MockData.venues.find((v) => v.id === parentVenueId);
     const offer = venue?.offers.find((o) => o.id === offerId);
 
+    try {
+    } catch (error) {
+      Alert.alert(
+        "Error",
+        "There was an error loading this offer. Please try again later.",
+      );
+    }
     setOfferData(offer ? { ...offer, venue } : undefined);
     setLoading(false);
   }, [parentVenueId, offerId]);
@@ -79,108 +79,89 @@ export default function OfferView() {
       {loading && <Loading />}
 
       {!loading && (
-        <ScrollView>
-          {error && (
-            <ThemeText type="error">
-              There was an error loading the data, please try again later.
-              Error: {error}
-            </ThemeText>
-          )}
-          <View style={styles.headerContainer}>
-            <ThemeText
-              type="title"
-              style={styles.venueNameStyle}
-              numberOfLines={(offerData?.eventName.length ?? 0) < 20 ? 1 : 2}
-              adjustsFontSizeToFit
-            >
-              {offerData?.eventName}
-            </ThemeText>
-          </View>
-
-          <View style={styles.infoContainerMain}>
-            <ThemeText type="subtitle">Info</ThemeText>
-            <Image
-              source={{ uri: offerData?.venue?.venueImage || "" }}
-              style={styles.image}
+        <FlatList
+          data={appliedArtists}
+          keyExtractor={(artist) => artist.id}
+          renderItem={({ item }) => (
+            <ArtistCell
+              id={item.id}
+              name={item.bandName}
+              genre={item.genre}
+              picture={item.picture}
             />
-
-            <View style={styles.profileContainerSub}>
-              <LabelWrapper label="Venue">
-                <Pressable onPress={openVenuePage}>
-                  <ThemeText type="link">
-                    {offerData?.venue?.venueName}
-                  </ThemeText>
-                </Pressable>
-              </LabelWrapper>
-
-              <LabelWrapper label="Description">
-                <ThemeText type="defaultSemiBold">
-                  {offerData?.description}
-                </ThemeText>
-              </LabelWrapper>
-
-              <LabelWrapper label="Address">
-                <ThemeText type="defaultSemiBold">
-                  {offerData?.venue?.address}
-                </ThemeText>
-              </LabelWrapper>
-
-              <LabelWrapper label="State">
-                <ThemeText type="defaultSemiBold">
-                  {offerData?.venue?.state}
-                </ThemeText>
-              </LabelWrapper>
-            </View>
-
-            <View style={styles.contactContainer}>
-              {/* THIS WILL NEED TO BE DYNAMIC IF CURRENT USER IS NOT A BAND */}
-              <Pressable onPress={openBookingForm} style={styles.contactButton}>
-                <ThemeText type="defaultSemiBold">Apply For Gig</ThemeText>
-              </Pressable>
-
-              <ThemeText type="caption">
-                By proceeding to book you agree to GigDogs <TermsPrivacyLinks />
-              </ThemeText>
-              <Pressable onPress={handleReport} style={styles.report}>
-                <ThemeText type="link">Report Offer</ThemeText>
-              </Pressable>
-            </View>
-
-            {/* Bands that have applied for the offer */}
+          )}
+          keyboardShouldPersistTaps="always"
+          style={styles.flatListContainer}
+          ListEmptyComponent={
             <View>
-              <ThemeText type="subtitle">Applied Bands</ThemeText>
-              <FlatList
-                data={appliedArtists}
-                keyExtractor={(artist) => artist.id}
-                renderItem={({ item }) => (
-                  <ArtistCell
-                    id={item.id}
-                    name={item.bandName}
-                    genre={item.genre}
-                    picture={item.picture}
-                  />
-                )}
-                keyboardShouldPersistTaps="always"
-                style={styles.flatListContainer}
-                ListEmptyComponent={
-                  <View>
-                    <ThemeText type="error">No bands have applied</ThemeText>
-                  </View>
-                }
-                ListHeaderComponent={
-                  <View>
-                    {error && (
-                      <ThemeText type="error">
-                        There was an error loading data please try again later,{" "}
-                        {error}
-                      </ThemeText>
-                    )}
-                  </View>
-                }
-              />
+              <ThemeText type="error">No artists have applied</ThemeText>
             </View>
-          </View>
-        </ScrollView>
+          }
+          ListHeaderComponent={
+            <View>
+              <View style={styles.infoContainerMain}>
+                <ThemeText type="subtitle">Info</ThemeText>
+                <Image
+                  source={{ uri: offerData?.venue?.venueImage || "" }}
+                  style={styles.image}
+                />
+
+                <View style={styles.profileContainerSub}>
+                  <LabelWrapper label="Venue">
+                    <Pressable onPress={openVenuePage}>
+                      <ThemeText type="link">
+                        {offerData?.venue?.venueName}
+                      </ThemeText>
+                    </Pressable>
+                  </LabelWrapper>
+
+                  <LabelWrapper label="Description">
+                    <ThemeText type="defaultSemiBold">
+                      {offerData?.description}
+                    </ThemeText>
+                  </LabelWrapper>
+
+                  <LabelWrapper label="Amount">
+                    <ThemeText type="defaultSemiBold">
+                      {offerData?.offerAmount}
+                    </ThemeText>
+                  </LabelWrapper>
+
+                  <LabelWrapper label="Address">
+                    <ThemeText type="defaultSemiBold">
+                      {offerData?.venue?.address}
+                    </ThemeText>
+                  </LabelWrapper>
+
+                  <LabelWrapper label="State">
+                    <ThemeText type="defaultSemiBold">
+                      {offerData?.venue?.state}
+                    </ThemeText>
+                  </LabelWrapper>
+                </View>
+
+                <View style={styles.contactContainer}>
+                  {/* THIS WILL NEED TO BE DYNAMIC IF CURRENT USER IS NOT A BAND */}
+                  <Pressable
+                    onPress={openBookingForm}
+                    style={styles.contactButton}
+                  >
+                    <ThemeText type="defaultSemiBold">Apply For Gig</ThemeText>
+                  </Pressable>
+
+                  <ThemeText type="caption">
+                    By proceeding to book you agree to GigDogs{" "}
+                    <TermsPrivacyLinks />
+                  </ThemeText>
+                  <Pressable onPress={handleReport} style={styles.report}>
+                    <ThemeText type="link">Report Offer</ThemeText>
+                  </Pressable>
+                </View>
+              </View>
+              <ThemeText type="subtitle">Applied Artists</ThemeText>
+            </View>
+          }
+        />
       )}
     </SafeAreaView>
   );

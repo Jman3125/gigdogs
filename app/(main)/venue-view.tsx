@@ -4,7 +4,6 @@ import Loading from "@/components/loading";
 import { OfferCell } from "@/components/offer-cell";
 import { ThemeText } from "@/components/theme-text";
 import { MockData, Venue } from "@/models/venue";
-import { colors } from "@/utilities/colors";
 import { useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -13,7 +12,6 @@ import {
   Image,
   Linking,
   Pressable,
-  ScrollView,
   StyleSheet,
   View,
 } from "react-native";
@@ -26,9 +24,6 @@ export default function VenueView() {
   const [venue, setData] = useState<Venue>();
   const [loading, setLoading] = useState(true);
 
-  //show error on failure
-  const [error, setError] = useState("");
-
   //fetch the selected bands data
   const fetchvenue = useCallback(async () => {
     try {
@@ -37,10 +32,9 @@ export default function VenueView() {
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
-      setError(error.message);
       Alert.alert(
         "Error",
-        "Failed to fetch artist data. Please try again later.",
+        "Failed to fetch venue data. Please try again later.",
       );
     }
   }, [id]);
@@ -53,10 +47,6 @@ export default function VenueView() {
   //Offers this venue has
   //Get all of the artists on the offer object
   const venueOffers = venue?.offers ?? [];
-
-  const openBookingForm = () => {
-    console.log("Open booking form");
-  };
 
   const openEmail = () => {
     Linking.openURL(`mailto:${venue?.email}?subject=GigDogs Booking Inquiry`);
@@ -92,113 +82,105 @@ export default function VenueView() {
       {loading && <Loading />}
 
       {!loading && (
-        <ScrollView>
-          {error && (
-            <ThemeText type="error">
-              There was an error loading the data, please try again later.
-              Error: {error}
-            </ThemeText>
+        <FlatList
+          data={venueOffers}
+          keyExtractor={(offer) => offer.id}
+          renderItem={({ item }) => (
+            <OfferCell
+              parentVenueId={venue?.id || ""}
+              offerId={item.id}
+              name={item.eventName}
+              picture={item.venue?.venueImage || ""}
+              date={item.date}
+              time={item.time}
+              offerAmount={item.offerAmount}
+              //Just get the length of applied artists
+              artistsApplied={item.appliedArtists.length}
+            />
           )}
-          <View style={styles.headerContainer}>
-            <ThemeText
-              type="title"
-              style={styles.venueNameStyle}
-              numberOfLines={(venue?.venueName?.length ?? 0) < 20 ? 1 : 2}
-              adjustsFontSizeToFit
-            >
-              {venue?.venueName}
-            </ThemeText>
-          </View>
-
-          <View style={styles.infoContainerMain}>
-            <ThemeText type="subtitle">Info</ThemeText>
-            <Image source={{ uri: venue?.venueImage }} style={styles.image} />
-
-            <View style={styles.profileContainerSub}>
-              <LabelWrapper label="Phone:">
-                <ThemeText type="defaultSemiBold">${venue?.phone}</ThemeText>
-              </LabelWrapper>
-
-              <LabelWrapper label="Email:">
-                <Pressable onPress={openEmail}>
-                  <ThemeText type="defaultSemiBold">${venue?.email}</ThemeText>
-                </Pressable>
-              </LabelWrapper>
-
-              {venue?.instagram && (
-                <LabelWrapper label="Instagram:">
-                  <Pressable onPress={linkInstagram}>
-                    <ThemeText type="link">{venue?.instagram}</ThemeText>
-                  </Pressable>
-                </LabelWrapper>
-              )}
-              {venue?.facebook && (
-                <LabelWrapper label="Facebook:">
-                  <Pressable onPress={linkFacebook}>
-                    <ThemeText type="link">{venue?.facebook}</ThemeText>
-                  </Pressable>
-                </LabelWrapper>
-              )}
-              {venue?.website && (
-                <LabelWrapper label="Website:">
-                  <Pressable onPress={linkWebsite}>
-                    <ThemeText type="link">{venue?.website}</ThemeText>
-                  </Pressable>
-                </LabelWrapper>
-              )}
-
-              <LabelWrapper label="State">
-                <ThemeText type="defaultSemiBold">{venue?.state}</ThemeText>
-              </LabelWrapper>
-
-              <LabelWrapper label="Address">
-                <ThemeText type="defaultSemiBold">{venue?.address}</ThemeText>
-              </LabelWrapper>
-            </View>
-
-            <Pressable onPress={handleReport} style={styles.report}>
-              <ThemeText type="link">Report Account</ThemeText>
-            </Pressable>
-
+          keyboardShouldPersistTaps="always"
+          style={styles.flatListContainer}
+          ListEmptyComponent={
             <View>
-              <ThemeText type="subtitle">Offers from this Venue</ThemeText>
-              <FlatList
-                data={venueOffers}
-                keyExtractor={(offer) => offer.id}
-                renderItem={({ item }) => (
-                  <OfferCell
-                    parentVenueId={item.venue?.id || ""}
-                    offerId={item.id}
-                    name={item.eventName}
-                    picture={item.venue?.venueImage || ""}
-                    date={item.date}
-                    time={item.time}
-                    offerAmount={item.offerAmount}
-                    //Just get the length of applied artists
-                    artistsApplied={item.appliedArtists.length}
-                  />
-                )}
-                keyboardShouldPersistTaps="always"
-                style={styles.flatListContainer}
-                ListEmptyComponent={
-                  <View>
-                    <ThemeText type="error">This venue has no offers</ThemeText>
-                  </View>
-                }
-                ListHeaderComponent={
-                  <View>
-                    {error && (
-                      <ThemeText type="error">
-                        There was an error loading data please try again later,{" "}
-                        {error}
-                      </ThemeText>
-                    )}
-                  </View>
-                }
-              />
+              <ThemeText type="error">This venue has no offers</ThemeText>
             </View>
-          </View>
-        </ScrollView>
+          }
+          ListHeaderComponent={
+            <View>
+              <View style={styles.headerContainer}>
+                <ThemeText
+                  type="title"
+                  style={styles.venueNameStyle}
+                  numberOfLines={(venue?.venueName?.length ?? 0) < 20 ? 1 : 2}
+                  adjustsFontSizeToFit
+                >
+                  {venue?.venueName}
+                </ThemeText>
+              </View>
+
+              <View style={styles.infoContainerMain}>
+                <ThemeText type="subtitle">Info</ThemeText>
+                <Image
+                  source={{ uri: venue?.venueImage }}
+                  style={styles.image}
+                />
+
+                <View style={styles.profileContainerSub}>
+                  <LabelWrapper label="Phone:">
+                    <ThemeText type="defaultSemiBold">
+                      ${venue?.phone}
+                    </ThemeText>
+                  </LabelWrapper>
+
+                  <LabelWrapper label="Email:">
+                    <Pressable onPress={openEmail}>
+                      <ThemeText type="defaultSemiBold">
+                        ${venue?.email}
+                      </ThemeText>
+                    </Pressable>
+                  </LabelWrapper>
+
+                  {venue?.instagram && (
+                    <LabelWrapper label="Instagram:">
+                      <Pressable onPress={linkInstagram}>
+                        <ThemeText type="link">{venue?.instagram}</ThemeText>
+                      </Pressable>
+                    </LabelWrapper>
+                  )}
+                  {venue?.facebook && (
+                    <LabelWrapper label="Facebook:">
+                      <Pressable onPress={linkFacebook}>
+                        <ThemeText type="link">{venue?.facebook}</ThemeText>
+                      </Pressable>
+                    </LabelWrapper>
+                  )}
+                  {venue?.website && (
+                    <LabelWrapper label="Website:">
+                      <Pressable onPress={linkWebsite}>
+                        <ThemeText type="link">{venue?.website}</ThemeText>
+                      </Pressable>
+                    </LabelWrapper>
+                  )}
+
+                  <LabelWrapper label="State">
+                    <ThemeText type="defaultSemiBold">{venue?.state}</ThemeText>
+                  </LabelWrapper>
+
+                  <LabelWrapper label="Address">
+                    <ThemeText type="defaultSemiBold">
+                      {venue?.address}
+                    </ThemeText>
+                  </LabelWrapper>
+                </View>
+
+                <Pressable onPress={handleReport} style={styles.report}>
+                  <ThemeText type="link">Report Account</ThemeText>
+                </Pressable>
+              </View>
+              <ThemeText type="subtitle">Offers from this Venue</ThemeText>
+            </View>
+          }
+        />
       )}
     </SafeAreaView>
   );
@@ -241,27 +223,6 @@ const styles = StyleSheet.create({
     width: 180,
     height: 180,
     borderRadius: 8,
-  },
-  contactContainer: {
-    flexDirection: "column",
-  },
-  contactButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: colors.secondary,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
-    borderRadius: 25,
-  },
-  contactButtonSecondary: {
-    width: "100%",
-    height: 50,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
-    borderRadius: 25,
   },
   headerButton: {
     alignItems: "center",

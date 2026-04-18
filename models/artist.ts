@@ -6,12 +6,8 @@ export interface Artist {
   bandName: string;
   email: string;
   genre: string;
-  pricePerHour: number;
   bio: string;
   picture: string;
-  //Set time
-  hours: number;
-  minutes: number;
   facebook?: string;
   instagram?: string;
   phone: string;
@@ -51,7 +47,7 @@ export const Genres = [
 //States
 // States
 export const States = [
-  { label: "Select", value: "xyz" },
+  { label: "None", value: "xyz" },
   { label: "Alabama", value: "AL" },
   { label: "Alaska", value: "AK" },
   { label: "Arizona", value: "AZ" },

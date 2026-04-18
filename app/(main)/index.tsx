@@ -99,7 +99,6 @@ export default function Index() {
   useEffect(() => {
     //will be the initial data load
     loadOffersFromState(state);
-    console.log({ state });
   }, [state]);
 
   //set up auth listener

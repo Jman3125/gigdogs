@@ -3,7 +3,6 @@ import LogoTitle from "@/components/logo-title";
 import NavButton from "@/components/nav-button";
 import { colors } from "@/utilities/colors";
 import { Stack, usePathname } from "expo-router";
-import { StyleSheet } from "react-native";
 
 const StackLayout = () => {
   const pathname = usePathname();
@@ -44,16 +43,5 @@ const StackLayout = () => {
     </Stack>
   );
 };
-
-const styles = StyleSheet.create({
-  headerButton: {
-    alignItems: "center",
-    marginRight: 10,
-    flexDirection: "row",
-  },
-  headerText: {
-    color: "white",
-  },
-});
 
 export default StackLayout;

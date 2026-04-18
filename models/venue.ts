@@ -1,3 +1,4 @@
+import { Artist } from "./artist";
 import { Offer } from "./offer";
 
 export interface Venue {
@@ -19,7 +20,7 @@ export class MockData {
   static venues: Venue[] = [
     {
       id: "1",
-      venueName: "Sunset Bar",
+      venueName: "Varnish bar and brewery",
       venueImage: "https://example.com/sunset.jpg",
       state: "NY",
       address: "123 avenue road",
@@ -45,13 +46,47 @@ export class MockData {
               bandName: "Neon Skyline",
               email: "contact@neonskylineband.com",
               genre: "Indie Rock",
-              pricePerHour: 250,
               bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
               picture: "https://example.com/images/neon-skyline.jpg",
 
-              // Set time
-              hours: 1,
-              minutes: 30,
+              instagram: "https://instagram.com/neonskylineband",
+              facebook: "https://facebook.com/john.doe",
+              phone: "555-123-9876",
+              location: "Los Angeles, CA",
+            },
+            {
+              id: "artist_002",
+              bandName: "CornerstoneTheBand",
+              email: "contact@neonskylineband.com",
+              genre: "Indie Rock",
+              bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
+              picture: "https://example.com/images/neon-skyline.jpg",
+
+              instagram: "https://instagram.com/neonskylineband",
+              facebook: "https://facebook.com/john.doe",
+              phone: "555-123-9876",
+              location: "Los Angeles, CA",
+            },
+            {
+              id: "artist_003",
+              bandName: "Emerson Bruno and the Undercurrents",
+              email: "contact@neonskylineband.com",
+              genre: "Indie Rock",
+              bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
+              picture: "https://example.com/images/neon-skyline.jpg",
+
+              instagram: "https://instagram.com/neonskylineband",
+              facebook: "https://facebook.com/john.doe",
+              phone: "555-123-9876",
+              location: "Los Angeles, CA",
+            },
+            {
+              id: "artist_004",
+              bandName: "Antigravity",
+              email: "contact@neonskylineband.com",
+              genre: "Indie Rock",
+              bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
+              picture: "https://example.com/images/neon-skyline.jpg",
 
               instagram: "https://instagram.com/neonskylineband",
               facebook: "https://facebook.com/john.doe",
@@ -64,7 +99,7 @@ export class MockData {
     },
     {
       id: "2",
-      venueName: "Ocean Grill",
+      venueName: "Ocean Grill and Bar",
       venueImage: "https://example.com/ocean.jpg",
       state: "FL",
       address: "1245 Miamia rd",
@@ -84,7 +119,34 @@ export class MockData {
           status: "pending",
           description: "50% off all drinks from 5 to 7 PM",
           offerAmount: 100,
-          appliedArtists: [],
+          appliedArtists: [
+            {
+              id: "artist_003",
+              bandName: "Emerson Bruno and the Undercurrents",
+              email: "contact@neonskylineband.com",
+              genre: "Indie Rock",
+              bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
+              picture: "https://example.com/images/neon-skyline.jpg",
+
+              instagram: "https://instagram.com/neonskylineband",
+              facebook: "https://facebook.com/john.doe",
+              phone: "555-123-9876",
+              location: "Los Angeles, CA",
+            },
+            {
+              id: "artist_002",
+              bandName: "CornerstoneTheBand",
+              email: "contact@neonskylineband.com",
+              genre: "Indie Rock",
+              bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
+              picture: "https://example.com/images/neon-skyline.jpg",
+
+              instagram: "https://instagram.com/neonskylineband",
+              facebook: "https://facebook.com/john.doe",
+              phone: "555-123-9876",
+              location: "Los Angeles, CA",
+            },
+          ],
         },
         {
           id: "o3",
@@ -96,9 +158,78 @@ export class MockData {
           status: "pending",
           offerAmount: 500,
           description: "50% off all drinks from 5 to 7 PM",
-          appliedArtists: [],
+          appliedArtists: [
+            {
+              id: "artist_003",
+              bandName: "Emerson Bruno and the Undercurrents",
+              email: "contact@neonskylineband.com",
+              genre: "Indie Rock",
+              bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
+              picture: "https://example.com/images/neon-skyline.jpg",
+
+              instagram: "https://instagram.com/neonskylineband",
+              facebook: "https://facebook.com/john.doe",
+              phone: "555-123-9876",
+              location: "Los Angeles, CA",
+            },
+          ],
         },
       ],
+    },
+  ];
+
+  static bands: Artist[] = [
+    {
+      id: "artist_001",
+      bandName: "Neon Skyline",
+      email: "contact@neonskylineband.com",
+      genre: "Indie Rock",
+      bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
+      picture: "https://example.com/images/neon-skyline.jpg",
+
+      instagram: "https://instagram.com/neonskylineband",
+      facebook: "https://facebook.com/john.doe",
+      phone: "555-123-9876",
+      location: "Los Angeles, CA",
+    },
+    {
+      id: "artist_002",
+      bandName: "CornerstoneTheBand",
+      email: "contact@neonskylineband.com",
+      genre: "Indie Rock",
+      bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
+      picture: "https://example.com/images/neon-skyline.jpg",
+
+      instagram: "https://instagram.com/neonskylineband",
+      facebook: "https://facebook.com/john.doe",
+      phone: "555-123-9876",
+      location: "Los Angeles, CA",
+    },
+    {
+      id: "artist_003",
+      bandName: "Emerson Bruno and the Undercurrents",
+      email: "contact@neonskylineband.com",
+      genre: "Indie Rock",
+      bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
+      picture: "https://example.com/images/neon-skyline.jpg",
+
+      instagram: "https://instagram.com/neonskylineband",
+      facebook: "https://facebook.com/john.doe",
+      phone: "555-123-9876",
+      location: "Los Angeles, CA",
+    },
+    {
+      id: "artist_004",
+      bandName: "Antigravity",
+      email: "contact@neonskylineband.com",
+      genre: "Indie Rock",
+      bio: "Neon Skyline blends atmospheric guitars with energetic rhythms, creating a modern indie sound inspired by late‑night city lights and coastal drives.",
+      picture: "https://example.com/images/neon-skyline.jpg",
+
+      instagram: "https://instagram.com/neonskylineband",
+      facebook: "https://facebook.com/john.doe",
+      phone: "555-123-9876",
+      location: "Los Angeles, CA",
     },
   ];
 }

@@ -28,6 +28,7 @@ export function OfferCell({
   const router = useRouter();
 
   const openProfile = () => {
+    console.log(parentVenueId, offerId);
     router.navigate({
       pathname: "/offer-view",
       params: { parentVenueId, offerId },
@@ -42,8 +43,10 @@ export function OfferCell({
           {name}
         </ThemeText>
         <ThemeText type="default">
-          Date: <ThemeText type="defaultSemiBold">{date}</ThemeText> Time:{" "}
-          <ThemeText type="defaultSemiBold">{time}</ThemeText>
+          Date: <ThemeText type="defaultSemiBold">{date}</ThemeText>
+        </ThemeText>
+        <ThemeText type="default">
+          Time: <ThemeText type="defaultSemiBold">{time}</ThemeText>
         </ThemeText>
         <ThemeText type="default">
           Amount: <ThemeText type="defaultSemiBold">{offerAmount}</ThemeText>

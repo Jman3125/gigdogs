@@ -1,11 +1,9 @@
 //Navigates to this page after a user clicks 'View' on a bands profile. adds band ID to url to get specific data.
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
-import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
 import { Artist } from "@/models/artist";
-import { colors } from "@/utilities/colors";
-import { getOneBand } from "@/utilities/firebase/fetch-data";
+import { MockData } from "@/models/venue";
 import { getGenre } from "@/utilities/getGenreLabel";
 import { useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
@@ -33,8 +31,8 @@ export default function ArtistView() {
   //fetch the selected bands data
   const fetchBandData = useCallback(async () => {
     try {
-      const data = await getOneBand(id);
-      setData(data);
+      //const data = await getOneBand(id); FETCH ALL BANDS FROM THE DB AND RETURN MATCHING ONE
+      setData(MockData.bands.find((band) => band.id === id));
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
@@ -50,10 +48,6 @@ export default function ArtistView() {
   useEffect(() => {
     fetchBandData();
   }, [fetchBandData]);
-
-  const openBookingForm = () => {
-    console.log("Open booking form");
-  };
 
   const openEmail = () => {
     Linking.openURL(
@@ -107,18 +101,6 @@ export default function ArtistView() {
                 </ThemeText>
               </LabelWrapper>
 
-              <LabelWrapper label="Price Per Hour:">
-                <ThemeText type="defaultSemiBold">
-                  ${bandData?.pricePerHour}
-                </ThemeText>
-              </LabelWrapper>
-
-              <LabelWrapper label="Max Play Time:">
-                <ThemeText type="defaultSemiBold">
-                  {bandData?.hours} Hour{(bandData?.hours ?? 0) > 1 && "s"}
-                  {bandData?.minutes !== 0 && `, ${bandData?.minutes} Minutes`}
-                </ThemeText>
-              </LabelWrapper>
               <LabelWrapper label="Bio">
                 <ThemeText type="defaultSemiBold">{bandData?.bio}</ThemeText>
               </LabelWrapper>
@@ -140,18 +122,9 @@ export default function ArtistView() {
               </LabelWrapper>
             </View>
 
-            <View style={styles.contactContainer}>
-              <Pressable onPress={openBookingForm} style={styles.contactButton}>
-                <ThemeText type="defaultSemiBold">Book Now</ThemeText>
-              </Pressable>
-
-              <ThemeText type="caption">
-                By proceeding to book you agree to GigDogs <TermsPrivacyLinks />
-              </ThemeText>
-              <Pressable onPress={handleReport} style={styles.report}>
-                <ThemeText type="link">Report Account</ThemeText>
-              </Pressable>
-            </View>
+            <Pressable onPress={handleReport} style={styles.report}>
+              <ThemeText type="link">Report Account</ThemeText>
+            </Pressable>
           </View>
         </ScrollView>
       )}
@@ -196,27 +169,6 @@ const styles = StyleSheet.create({
     width: 180,
     height: 180,
     borderRadius: 8,
-  },
-  contactContainer: {
-    flexDirection: "column",
-  },
-  contactButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: colors.secondary,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
-    borderRadius: 25,
-  },
-  contactButtonSecondary: {
-    width: "100%",
-    height: 50,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
-    borderRadius: 25,
   },
   headerButton: {
     alignItems: "center",
