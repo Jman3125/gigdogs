@@ -1,5 +1,5 @@
 import { auth, db } from "@/config/firebaseConfig";
-import { validateLoginFields } from "@/utilities/authenticate/authenticate-login";
+import { validateLoginFields } from "@/utilities/validate/authenticate-login";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 

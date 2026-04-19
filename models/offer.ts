@@ -1,20 +1,19 @@
 //A venue adds an offer for artists to see
-import { Artist } from "./artist";
 import { Venue } from "./venue";
 
 export interface Offer {
   id: string;
+  status: string;
   venue?: Venue;
-  eventName: string;
   date: string;
   //Will be a window (ex: 7:00pm-10:00pm)
   time: string;
-  //Required set time
-  hours: number;
-  minutes: number;
+  arrivalTime: string;
   description: string;
-  status: string;
   offerAmount: number;
+  //What the venue will be providing at the gig
+  providedEquipment: string;
+  extraNotes?: string;
   //Artists that have applied
-  appliedArtists: Artist[];
+  appliedArtistIds: [];
 }

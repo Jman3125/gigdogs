@@ -12,7 +12,7 @@ export default function Account() {
         <ThemeText type="title">OFFERS</ThemeText>
 
         <Pressable>
-          <Link href="/actions/account">
+          <Link href="/artist/account">
             <ThemeText>View Account</ThemeText>
           </Link>
         </Pressable>

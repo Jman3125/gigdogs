@@ -70,8 +70,8 @@ export default function ArtistLogin() {
       await login(email, password);
       setLoading(false);
 
-      //return to feed but delay so reload state updates
-      navigator.dismissAll();
+      //return to home but delay so reload state updates
+      navigator.replace("/(main)");
 
       //reload home page
       setReload(true);

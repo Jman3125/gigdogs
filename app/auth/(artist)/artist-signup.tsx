@@ -5,7 +5,7 @@ import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
-import { useSignup } from "@/hooks/use-signup";
+import { useSignupArtist } from "@/hooks/use-signup";
 import { Genres } from "@/models/artist";
 import { colors } from "@/utilities/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -36,7 +36,7 @@ export default function ArtistSingup() {
   const [loading, setLoading] = useState(false);
 
   //Sign up function
-  const { signup } = useSignup();
+  const { signup } = useSignupArtist();
 
   const { pickImage } = useImagePicker();
 
@@ -96,6 +96,7 @@ export default function ArtistSingup() {
         bio.trimEnd().trimStart(),
         image || "",
         instagram,
+        facebook,
         phone,
         honey,
         isCheckedTerms,
@@ -111,7 +112,7 @@ export default function ArtistSingup() {
             onPress: async () => {
               setLoading(false);
               setReload(true);
-              navigator.dismissAll();
+              navigator.replace("/(main)");
             },
           },
         ],
@@ -321,7 +322,7 @@ export default function ArtistSingup() {
               {error ? <ThemeText type="error">{error}</ThemeText> : null}
 
               <Pressable style={styles.signupButton} onPress={() => submit()}>
-                <ThemeText type="defaultSemiBold">Add Band</ThemeText>
+                <ThemeText type="defaultSemiBold">Submit</ThemeText>
               </Pressable>
             </ScrollView>
           </KeyboardAvoidingView>

@@ -85,7 +85,7 @@ export default function OfferView() {
           renderItem={({ item }) => (
             <ArtistCell
               id={item.id}
-              name={item.bandName}
+              name={item.artistName}
               genre={item.genre}
               picture={item.picture}
             />
@@ -124,6 +124,12 @@ export default function OfferView() {
                   <LabelWrapper label="Amount">
                     <ThemeText type="defaultSemiBold">
                       {offerData?.offerAmount}
+                    </ThemeText>
+                  </LabelWrapper>
+
+                  <LabelWrapper label="Equipment Provided">
+                    <ThemeText type="defaultSemiBold">
+                      {offerData?.providedEquipment}
                     </ThemeText>
                   </LabelWrapper>
 

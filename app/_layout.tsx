@@ -1,5 +1,5 @@
 import Loading from "@/components/loading";
-import { useAuthState } from "@/hooks/use-auth-state";
+import { useAuthWithRole } from "@/hooks/use-auth-state";
 import {
   Ubuntu_300Light,
   Ubuntu_400Regular,
@@ -25,11 +25,11 @@ const TabsLayout = () => {
     DynaPuff_500Medium,
   });
 
-  const { isSignedIn, loading } = useAuthState();
+  const { role, isSignedIn } = useAuthWithRole();
 
   const [reload, setReload] = useState(false);
 
-  if (!loaded || loading) {
+  if (!loaded) {
     return <Loading />;
   }
   return (
@@ -51,11 +51,12 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="actions"
+          name="artist"
           options={{
-            title: "Offers",
+            title: "Account",
             headerShown: false,
-            href: isSignedIn ? "/actions" : null,
+            href: isSignedIn && role === "artist" ? "/artist" : null,
+            //This is the actions page for authenticated artists
             tabBarIcon: ({ color }) => (
               <FontAwesome name="send" size={24} color={color} />
             ),
@@ -64,12 +65,30 @@ const TabsLayout = () => {
             tabBarBadge: 2,
           }}
         />
+
+        <Tabs.Screen
+          name="venue"
+          options={{
+            title: "Account",
+            headerShown: false,
+            href: isSignedIn && role === "venue" ? "/venue" : null,
+
+            tabBarIcon: ({ color }) => (
+              <FontAwesome name="send" size={24} color={color} />
+            ),
+            tabBarActiveTintColor: colors.primary,
+            tabBarInactiveTintColor: colors.placeholder,
+            tabBarBadge: 2,
+          }}
+        />
+
         <Tabs.Screen
           name="auth"
           options={{
             title: "Account",
             headerShown: false,
-            href: isSignedIn ? null : "/auth",
+            href: !isSignedIn ? "/auth" : null,
+
             tabBarIcon: ({ color }) => (
               <FontAwesome name="plus" size={24} color={color} />
             ),

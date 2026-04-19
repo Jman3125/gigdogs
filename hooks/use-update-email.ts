@@ -1,7 +1,7 @@
 import { auth } from "@/config/firebaseConfig";
-import { validateUserEmailUpdate } from "@/utilities/authenticate/authenticate-email-update";
-import { validateLoginFields } from "@/utilities/authenticate/authenticate-login";
 import { getAllBands } from "@/utilities/firebase/fetch-data";
+import { validateUserEmailUpdate } from "@/utilities/validate/authenticate-email-update";
+import { validateLoginFields } from "@/utilities/validate/authenticate-login";
 import {
   EmailAuthProvider,
   reauthenticateWithCredential,
@@ -61,7 +61,12 @@ export function useUpdateEmail() {
     //User is now reauthenticated if this is the second time trying to update email and they got the requires-recent-login error
     try {
       //Send email update verification
-      console.log("verifyBeforeUpdateEmail: starting for user", user.uid, "with new email", newEmail);
+      console.log(
+        "verifyBeforeUpdateEmail: starting for user",
+        user.uid,
+        "with new email",
+        newEmail,
+      );
       await verifyBeforeUpdateEmail(user, newEmail);
       console.log("verifyBeforeUpdateEmail: success - verification email sent");
       await logout();

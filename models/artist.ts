@@ -1,9 +1,9 @@
 // Set up data model and mock data for bands in the application
-import { Offer } from "./offer";
 
 export interface Artist {
   id: string;
-  bandName: string;
+  role: string;
+  artistName: string;
   email: string;
   genre: string;
   bio: string;
@@ -13,7 +13,7 @@ export interface Artist {
   phone: string;
   location: string;
   //The events the artist has applied to
-  appliedEvents?: Offer[];
+  appliedEventIds: [];
 }
 
 //Genres

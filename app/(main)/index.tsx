@@ -9,7 +9,7 @@ import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { States } from "@/models/artist";
 import { MockData, Venue } from "@/models/venue";
-import { CheckVerification } from "@/utilities/authenticate/verify-email";
+import { CheckVerification } from "@/utilities/validate/verify-email";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Alert, FlatList, StyleSheet, View } from "react-native";

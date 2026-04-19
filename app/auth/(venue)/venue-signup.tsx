@@ -5,7 +5,7 @@ import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
-import { useSignup } from "@/hooks/use-signup";
+import { useSignupVenue } from "@/hooks/use-signup";
 import { States } from "@/models/artist";
 import { colors } from "@/utilities/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -36,7 +36,7 @@ export default function VenueSingup() {
   const [loading, setLoading] = useState(false);
 
   //Sign up function
-  const { signup } = useSignup();
+  const { signup } = useSignupVenue();
 
   const { pickImage } = useImagePicker();
 
@@ -96,8 +96,8 @@ export default function VenueSingup() {
         email,
         password,
         password2,
-        address,
         selectedState,
+        address,
         image || "",
         website,
         instagram,
@@ -117,7 +117,7 @@ export default function VenueSingup() {
             onPress: async () => {
               setLoading(false);
               setReload(true);
-              navigator.dismissAll();
+              navigator.replace("/(main)");
             },
           },
         ],

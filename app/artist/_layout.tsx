@@ -9,7 +9,7 @@ const StackLayout = () => {
   return (
     <Stack
       screenOptions={{
-        animation: pathname.startsWith("/actions") ? "default" : "none",
+        animation: pathname.startsWith("/venue") ? "default" : "none",
         headerStyle: {
           backgroundColor: colors.primary,
         },
@@ -20,7 +20,7 @@ const StackLayout = () => {
         options={{
           headerTitle: () => <LogoTitle />,
           headerRight: () => (
-            <NavButton imageName="cog" route={"/actions/account"} />
+            <NavButton imageName="cog" route={"/artist/account"} />
           ),
         }}
       />
