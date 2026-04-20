@@ -3,7 +3,9 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { OfferCell } from "@/components/offer-cell";
 import { ThemeText } from "@/components/theme-text";
-import { MockData, Venue } from "@/models/venue";
+import { Offer } from "@/models/offer";
+import { Venue } from "@/models/venue";
+import { getItemsByIds, getOneItem } from "@/utilities/firebase/fetch-data";
 import { useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -21,14 +23,24 @@ export default function VenueView() {
   // Going to match the id to a band and get attributes so I don't pass them all through URL
   const { id } = useLocalSearchParams<{ id: string }>();
   // Find the band in the db that matches the id passed through the URL params
-  const [venue, setData] = useState<Venue>();
+  const [venue, setData] = useState<Venue | null>();
   const [loading, setLoading] = useState(true);
+
+  //Hold the offfers for this venue
+  const [venueOffers, setVenueOffers] = useState<Offer[]>([]);
 
   //fetch the selected bands data
   const fetchvenue = useCallback(async () => {
     try {
-      //const data = await getOneBand(parentVenueId);
-      setData(MockData.venues.find((venue) => venue.id === id));
+      const data = await getOneItem<Venue>(id, "venues");
+      setData(data);
+      //Offers this venue has
+      //Get all of the artists on the offer object
+      if (data?.offerIds && data.offerIds.length > 0) {
+        const offerData = await getItemsByIds<Offer>(data.offerIds, "offers");
+        setVenueOffers(offerData);
+      }
+
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
@@ -43,10 +55,6 @@ export default function VenueView() {
   useEffect(() => {
     fetchvenue();
   }, [fetchvenue]);
-
-  //Offers this venue has
-  //Get all of the artists on the offer object
-  const venueOffers = venue?.offers ?? [];
 
   const openEmail = () => {
     Linking.openURL(`mailto:${venue?.email}?subject=GigDogs Booking Inquiry`);
@@ -89,13 +97,12 @@ export default function VenueView() {
             <OfferCell
               parentVenueId={venue?.id || ""}
               offerId={item.id}
-              name={item.eventName}
-              picture={item.venue?.venueImage || ""}
+              name={venue?.venueName || ""}
               date={item.date}
               time={item.time}
               offerAmount={item.offerAmount}
               //Just get the length of applied artists
-              artistsApplied={item.appliedArtists.length}
+              artistsApplied={item.appliedArtistIds.length}
             />
           )}
           keyboardShouldPersistTaps="always"

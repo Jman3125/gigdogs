@@ -1,4 +1,3 @@
-
 export interface Venue {
   id: string;
   role: string;
@@ -12,5 +11,5 @@ export interface Venue {
   website?: string;
   instagram?: string;
   facebook?: string;
-  offerIds: [];
+  offerIds: string[];
 }

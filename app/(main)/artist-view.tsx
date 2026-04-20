@@ -3,7 +3,7 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { ThemeText } from "@/components/theme-text";
 import { Artist } from "@/models/artist";
-import { MockData } from "@/models/venue";
+import { getOneItem } from "@/utilities/firebase/fetch-data";
 import { getGenre } from "@/utilities/getGenreLabel";
 import { useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
@@ -22,17 +22,17 @@ export default function ArtistView() {
   // Going to match the id to a band and get attributes so I don't pass them all through URL
   const { id } = useLocalSearchParams<{ id: string }>();
   // Find the band in the db that matches the id passed through the URL params
-  const [bandData, setData] = useState<Artist>();
+  const [artistData, setData] = useState<Artist | null>();
   const [loading, setLoading] = useState(true);
 
   //show error on failure
   const [error, setError] = useState("");
 
   //fetch the selected bands data
-  const fetchBandData = useCallback(async () => {
+  const fetchArtistData = useCallback(async () => {
     try {
-      //const data = await getOneBand(id); FETCH ALL BANDS FROM THE DB AND RETURN MATCHING ONE
-      setData(MockData.bands.find((band) => band.id === id));
+      const data = await getOneItem<Artist>(id, "artists");
+      setData(data);
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
@@ -46,19 +46,19 @@ export default function ArtistView() {
 
   //fetch bands data on load
   useEffect(() => {
-    fetchBandData();
-  }, [fetchBandData]);
+    fetchArtistData();
+  }, [fetchArtistData]);
 
   const openEmail = () => {
     Linking.openURL(
-      `mailto:${bandData?.email}?subject=GigDogs Booking Inquiry`,
+      `mailto:${artistData?.email}?subject=GigDogs Booking Inquiry`,
     );
   };
 
   //Open bands instagram account
   const linkInstagram = () => {
     Linking.openURL(
-      `https://instagram.com/${bandData?.instagram?.trimEnd().toLowerCase()}`,
+      `https://instagram.com/${artistData?.instagram?.trimEnd().toLowerCase()}`,
     );
   };
   //User wants to report content
@@ -83,42 +83,46 @@ export default function ArtistView() {
             <ThemeText
               type="title"
               style={styles.bandName}
-              numberOfLines={(bandData?.bandName?.length ?? 0) < 20 ? 1 : 2}
+              numberOfLines={(artistData?.artistName?.length ?? 0) < 20 ? 1 : 2}
               adjustsFontSizeToFit
             >
-              {bandData?.bandName}
+              {artistData?.artistName}
             </ThemeText>
           </View>
 
           <View style={styles.infoContainerMain}>
             <ThemeText type="subtitle">Info</ThemeText>
-            <Image source={{ uri: bandData?.picture }} style={styles.image} />
+            <Image source={{ uri: artistData?.picture }} style={styles.image} />
 
             <View style={styles.profileContainerSub}>
               <LabelWrapper label="Genre:">
                 <ThemeText type="defaultSemiBold">
-                  {getGenre(bandData?.genre || "All")}
+                  {getGenre(artistData?.genre || "All")}
                 </ThemeText>
               </LabelWrapper>
 
               <LabelWrapper label="Bio">
-                <ThemeText type="defaultSemiBold">{bandData?.bio}</ThemeText>
+                <ThemeText type="defaultSemiBold">{artistData?.bio}</ThemeText>
               </LabelWrapper>
-              <LabelWrapper label="Instagram:">
-                <Pressable onPress={linkInstagram}>
-                  <ThemeText type="link">{bandData?.instagram}</ThemeText>
-                </Pressable>
-              </LabelWrapper>
+              {artistData?.instagram && (
+                <LabelWrapper label="Instagram:">
+                  <Pressable onPress={linkInstagram}>
+                    <ThemeText type="link">{artistData?.instagram}</ThemeText>
+                  </Pressable>
+                </LabelWrapper>
+              )}
+
+              {artistData?.facebook && (
+                <LabelWrapper label="Facebook:">
+                  <Pressable onPress={linkInstagram}>
+                    <ThemeText type="link">{artistData?.facebook}</ThemeText>
+                  </Pressable>
+                </LabelWrapper>
+              )}
               <LabelWrapper label="Email:">
                 <Pressable onPress={openEmail}>
-                  <ThemeText type="link">{bandData?.email}</ThemeText>
+                  <ThemeText type="link">{artistData?.email}</ThemeText>
                 </Pressable>
-              </LabelWrapper>
-
-              <LabelWrapper label="Location">
-                <ThemeText type="defaultSemiBold">
-                  {bandData?.location}
-                </ThemeText>
               </LabelWrapper>
             </View>
 

@@ -1,7 +1,7 @@
 //Show venue profile on feed page
 import { colors } from "@/utilities/colors";
 import { useRouter } from "expo-router";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { ThemeText } from "./theme-text";
 
 type Props = {
@@ -11,7 +11,6 @@ type Props = {
   date: string;
   time: string;
   offerAmount: number;
-  picture: string;
   artistsApplied: number;
 };
 
@@ -19,7 +18,6 @@ export function OfferCell({
   parentVenueId,
   offerId,
   name,
-  picture,
   date,
   time,
   offerAmount,
@@ -36,8 +34,6 @@ export function OfferCell({
   };
   return (
     <Pressable style={styles.container} onPress={openProfile}>
-      <Image source={{ uri: picture }} style={styles.image} />
-
       <View style={styles.infoContainer}>
         <ThemeText type="subtitle" style={styles.name}>
           {name}
@@ -86,7 +82,5 @@ const styles = StyleSheet.create({
     width: 230,
   },
 
-  // right
-  image: { width: 80, height: 80, borderRadius: 10 },
   name: { fontSize: 18, lineHeight: 25 },
 });

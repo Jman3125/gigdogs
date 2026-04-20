@@ -8,7 +8,8 @@ import VerifyEmailAlert from "@/components/verify-email-alert";
 import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { States } from "@/models/artist";
-import { MockData, Venue } from "@/models/venue";
+import { Offer } from "@/models/offer";
+import { getAllOffersByState } from "@/utilities/firebase/fetch-data";
 import { CheckVerification } from "@/utilities/validate/verify-email";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -20,17 +21,14 @@ export default function Index() {
   //Will use context to know when user updated account to reload feed
   const { reload, setReload } = useContext(ReloadFeedContext);
 
-  //State of if user is signed in
-  //const [_, updateSignedIn] = useState(false);
-
   //For State selection Drop down picker
   //For Genre picker selection
   const [openState, setOpenState] = useState(false);
   const [states, setStates] = useState(States);
   const [state, setState] = useState("xyz");
 
-  //state to populate bands
-  const [venuesData, setData] = useState<Venue[]>([]);
+  //state to populate offers
+  const [offersData, setData] = useState<Offer[]>([]);
 
   //loading state
   const [loading, setLoading] = useState(true);
@@ -42,16 +40,10 @@ export default function Index() {
   const [verifyEmail, setVerifyEmail] = useState(false);
 
   //Fetch all of the offers from selected state to display
-  const fetchOffers = async (state: string) => {
+  const fetchOffers = async (filterState: string) => {
     try {
-      //const data = await getAllBands();
-      //Shuffle the data so it's not in same order every load
-      //JACK - THIS IS HOW YOU POPULATE VENUES
-      //const shuffledData = shuffleArray(data);
-      //setData(shuffledData);
-
-      //Now just set data to mock data venues that are in teh same states as state
-      setData(MockData.venues.filter((venue) => venue.state === state));
+      const data = await getAllOffersByState(filterState);
+      setData(data);
     } catch (error: any) {
       setError(error.message);
       Alert.alert(
@@ -101,15 +93,6 @@ export default function Index() {
     loadOffersFromState(state);
   }, [state]);
 
-  //set up auth listener
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     updateSignedIn(!!user);
-  //   });
-
-  //   return unsubscribe; // cleanup properly
-  // }, []);
-
   //if user updated account refresh page with context variable
   useFocusEffect(
     useCallback(() => {
@@ -123,32 +106,6 @@ export default function Index() {
         setReload(false);
       }
     }, [reload, loadOffersFromState, setReload]),
-  );
-
-  //Used to repopulate bands that match entered location
-  // const filteredVenues = venuesData.filter((venue) => {
-  //   const matchesLocation = state === "" || venue.state == state;
-
-  //   return matchesLocation;
-  // });
-
-  //This will go through each venue and return the offers from that venue to display in the feed
-  const venuesOffers = venuesData.flatMap((venue) =>
-    venue.offers.map((offer) => {
-      return {
-        ...offer,
-        venueId: venue.id,
-        venueName: venue.venueName,
-        venueImage: venue.venueImage,
-        state: venue.state,
-        address: venue.address,
-        email: venue.email,
-        phone: venue.phone,
-        website: venue.website,
-        instagram: venue.instagram,
-        facebook: venue.facebook,
-      };
-    }),
   );
 
   return (
@@ -185,19 +142,18 @@ export default function Index() {
           </View>
 
           <FlatList
-            data={venuesOffers}
+            data={offersData}
             keyExtractor={(offer) => offer.id}
             renderItem={({ item }) => (
               <OfferCell
-                parentVenueId={item.venueId}
+                parentVenueId={item.parentVenueId}
                 offerId={item.id}
                 name={item.venueName}
-                picture={item.venueImage}
                 date={item.date}
                 time={item.time}
                 offerAmount={item.offerAmount}
                 //Just get the length of applied artists
-                artistsApplied={item.appliedArtists.length}
+                artistsApplied={item.appliedArtistIds.length}
               />
             )}
             keyboardShouldPersistTaps="always"

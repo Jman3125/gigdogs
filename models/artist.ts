@@ -11,9 +11,8 @@ export interface Artist {
   facebook?: string;
   instagram?: string;
   phone: string;
-  location: string;
   //The events the artist has applied to
-  appliedEventIds: [];
+  appliedEventIds: string[];
 }
 
 //Genres

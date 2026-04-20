@@ -157,7 +157,6 @@ export function useSignupVenue() {
       );
 
       //send email verification
-
       await sendEmailVerification(userCredential.user);
 
       //Create user uid
@@ -187,6 +186,7 @@ export function useSignupVenue() {
         instagram,
         facebook,
         phone,
+        offerIds: [],
         createdAt: serverTimestamp(),
       });
 

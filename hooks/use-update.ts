@@ -1,4 +1,6 @@
 import { auth, db } from "@/config/firebaseConfig";
+import { Venue } from "@/models/venue";
+import { getOneItem } from "@/utilities/firebase/fetch-data";
 import { uploadImageAsync } from "@/utilities/upload-image";
 import {
   validateUpdateFieldsArtist,
@@ -111,6 +113,18 @@ export function useUpdateVenue() {
         imageURL = await uploadImageAsync(picture, user.uid);
       }
 
+      //If the name was changed, update the offers collection with the new name so it shows on feed without having to grab venue data
+      if (venueName) {
+        const venueData = await getOneItem<Venue>(user.uid, "venues");
+        const offerIds = venueData?.offerIds || [];
+        for (const offerId of offerIds) {
+          await updateDoc(doc(db, "offers", offerId), {
+            venueName,
+          });
+        }
+      }
+
+      //Updat the venue document
       await updateDoc(doc(db, "venues", user.uid), {
         venueName,
         address,
