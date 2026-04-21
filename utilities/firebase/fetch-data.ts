@@ -1,5 +1,5 @@
 import { db } from "@/config/firebaseConfig";
-import { Offer } from "@/models/offer";
+import { Venue } from "@/models/venue";
 import {
   collection,
   doc,
@@ -10,32 +10,29 @@ import {
 } from "firebase/firestore";
 
 //Takes in a state and gets all offers from that state to populate search
-export async function getAllOffersByState(state: string): Promise<Offer[]> {
+export async function getAllVenuesByState(state: string): Promise<Venue[]> {
   try {
     const q = await query(
-      collection(db, "offers"),
+      collection(db, "venues"),
       where("state", "==", state),
     );
     const offerCollection = await getDocs(q);
-    const offers: Offer[] = [];
+    const venues: Venue[] = [];
     offerCollection.forEach((doc) => {
-      offers.push({ id: doc.id, ...doc.data() } as Offer);
+      venues.push({ id: doc.id, ...doc.data() } as Venue);
     });
-    return offers;
+    return venues;
   } catch (error: any) {
     throw new Error(error.message);
   }
 }
 
-//Just get data from one venue.
+//Just get data from one item.
 export async function getOneItem<T>(
   id: string,
   collectionName: string,
 ): Promise<T | null> {
   try {
-    // const q = query(collection(db, collectionName), where("id", "==", id));
-
-    //const querySnapshot = await getDocs(q);
     const ref = doc(db, collectionName, id);
     const snap = await getDoc(ref);
 
@@ -43,8 +40,6 @@ export async function getOneItem<T>(
       throw new Error("User not found");
     }
 
-    // const dataDoc = snap.docs[0];
-    // const data = dataDoc.data();
     const data = snap.data();
     return {
       id: snap.id,

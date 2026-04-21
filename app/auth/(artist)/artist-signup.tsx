@@ -145,9 +145,9 @@ export default function ArtistSingup() {
                 Artist Signup
               </ThemeText>
 
-              <LabelWrapper label="Band Name" footnote="Max Length: 50">
+              <LabelWrapper label="Artist Name" footnote="Max Length: 50">
                 <TextInput
-                  placeholder="Your Band Name Here"
+                  placeholder="Artist Name"
                   maxLength={35}
                   style={styles.input}
                   placeholderTextColor={colors.placeholder}
@@ -221,7 +221,7 @@ export default function ArtistSingup() {
 
               <LabelWrapper label="Bio" footnote="Max Length: 280">
                 <TextInput
-                  placeholder="Tell us more about you and any important details people should know"
+                  placeholder="Tell us about the music you play, your experience, or anything else you want venues to know!"
                   multiline
                   numberOfLines={5}
                   maxLength={280}

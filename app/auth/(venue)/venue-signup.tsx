@@ -6,7 +6,7 @@ import { ThemeText } from "@/components/theme-text";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useSignupVenue } from "@/hooks/use-signup";
-import { States } from "@/models/artist";
+import { States } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Checkbox } from "expo-checkbox";
@@ -57,7 +57,7 @@ export default function VenueSingup() {
 
   //For State picker selection
   const [openState, setOpenState] = useState(false);
-  const [selectedState, selectState] = useState("");
+  const [selectedState, selectState] = useState("xyz");
   const [states, setStates] = useState(States);
 
   //For Phone
@@ -232,7 +232,6 @@ export default function VenueSingup() {
                   items={States}
                   setOpen={setOpenState}
                   setValue={selectState}
-                  setItems={setStates}
                   placeholder="Select a State"
                   listMode="MODAL"
                   style={styles.picker}

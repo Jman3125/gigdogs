@@ -58,21 +58,11 @@ export function useSignupArtist() {
       );
 
       //send email verification
-      console.log(
-        "sendEmailVerification: starting for user",
-        userCredential.user.uid,
-      );
+
       await sendEmailVerification(userCredential.user);
-      console.log("sendEmailVerification: success - verification email sent");
 
       //Create user uid
       const uid = userCredential.user.uid;
-
-      const generateID = () => {
-        return Math.random().toString(36).substring(2, 9);
-      };
-
-      const id = generateID();
 
       const role = "artist";
 
@@ -81,7 +71,6 @@ export function useSignupArtist() {
 
       // 3 Create Firestore user doc for artists
       await setDoc(doc(db, "users", uid), {
-        id,
         role,
         artistName,
         email,
@@ -169,7 +158,6 @@ export function useSignupVenue() {
 
       // 3 Create Firestore user doc
       await setDoc(doc(db, "venues"), {
-        id: uid,
         role,
         venueName,
         email,

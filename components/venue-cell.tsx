@@ -1,57 +1,35 @@
 //Show venue profile on feed page
 import { colors } from "@/utilities/colors";
-import { formatTimeRange } from "@/utilities/format-time-range";
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import { ThemeText } from "./theme-text";
 
 type Props = {
-  offerId: string;
+  venueId: string;
   name: string;
-  date: string;
-  time: string;
-  offerAmount: number;
-  artistsApplied: number;
+  offers: number;
+  venueImage: string;
 };
 
-export function OfferCell({
-  offerId,
-  name,
-  date,
-  time,
-  offerAmount,
-  artistsApplied,
-}: Props) {
+export function VenueCell({ venueId, name, offers, venueImage }: Props) {
   const router = useRouter();
 
   const openProfile = () => {
     router.navigate({
-      pathname: "/offer-view",
-      params: { offerId },
+      pathname: "/venue-view",
+      params: { venueId },
     });
   };
   return (
     <Pressable style={styles.container} onPress={openProfile}>
+      <Image source={{ uri: venueImage }} style={styles.image} />
       <View style={styles.infoContainer}>
         <ThemeText type="subtitle" style={styles.name}>
           {name}
         </ThemeText>
+
         <ThemeText type="default">
-          Date:{" "}
-          <ThemeText type="defaultSemiBold">
-            {new Date(date).toLocaleDateString()}
-          </ThemeText>
-        </ThemeText>
-        <ThemeText type="default">
-          Time:{" "}
-          <ThemeText type="defaultSemiBold">{formatTimeRange(time)}</ThemeText>
-        </ThemeText>
-        <ThemeText type="default">
-          Amount: <ThemeText type="defaultSemiBold">${offerAmount}</ThemeText>
-        </ThemeText>
-        <ThemeText type="default">
-          Bands Applied:{" "}
-          <ThemeText type="defaultSemiBold">{artistsApplied}</ThemeText>
+          Offers: <ThemeText type="defaultSemiBold">{offers}</ThemeText>
         </ThemeText>
       </View>
     </Pressable>
@@ -85,4 +63,10 @@ const styles = StyleSheet.create({
   },
 
   name: { fontSize: 18, lineHeight: 25 },
+
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+  },
 });

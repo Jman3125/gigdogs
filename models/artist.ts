@@ -12,7 +12,7 @@ export interface Artist {
   instagram?: string;
   phone: string;
   //The events the artist has applied to
-  appliedEventIds: string[];
+  appliedOfferIds: string[];
 }
 
 //Genres

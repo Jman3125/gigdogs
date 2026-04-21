@@ -15,7 +15,6 @@ export function ArtistCell({ id, name, genre, picture }: Props) {
   const router = useRouter();
 
   const openProfile = () => {
-    console.log(id);
     router.navigate({
       pathname: "/artist-view",
       params: { id },

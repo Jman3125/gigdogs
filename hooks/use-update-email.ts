@@ -1,5 +1,4 @@
 import { auth } from "@/config/firebaseConfig";
-import { getAllBands } from "@/utilities/firebase/fetch-data";
 import { validateUserEmailUpdate } from "@/utilities/validate/authenticate-email-update";
 import { validateLoginFields } from "@/utilities/validate/authenticate-login";
 import {
@@ -32,15 +31,15 @@ export function useUpdateEmail() {
     }
 
     // Check if ANY other band has this email
-    const allBands = await getAllBands();
+    //const allBands = await getAllBands();
 
-    const emailTakenByAnotherBand = allBands.some(
-      (band) => band.email === newEmail && band.id !== user.uid,
-    );
+    // const emailTakenByAnotherBand = allBands.some(
+    //   (band) => band.email === newEmail && band.id !== user.uid,
+    // );
 
-    if (emailTakenByAnotherBand) {
-      throw new Error("That email is already in use.");
-    }
+    // if (emailTakenByAnotherBand) {
+    //   throw new Error("That email is already in use.");
+    // }
 
     //Ensure user is authenticated before updating if needed (error would have been thrown and this would be users second time after passing email and password)
     if (email && password) {
@@ -61,14 +60,8 @@ export function useUpdateEmail() {
     //User is now reauthenticated if this is the second time trying to update email and they got the requires-recent-login error
     try {
       //Send email update verification
-      console.log(
-        "verifyBeforeUpdateEmail: starting for user",
-        user.uid,
-        "with new email",
-        newEmail,
-      );
+
       await verifyBeforeUpdateEmail(user, newEmail);
-      console.log("verifyBeforeUpdateEmail: success - verification email sent");
       await logout();
     } catch (error: any) {
       console.error("verifyBeforeUpdateEmail: error", {

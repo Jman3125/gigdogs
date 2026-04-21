@@ -82,7 +82,7 @@ export default function ArtistView() {
           <View style={styles.headerContainer}>
             <ThemeText
               type="title"
-              style={styles.bandName}
+              style={styles.artistName}
               numberOfLines={(artistData?.artistName?.length ?? 0) < 20 ? 1 : 2}
               adjustsFontSizeToFit
             >
@@ -91,7 +91,7 @@ export default function ArtistView() {
           </View>
 
           <View style={styles.infoContainerMain}>
-            <ThemeText type="subtitle">Info</ThemeText>
+            <ThemeText type="subtitle">About</ThemeText>
             <Image source={{ uri: artistData?.picture }} style={styles.image} />
 
             <View style={styles.profileContainerSub}>
@@ -100,9 +100,11 @@ export default function ArtistView() {
                   {getGenre(artistData?.genre || "All")}
                 </ThemeText>
               </LabelWrapper>
-
-              <LabelWrapper label="Bio">
-                <ThemeText type="defaultSemiBold">{artistData?.bio}</ThemeText>
+              <LabelWrapper label="Applied to:">
+                <ThemeText type="defaultSemiBold">
+                  {artistData?.appliedOfferIds?.length ?? 0} offer
+                  {artistData?.appliedOfferIds?.length === 1 ? "" : "s"}
+                </ThemeText>
               </LabelWrapper>
               {artistData?.instagram && (
                 <LabelWrapper label="Instagram:">
@@ -123,6 +125,10 @@ export default function ArtistView() {
                 <Pressable onPress={openEmail}>
                   <ThemeText type="link">{artistData?.email}</ThemeText>
                 </Pressable>
+              </LabelWrapper>
+
+              <LabelWrapper label="Bio">
+                <ThemeText type="defaultSemiBold">{artistData?.bio}</ThemeText>
               </LabelWrapper>
             </View>
 
@@ -165,6 +171,7 @@ const styles = StyleSheet.create({
   profileContainerSub: {
     flexDirection: "column",
     justifyContent: "space-between",
+    marginTop: 10,
   },
   image: {
     position: "absolute",
@@ -182,7 +189,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: "white",
   },
-  bandName: {
+  artistName: {
     fontSize: 35,
   },
   report: {

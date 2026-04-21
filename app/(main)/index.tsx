@@ -1,14 +1,13 @@
 // Main feed page
 import BlankSearch from "@/components/blank-search";
 import Loading from "@/components/loading";
-import { OfferCell } from "@/components/offer-cell";
 import { ThemeText } from "@/components/theme-text";
+import { VenueCell } from "@/components/venue-cell";
 import VerifyEmailAlert from "@/components/verify-email-alert";
 import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
-import { Offer } from "@/models/offer";
-import { States } from "@/models/venue";
-import { getAllOffersByState } from "@/utilities/firebase/fetch-data";
+import { States, Venue } from "@/models/venue";
+import { getAllVenuesByState } from "@/utilities/firebase/fetch-data";
 import { CheckVerification } from "@/utilities/validate/verify-email";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -27,7 +26,7 @@ export default function Index() {
   const [state, setState] = useState("xyz");
 
   //state to populate offers
-  const [offersData, setData] = useState<Offer[]>([]);
+  const [venuesData, setData] = useState<Venue[]>([]);
 
   //loading state
   const [loading, setLoading] = useState(true);
@@ -41,7 +40,7 @@ export default function Index() {
   //Fetch all of the offers from selected state to display
   const fetchOffers = async (filterState: string) => {
     try {
-      const data = await getAllOffersByState(filterState);
+      const data = await getAllVenuesByState(filterState);
       setData(data);
     } catch (error: any) {
       setError(error.message);
@@ -141,19 +140,15 @@ export default function Index() {
           </View>
 
           <FlatList
-            data={offersData}
-            keyExtractor={(offer) => offer.id}
+            data={venuesData}
+            keyExtractor={(venue) => venue.id}
             renderItem={({ item }) => (
-              <OfferCell
-                offerId={item.id}
-                name={item.eventName}
-                date={item.date}
-                time={item.time}
-                offerAmount={item.offerAmount}
+              <VenueCell
+                venueId={item.id}
+                name={item.venueName}
+                offers={item.offers ? item.offers.length : 0}
+                venueImage={item.venueImage}
                 //Just get the length of applied artists
-                artistsApplied={
-                  item.appliedArtistIds ? item.appliedArtistIds.length : 0
-                }
               />
             )}
             keyboardShouldPersistTaps="always"

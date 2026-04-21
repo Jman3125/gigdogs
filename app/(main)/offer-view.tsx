@@ -44,7 +44,7 @@ export default function OfferView() {
     setOfferData(data);
 
     //Get all of the artists on the offer object
-    const appliedArtists = offerData?.appliedArtistIds ?? [];
+    const appliedArtists = data?.appliedArtistIds ?? [];
 
     const artistsData = await getItemsByIds<Artist>(appliedArtists, "users");
     setArtists(artistsData);
@@ -100,6 +100,7 @@ export default function OfferView() {
           keyExtractor={(artist) => artist.id}
           renderItem={({ item }) => (
             <ArtistCell
+              //Set this to the uid of the artist
               id={item.id}
               name={item.artistName}
               genre={item.genre}
@@ -165,12 +166,6 @@ export default function OfferView() {
                   <LabelWrapper label="Equipment Provided">
                     <ThemeText type="defaultSemiBold">
                       {offerData?.providedEquipment}
-                    </ThemeText>
-                  </LabelWrapper>
-
-                  <LabelWrapper label="State">
-                    <ThemeText type="defaultSemiBold">
-                      {offerData?.state}
                     </ThemeText>
                   </LabelWrapper>
                 </View>

@@ -1,5 +1,4 @@
 //This is where venues can access and edit their information once signed in
-import BandProfileLink from "@/components/band-profile-link";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { ThemeText } from "@/components/theme-text";
@@ -175,13 +174,6 @@ export default function Account() {
             <ThemeText type="subtitle" style={styles.title}>
               Welcome, {signedInVenue?.venueName || ""}
             </ThemeText>
-            <LabelWrapper
-              label="GigDogs Profile Link"
-              isBold={true}
-              footnote="Tap to copy"
-            >
-              <BandProfileLink userId={signedInVenue.id} />
-            </LabelWrapper>
             <ThemeText type="subtitle">Edit Account</ThemeText>
             <View>
               <LabelWrapper label="Venue Name">

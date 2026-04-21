@@ -1,5 +1,4 @@
 //This is where artists can access and edit their information once signed in
-import BandProfileLink from "@/components/band-profile-link";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { ThemeText } from "@/components/theme-text";
@@ -171,18 +170,11 @@ export default function Account() {
             <ThemeText type="subtitle" style={styles.title}>
               Welcome, {signedInArtist?.artistName || ""}
             </ThemeText>
-            <LabelWrapper
-              label="GigDogs Profile Link"
-              isBold={true}
-              footnote="Tap to copy"
-            >
-              <BandProfileLink userId={signedInArtist.id} />
-            </LabelWrapper>
             <ThemeText type="subtitle">Edit Account</ThemeText>
             <View>
-              <LabelWrapper label="Band Name">
+              <LabelWrapper label="Artist Name">
                 <TextInput
-                  placeholder="Your Band Name Here"
+                  placeholder="Artist Name"
                   maxLength={50}
                   style={styles.input}
                   placeholderTextColor={"#464141cb"}
@@ -219,7 +211,7 @@ export default function Account() {
 
               <LabelWrapper label="Bio" footnote="Max Length: 280">
                 <TextInput
-                  placeholder="Tell us a little about yourself"
+                  placeholder="Tell us about the music you play, your experience, or anything else you want venues to know!"
                   multiline
                   numberOfLines={5}
                   maxLength={280}

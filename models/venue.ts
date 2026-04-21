@@ -11,7 +11,7 @@ export interface Venue {
   website?: string;
   instagram?: string;
   facebook?: string;
-  offerIds: string[];
+  offers: string[];
 }
 
 //States

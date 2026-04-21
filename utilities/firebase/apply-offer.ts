@@ -26,6 +26,12 @@ export const applyToOffer = async (offerId: string) => {
     throw new Error("You have already applied to this offer");
   }
 
+  // Firestore-safe atomic update to add the offer UID to the artists appliedOfferIds array
+  const userRef = doc(db, "users", user.uid);
+  await updateDoc(userRef, {
+    appliedOfferIds: arrayUnion(offerId),
+  });
+
   // Firestore-safe atomic update
   await updateDoc(offerRef, {
     appliedArtistIds: arrayUnion(user.uid),

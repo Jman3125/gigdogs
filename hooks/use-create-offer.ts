@@ -44,17 +44,10 @@ export function useCreateOffer() {
         throw new Error("User not authenticated.");
       }
 
-      //Create user uid
-      const uid = user.uid;
-
-      //I also need to pass the current venues state and name with the offer so it's easy to put in feed
-
       //Create an ID for the offer
       const generateID = () => {
         return Math.random().toString(36).substring(2, 9);
       };
-
-      console.log(uid);
 
       //Grab the current venues name and state to put on the offer object so it's easy to display in feed without having to grab the venue data
       const venueData = await getOneItem<Venue>(parentVenueId, "venues");
@@ -65,9 +58,7 @@ export function useCreateOffer() {
       await setDoc(newRef, {
         parentVenueId: user.uid,
         status: "open",
-        venueName: venueData?.venueName || "Unknown Venue",
         eventName: eventName,
-        state: venueData?.state || "Unknown State",
         date: date.toISOString(),
         time: startTime.toISOString() + " - " + endTime.toISOString(),
         arrivalTime: arrivalTime.toISOString(),

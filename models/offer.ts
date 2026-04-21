@@ -5,7 +5,6 @@ export interface Offer {
   id: string;
   status: string;
   eventName: string;
-  state: string;
   date: string;
   //Will be a window (ex: 7:00pm-10:00pm)
   time: string;
