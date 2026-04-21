@@ -4,7 +4,7 @@ export interface Offer {
   parentVenueId: string;
   id: string;
   status: string;
-  venueName: string;
+  eventName: string;
   state: string;
   date: string;
   //Will be a window (ex: 7:00pm-10:00pm)

@@ -162,20 +162,14 @@ export function useSignupVenue() {
       //Create user uid
       const uid = userCredential.user.uid;
 
-      const generateID = () => {
-        return Math.random().toString(36).substring(2, 9);
-      };
-
-      const id = generateID();
-
       const role = "venue";
 
       // 2 Upload image
       const imageURL = picture ? await uploadImageAsync(picture, uid) : null;
 
       // 3 Create Firestore user doc
-      await setDoc(doc(db, "venues", uid), {
-        id,
+      await setDoc(doc(db, "venues"), {
+        id: uid,
         role,
         venueName,
         email,
@@ -186,7 +180,6 @@ export function useSignupVenue() {
         instagram,
         facebook,
         phone,
-        offerIds: [],
         createdAt: serverTimestamp(),
       });
 

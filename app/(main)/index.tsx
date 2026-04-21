@@ -1,5 +1,4 @@
 // Main feed page
-
 import BlankSearch from "@/components/blank-search";
 import Loading from "@/components/loading";
 import { OfferCell } from "@/components/offer-cell";
@@ -7,8 +6,8 @@ import { ThemeText } from "@/components/theme-text";
 import VerifyEmailAlert from "@/components/verify-email-alert";
 import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
-import { States } from "@/models/artist";
 import { Offer } from "@/models/offer";
+import { States } from "@/models/venue";
 import { getAllOffersByState } from "@/utilities/firebase/fetch-data";
 import { CheckVerification } from "@/utilities/validate/verify-email";
 import { useFocusEffect } from "expo-router";
@@ -146,14 +145,15 @@ export default function Index() {
             keyExtractor={(offer) => offer.id}
             renderItem={({ item }) => (
               <OfferCell
-                parentVenueId={item.parentVenueId}
                 offerId={item.id}
-                name={item.venueName}
+                name={item.eventName}
                 date={item.date}
                 time={item.time}
                 offerAmount={item.offerAmount}
                 //Just get the length of applied artists
-                artistsApplied={item.appliedArtistIds.length}
+                artistsApplied={
+                  item.appliedArtistIds ? item.appliedArtistIds.length : 0
+                }
               />
             )}
             keyboardShouldPersistTaps="always"

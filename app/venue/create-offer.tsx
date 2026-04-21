@@ -4,9 +4,14 @@ import { ThemeText } from "@/components/theme-text";
 import { colors } from "@/utilities/colors";
 import { useState } from "react";
 
+import Loading from "@/components/loading";
+import { auth } from "@/config/firebaseConfig";
 import { useCreateOffer } from "@/hooks/use-create-offer";
+import { fetchAuthVenue } from "@/utilities/firebase/fetch-auth-venue";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useEffect } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -18,15 +23,40 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Modal() {
   const { create } = useCreateOffer();
+
+  //loading state
+  const [loading, setLoading] = useState(true);
+
+  //Error
+  const [error, setError] = useState("");
+
+  //Parent venue id
+  const [parentVenueId, setParentVenueId] = useState("");
+
+  //Default to Venue name
+  const [eventName, setEventName] = useState("");
+
   //For date of event
   const [date, setDate] = useState(new Date());
 
   //For time of event
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
+  const [startTime, setStartTime] = useState(() => {
+    const now = new Date();
+    now.setHours(now.getHours() + 1, 0, 0, 0);
+    return now;
+  });
+  const [endTime, setEndTime] = useState(() => {
+    const now = new Date();
+    now.setHours(now.getHours() + 2, 0, 0, 0);
+    return now;
+  });
 
   //For arrival time of event
-  const [arrival, setArrival] = useState(new Date());
+  const [arrival, setArrival] = useState(() => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 30);
+    return now;
+  });
 
   //For offer amount
   const [offerAmount, setOfferAmount] = useState("");
@@ -40,125 +70,187 @@ export default function Modal() {
   //Extra Notes (optional)
   const [extraNotes, setExtraNotes] = useState("");
 
+  // fetch signed in venues data
+  const fetchAuthVenueData = async (uid: string) => {
+    const venue = await fetchAuthVenue(uid);
+    return venue;
+  };
+
+  //On page load fetch data and set up auth listener to update signed-in state. Cleanup listener on unmount.
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const venueAuthData = await fetchAuthVenueData(user.uid);
+        //Populate venue name
+        setEventName(venueAuthData?.venueName);
+
+        setParentVenueId(venueAuthData?.id);
+
+        setLoading(false);
+      } else {
+        Alert.alert("Error", "User not authenticated. Please reset the app.");
+        setEventName("");
+        setLoading(false);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
   const submit = async () => {
-    create(
-      date,
-      startTime,
-      endTime,
-      arrival,
-      offerAmount,
-      description,
-      providedEquipment,
-      extraNotes,
-    );
+    setLoading(true);
+    try {
+      await create(
+        parentVenueId,
+        eventName,
+        date,
+        startTime,
+        endTime,
+        arrival,
+        offerAmount,
+        description,
+        providedEquipment,
+        extraNotes,
+      );
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      Alert.alert("Error", error.message);
+      setError(error.message);
+    }
   };
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <ScrollView>
-          <ThemeText type="subtitle">Create Offer</ThemeText>
+      {loading && <Loading />}
 
-          <LabelWrapper label="Date">
-            <DateTimePicker
-              value={date}
-              mode={"date"}
-              is24Hour={true}
-              onChange={() => setDate(date)}
-            />
-          </LabelWrapper>
-          <LabelWrapper label="Start Time">
-            <DateTimePicker
-              value={startTime}
-              mode={"time"}
-              is24Hour={true}
-              onChange={() => setStartTime(startTime)}
-            />
-          </LabelWrapper>
-          <LabelWrapper label="End Time">
-            <DateTimePicker
-              value={endTime}
-              mode={"time"}
-              is24Hour={true}
-              onChange={() => setEndTime(endTime)}
-            />
-          </LabelWrapper>
-          <LabelWrapper label="Arrival Time">
-            <DateTimePicker
-              value={arrival}
-              mode={"time"}
-              is24Hour={true}
-              onChange={() => setArrival(arrival)}
-            />
-          </LabelWrapper>
+      {!loading && (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <ScrollView>
+            <ThemeText type="subtitle">Create Offer</ThemeText>
 
-          <LabelWrapper label="Offer Amount">
-            <TextInput
-              placeholder="Amount"
-              style={styles.input}
-              placeholderTextColor={colors.placeholder}
-              inputMode="numeric"
-              value={offerAmount}
-              onChangeText={(value) => {
-                setOfferAmount(value);
-              }}
-            />
-          </LabelWrapper>
-          <LabelWrapper label="Event Details" footnote="Max Length: 280">
-            <TextInput
-              placeholder="Looking for high-energy bands or acoustic acts? Describe your events details to get the right artists to apply."
-              multiline
-              numberOfLines={5}
-              maxLength={280}
-              style={styles.multiline}
-              placeholderTextColor={colors.placeholder}
-              value={description}
-              onChangeText={(value) => {
-                setDescription(value);
-              }}
-            />
-          </LabelWrapper>
+            {/* Name of the event, defaults to venue name */}
+            <LabelWrapper label="Event Name">
+              <TextInput
+                style={styles.input}
+                value={eventName}
+                onChangeText={(value) => {
+                  setEventName(value);
+                }}
+              />
+            </LabelWrapper>
 
-          <LabelWrapper label="Provided Equipment" footnote="Max Length: 100">
-            <TextInput
-              placeholder="In-house sound system, Mic Stands, e.t.c."
-              multiline
-              numberOfLines={3}
-              maxLength={100}
-              style={styles.multiline}
-              placeholderTextColor={colors.placeholder}
-              value={providedEquipment}
-              onChangeText={(value) => {
-                setProvidedEquipment(value);
-              }}
-            />
-          </LabelWrapper>
+            <LabelWrapper label="Date">
+              <DateTimePicker
+                value={date}
+                mode={"date"}
+                is24Hour={true}
+                onChange={(event, selectedDate) =>
+                  setDate(selectedDate || date)
+                }
+              />
+            </LabelWrapper>
+            <LabelWrapper label="Start Time">
+              <DateTimePicker
+                value={startTime}
+                mode={"time"}
+                is24Hour={true}
+                onChange={(event, selectedTime) =>
+                  setStartTime(selectedTime || startTime)
+                }
+              />
+            </LabelWrapper>
+            <LabelWrapper label="End Time">
+              <DateTimePicker
+                value={endTime}
+                mode={"time"}
+                is24Hour={true}
+                onChange={(event, selectedTime) =>
+                  setEndTime(selectedTime || endTime)
+                }
+              />
+            </LabelWrapper>
+            <LabelWrapper label="Arrival Time">
+              <DateTimePicker
+                value={arrival}
+                mode={"time"}
+                is24Hour={true}
+                onChange={(event, selectedTime) =>
+                  setArrival(selectedTime || arrival)
+                }
+              />
+            </LabelWrapper>
 
-          <LabelWrapper
-            label="Extra Notes (optional)"
-            footnote="Max Length: 200"
-          >
-            <TextInput
-              placeholder="Notes"
-              multiline
-              numberOfLines={3}
-              maxLength={150}
-              style={styles.multiline}
-              placeholderTextColor={colors.placeholder}
-              value={extraNotes}
-              onChangeText={(value) => {
-                setExtraNotes(value);
-              }}
-            />
-          </LabelWrapper>
+            <LabelWrapper label="Offer Amount">
+              <TextInput
+                placeholder="Amount"
+                style={styles.input}
+                placeholderTextColor={colors.placeholder}
+                inputMode="numeric"
+                value={offerAmount}
+                onChangeText={(value) => {
+                  setOfferAmount(value);
+                }}
+              />
+            </LabelWrapper>
+            <LabelWrapper label="Event Details" footnote="Max Length: 280">
+              <TextInput
+                placeholder="Looking for high-energy bands or acoustic acts? Describe your events details to get the right artists to apply."
+                multiline
+                numberOfLines={5}
+                maxLength={280}
+                style={styles.multiline}
+                placeholderTextColor={colors.placeholder}
+                value={description}
+                onChangeText={(value) => {
+                  setDescription(value);
+                }}
+              />
+            </LabelWrapper>
 
-          <Pressable style={styles.signupButton} onPress={() => submit()}>
-            <ThemeText type="defaultSemiBold">Submit</ThemeText>
-          </Pressable>
-        </ScrollView>
-      </KeyboardAvoidingView>
+            <LabelWrapper label="Provided Equipment" footnote="Max Length: 100">
+              <TextInput
+                placeholder="In-house sound system, Mic Stands, e.t.c."
+                multiline
+                numberOfLines={3}
+                maxLength={100}
+                style={styles.multiline}
+                placeholderTextColor={colors.placeholder}
+                value={providedEquipment}
+                onChangeText={(value) => {
+                  setProvidedEquipment(value);
+                }}
+              />
+            </LabelWrapper>
+
+            <LabelWrapper
+              label="Extra Notes (optional)"
+              footnote="Max Length: 200"
+            >
+              <TextInput
+                placeholder="Notes"
+                multiline
+                numberOfLines={3}
+                maxLength={150}
+                style={styles.multiline}
+                placeholderTextColor={colors.placeholder}
+                value={extraNotes}
+                onChangeText={(value) => {
+                  setExtraNotes(value);
+                }}
+              />
+            </LabelWrapper>
+
+            {error ? <ThemeText type="error">{error}</ThemeText> : null}
+
+            <Pressable style={styles.signupButton} onPress={() => submit()}>
+              <ThemeText type="defaultSemiBold">Submit</ThemeText>
+            </Pressable>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      )}
     </SafeAreaView>
   );
 }

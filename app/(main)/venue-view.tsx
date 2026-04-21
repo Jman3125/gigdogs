@@ -95,7 +95,6 @@ export default function VenueView() {
           keyExtractor={(offer) => offer.id}
           renderItem={({ item }) => (
             <OfferCell
-              parentVenueId={venue?.id || ""}
               offerId={item.id}
               name={venue?.venueName || ""}
               date={item.date}

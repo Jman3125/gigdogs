@@ -1,11 +1,11 @@
 //Show venue profile on feed page
 import { colors } from "@/utilities/colors";
+import { formatTimeRange } from "@/utilities/format-time-range";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 import { ThemeText } from "./theme-text";
 
 type Props = {
-  parentVenueId: string;
   offerId: string;
   name: string;
   date: string;
@@ -15,7 +15,6 @@ type Props = {
 };
 
 export function OfferCell({
-  parentVenueId,
   offerId,
   name,
   date,
@@ -26,10 +25,9 @@ export function OfferCell({
   const router = useRouter();
 
   const openProfile = () => {
-    console.log(parentVenueId, offerId);
     router.navigate({
       pathname: "/offer-view",
-      params: { parentVenueId, offerId },
+      params: { offerId },
     });
   };
   return (
@@ -39,10 +37,14 @@ export function OfferCell({
           {name}
         </ThemeText>
         <ThemeText type="default">
-          Date: <ThemeText type="defaultSemiBold">{date}</ThemeText>
+          Date:{" "}
+          <ThemeText type="defaultSemiBold">
+            {new Date(date).toLocaleDateString()}
+          </ThemeText>
         </ThemeText>
         <ThemeText type="default">
-          Time: <ThemeText type="defaultSemiBold">{time}</ThemeText>
+          Time:{" "}
+          <ThemeText type="defaultSemiBold">{formatTimeRange(time)}</ThemeText>
         </ThemeText>
         <ThemeText type="default">
           Amount: <ThemeText type="defaultSemiBold">{offerAmount}</ThemeText>

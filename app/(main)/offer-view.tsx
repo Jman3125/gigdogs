@@ -4,15 +4,17 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
+import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
-import { MockData } from "@/models/venue";
 import { colors } from "@/utilities/colors";
+import { applyToOffer } from "@/utilities/firebase/apply-offer";
+import { getItemsByIds, getOneItem } from "@/utilities/firebase/fetch-data";
+import { formatTimeRange } from "@/utilities/format-time-range";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
-  Image,
   Linking,
   Pressable,
   StyleSheet,
@@ -23,20 +25,29 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function OfferView() {
   const navigator = useRouter();
   // Going to match the id to a band and get attributes so I don't pass them all through URL
-  const { parentVenueId, offerId } = useLocalSearchParams<{
-    parentVenueId: string;
+  const { offerId } = useLocalSearchParams<{
     offerId: string;
   }>();
   // Find the band in the db that matches the id passed through the URL params
-  const [offerData, setOfferData] = useState<Offer>();
+  const [offerData, setOfferData] = useState<Offer | null>();
   const [loading, setLoading] = useState(true);
 
-  //fetch the selected bands data
-  const fetchvenue = useCallback(async () => {
-    if (!parentVenueId || !offerId) return;
+  //These are the applied artists on this offer
+  const [artists, setArtists] = useState<Artist[]>([]);
 
-    const venue = MockData.venues.find((v) => v.id === parentVenueId);
-    const offer = venue?.offers.find((o) => o.id === offerId);
+  //fetch the selected bands data
+  const populateData = useCallback(async () => {
+    if (!offerId) return;
+
+    const data = await getOneItem<Offer>(offerId, "offers");
+
+    setOfferData(data);
+
+    //Get all of the artists on the offer object
+    const appliedArtists = offerData?.appliedArtistIds ?? [];
+
+    const artistsData = await getItemsByIds<Artist>(appliedArtists, "users");
+    setArtists(artistsData);
 
     try {
     } catch (error) {
@@ -45,26 +56,31 @@ export default function OfferView() {
         "There was an error loading this offer. Please try again later.",
       );
     }
-    setOfferData(offer ? { ...offer, venue } : undefined);
     setLoading(false);
-  }, [parentVenueId, offerId]);
+  }, [offerId]);
 
   //fetch bands data on load
   useEffect(() => {
-    fetchvenue();
-  }, [fetchvenue]);
-
-  //Get all of the artists on the offer object
-  const appliedArtists = offerData?.appliedArtists ?? [];
+    populateData();
+  }, [populateData]);
 
   const openBookingForm = () => {
-    console.log("Open booking form");
+    applyToOffer(offerId!)
+      .then(() => {
+        Alert.alert(
+          "Success",
+          "You have successfully applied to this offer! The venue will be notified and can view your profile and contact you through the information provided.",
+        );
+      })
+      .catch((error) => {
+        Alert.alert("Error", error.message);
+      });
   };
 
   const openVenuePage = () => {
     navigator.navigate({
       pathname: "/venue-view",
-      params: { id: parentVenueId },
+      params: { id: offerData?.parentVenueId },
     });
   };
 
@@ -80,7 +96,7 @@ export default function OfferView() {
 
       {!loading && (
         <FlatList
-          data={appliedArtists}
+          data={artists}
           keyExtractor={(artist) => artist.id}
           renderItem={({ item }) => (
             <ArtistCell
@@ -100,17 +116,13 @@ export default function OfferView() {
           ListHeaderComponent={
             <View>
               <View style={styles.infoContainerMain}>
-                <ThemeText type="subtitle">Info</ThemeText>
-                <Image
-                  source={{ uri: offerData?.venue?.venueImage || "" }}
-                  style={styles.image}
-                />
+                <ThemeText type="subtitle">{offerData?.eventName}</ThemeText>
 
                 <View style={styles.profileContainerSub}>
                   <LabelWrapper label="Venue">
                     <Pressable onPress={openVenuePage}>
                       <ThemeText type="link">
-                        {offerData?.venue?.venueName}
+                        See venue details about {offerData?.eventName}
                       </ThemeText>
                     </Pressable>
                   </LabelWrapper>
@@ -127,27 +139,44 @@ export default function OfferView() {
                     </ThemeText>
                   </LabelWrapper>
 
+                  <LabelWrapper label="Date">
+                    <ThemeText type="defaultSemiBold">
+                      {offerData?.date &&
+                        new Date(offerData.date).toLocaleDateString()}
+                    </ThemeText>
+                  </LabelWrapper>
+
+                  <LabelWrapper label="Time">
+                    <ThemeText type="defaultSemiBold">
+                      {offerData?.time && formatTimeRange(offerData.time)}
+                    </ThemeText>
+                  </LabelWrapper>
+
+                  <LabelWrapper label="Arrival Time">
+                    <ThemeText type="defaultSemiBold">
+                      {offerData?.arrivalTime &&
+                        new Date(offerData.arrivalTime).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                    </ThemeText>
+                  </LabelWrapper>
+
                   <LabelWrapper label="Equipment Provided">
                     <ThemeText type="defaultSemiBold">
                       {offerData?.providedEquipment}
                     </ThemeText>
                   </LabelWrapper>
 
-                  <LabelWrapper label="Address">
-                    <ThemeText type="defaultSemiBold">
-                      {offerData?.venue?.address}
-                    </ThemeText>
-                  </LabelWrapper>
-
                   <LabelWrapper label="State">
                     <ThemeText type="defaultSemiBold">
-                      {offerData?.venue?.state}
+                      {offerData?.state}
                     </ThemeText>
                   </LabelWrapper>
                 </View>
 
                 <View style={styles.contactContainer}>
-                  {/* THIS WILL NEED TO BE DYNAMIC IF CURRENT USER IS NOT A BAND */}
+                  {/* THIS WILL NEED TO BE DYNAMIC IF CURRENT USER IS NOT AN ARTIST */}
                   <Pressable
                     onPress={openBookingForm}
                     style={styles.contactButton}

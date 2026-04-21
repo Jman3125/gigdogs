@@ -1,6 +1,7 @@
 //Validate Update Fields for a venue
 
 export function validateOfferFields(
+  eventName: string,
   date: Date,
   startTime: Date,
   endTime: Date,
@@ -11,12 +12,17 @@ export function validateOfferFields(
 ) {
   //Validate fields
 
-  const now = new Date();
-  if (date < now) {
+  if (!eventName.trim()) {
+    return { valid: false, message: "Please add an event name." };
+  }
+
+  // In validate-offer-fields.ts, replace the date validation block:
+  let today = new Date();
+  if (date < today) {
     return { valid: false, message: "Can not select a past date." };
   }
 
-  if (!(endTime > startTime && startTime > arrivalTime)) {
+  if (!(arrivalTime < startTime && startTime < endTime)) {
     return {
       valid: false,
       message:

@@ -33,19 +33,21 @@ export async function getOneItem<T>(
   collectionName: string,
 ): Promise<T | null> {
   try {
-    const q = query(collection(db, collectionName), where("id", "==", id));
+    // const q = query(collection(db, collectionName), where("id", "==", id));
 
-    const querySnapshot = await getDocs(q);
+    //const querySnapshot = await getDocs(q);
+    const ref = doc(db, collectionName, id);
+    const snap = await getDoc(ref);
 
-    if (querySnapshot.empty) {
-      throw new Error("Band not found");
+    if (!snap.exists()) {
+      throw new Error("User not found");
     }
 
-    const dataDoc = querySnapshot.docs[0];
-    const data = dataDoc.data();
-
+    // const dataDoc = snap.docs[0];
+    // const data = dataDoc.data();
+    const data = snap.data();
     return {
-      id: dataDoc.id,
+      id: snap.id,
       ...data,
     } as T;
   } catch (error: any) {

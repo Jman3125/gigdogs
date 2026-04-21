@@ -31,7 +31,7 @@ export default function ArtistView() {
   //fetch the selected bands data
   const fetchArtistData = useCallback(async () => {
     try {
-      const data = await getOneItem<Artist>(id, "artists");
+      const data = await getOneItem<Artist>(id, "users");
       setData(data);
       setLoading(false);
     } catch (error: any) {

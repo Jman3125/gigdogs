@@ -2,9 +2,17 @@ import { auth, db } from "@/config/firebaseConfig";
 import { Venue } from "@/models/venue";
 import { getOneItem } from "@/utilities/firebase/fetch-data";
 import { validateOfferFields } from "@/utilities/validate/validate-offer-fields";
-import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 export function useCreateOffer() {
   const create = async (
+    parentVenueId: string,
+    eventName: string,
     date: Date,
     startTime: Date,
     endTime: Date,
@@ -16,6 +24,7 @@ export function useCreateOffer() {
   ) => {
     // Validate fields
     const result = validateOfferFields(
+      eventName,
       date,
       startTime,
       endTime,
@@ -35,6 +44,9 @@ export function useCreateOffer() {
         throw new Error("User not authenticated.");
       }
 
+      //Create user uid
+      const uid = user.uid;
+
       //I also need to pass the current venues state and name with the offer so it's easy to put in feed
 
       //Create an ID for the offer
@@ -42,31 +54,33 @@ export function useCreateOffer() {
         return Math.random().toString(36).substring(2, 9);
       };
 
-      const offerId = generateID();
-
-      //Create an 'offers' array on the venue object, add the offer ID
-      await updateDoc(doc(db, "venues", user.uid), {
-        offers: arrayUnion(offerId),
-      });
+      console.log(uid);
 
       //Grab the current venues name and state to put on the offer object so it's easy to display in feed without having to grab the venue data
-      const venueData = await getOneItem<Venue>(user.uid, "venues");
+      const venueData = await getOneItem<Venue>(parentVenueId, "venues");
+      const offerId = generateID();
 
       //Create a collection for offers with all information and corresponding ID
-      await setDoc(doc(db, "offers", offerId), {
-        parentVenueId: venueData?.id || "Unknown Venue ID",
-        id: offerId,
+      const newRef = doc(collection(db, "offers")); // auto ID
+      await setDoc(newRef, {
+        parentVenueId: user.uid,
         status: "open",
         venueName: venueData?.venueName || "Unknown Venue",
+        eventName: eventName,
         state: venueData?.state || "Unknown State",
-        date: date,
-        time: startTime + " - " + endTime,
-        arrivalTime: arrivalTime,
+        date: date.toISOString(),
+        time: startTime.toISOString() + " - " + endTime.toISOString(),
+        arrivalTime: arrivalTime.toISOString(),
         description: eventDetails,
         offerAmount: parseFloat(offerAmount),
         providedEquipment: providedEquipment,
         extraNotes: extraNotes,
         appliedArtistIds: [],
+      });
+
+      //Create an 'offers' array on the venue object, add the offer ID
+      await updateDoc(doc(db, "venues", user.uid), {
+        offers: arrayUnion(offerId),
       });
 
       return { success: true };

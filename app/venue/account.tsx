@@ -8,7 +8,7 @@ import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useLogout } from "@/hooks/use-logout";
 import { useUpdateVenue } from "@/hooks/use-update";
-import { States } from "@/models/artist";
+import { States } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { fetchAuthVenue } from "@/utilities/firebase/fetch-auth-venue";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -53,7 +53,7 @@ export default function Account() {
 
   //For state picker selection
   const [openState, setOpenState] = useState(false);
-  const [selectedState, selectState] = useState("");
+  const [selectedState, setSelectedState] = useState("");
   const [states, setStates] = useState(States);
 
   //For Website
@@ -101,7 +101,7 @@ export default function Account() {
         setSignedInVenue(venueAuthData);
         setVenueName(venueAuthData?.venueName);
         setAddress(venueAuthData?.address);
-        selectState(venueAuthData?.website);
+        setSelectedState(venueAuthData?.state);
         setPhone(venueAuthData?.phone);
         setWebsite(venueAuthData?.website);
         setInstagram(venueAuthData?.instagram);
@@ -184,9 +184,9 @@ export default function Account() {
             </LabelWrapper>
             <ThemeText type="subtitle">Edit Account</ThemeText>
             <View>
-              <LabelWrapper label="Band Name">
+              <LabelWrapper label="Venue Name">
                 <TextInput
-                  placeholder="Your Band Name Here"
+                  placeholder="Venue Name"
                   maxLength={50}
                   style={styles.input}
                   placeholderTextColor={"#464141cb"}
@@ -213,9 +213,9 @@ export default function Account() {
                   value={selectedState}
                   items={states}
                   setOpen={setOpenState}
-                  setValue={selectState}
+                  setValue={setSelectedState}
                   setItems={setStates}
-                  placeholder="Select a genre"
+                  placeholder="Select a state"
                   listMode="MODAL"
                   style={styles.picker}
                 />
