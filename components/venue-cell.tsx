@@ -5,19 +5,19 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 import { ThemeText } from "./theme-text";
 
 type Props = {
-  venueId: string;
+  id: string;
   name: string;
   offers: number;
   venueImage: string;
 };
 
-export function VenueCell({ venueId, name, offers, venueImage }: Props) {
+export function VenueCell({ id, name, offers, venueImage }: Props) {
   const router = useRouter();
 
   const openProfile = () => {
     router.navigate({
       pathname: "/venue-view",
-      params: { venueId },
+      params: { id },
     });
   };
   return (

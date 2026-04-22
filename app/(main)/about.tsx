@@ -3,7 +3,7 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
 import { colors } from "@/utilities/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { FontAwesome } from "@expo/vector-icons";
 import { Linking, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -58,7 +58,7 @@ export default function About() {
           <View style={styles.section}>
             <LabelWrapper label="Please send us any feedback!">
               <View style={styles.horizontalWrap}>
-                <Ionicons name="mail-outline" size={22} color={"black"} />
+                <FontAwesome name="send" size={22} color={"rgb(31, 31, 31)"} />
                 <Pressable onPress={handleEmail}>
                   <ThemeText type="link">Contact Us</ThemeText>
                 </Pressable>
@@ -68,7 +68,7 @@ export default function About() {
             <ThemeText type="defaultSemiBold">
               <LabelWrapper label="Follow us on Instagram">
                 <View style={styles.horizontalWrap}>
-                  <Ionicons name="logo-instagram" size={22} color={"black"} />
+                  <FontAwesome name="instagram" size={22} color={"black"} />
                   <Pressable onPress={() => linkInstagram()}>
                     <ThemeText type="link">gig_dogs</ThemeText>
                   </Pressable>

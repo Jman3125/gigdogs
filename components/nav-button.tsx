@@ -8,7 +8,7 @@ type FontAwesomeIconName = React.ComponentProps<typeof FontAwesome>["name"];
 
 //To pass from parent view
 type Props = {
-  imageName: FontAwesomeIconName;
+  imageName?: FontAwesomeIconName;
   text?: string;
   route?: Href;
 };
@@ -17,10 +17,15 @@ export default function NavButton({ imageName, text, route }: Props) {
   return (
     //If there is a route passed then navigate to the route, else just go back to previous page
     <Pressable
-      style={styles.headerButton}
+      style={styles.header}
       onPress={() => (route ? navigator.push(route) : navigator.back())}
     >
-      <FontAwesome name={imageName} size={24} color="white" />
+      <FontAwesome
+        name={imageName}
+        size={28}
+        color="white"
+        style={styles.headerButton}
+      />
 
       {text && (
         <ThemeText type="defaultSemiBold" style={styles.headerText}>
@@ -32,7 +37,7 @@ export default function NavButton({ imageName, text, route }: Props) {
 }
 
 const styles = StyleSheet.create({
-  headerButton: {
+  header: {
     alignItems: "center",
     marginRight: 10,
     flexDirection: "row",
@@ -40,7 +45,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: "white",
   },
-  headerButtonRight: {
+  headerButton: {
     alignItems: "center",
     marginLeft: 10,
 

@@ -58,7 +58,7 @@ export default function Account() {
         keyboardShouldPersistTaps="always"
         ListEmptyComponent={
           <View>
-            <ThemeText type="subtitle">
+            <ThemeText type="defaultSemiBold">
               You have not applied to any offers yet.
             </ThemeText>
           </View>

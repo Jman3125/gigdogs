@@ -18,6 +18,7 @@ const StackLayout = () => {
       <Stack.Screen
         name="index"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
           headerRight: () => (
             <NavButton imageName="cog" route={"/venue/account"} />
@@ -28,25 +29,24 @@ const StackLayout = () => {
       <Stack.Screen
         name="account"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
 
       <Stack.Screen
-        name="credentials-reset"
+        name="credentials-reset-venue"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
 
-      {/* Modal */}
       <Stack.Screen
         name="create-offer"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
     </Stack>

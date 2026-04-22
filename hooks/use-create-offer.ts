@@ -1,6 +1,4 @@
 import { auth, db } from "@/config/firebaseConfig";
-import { Venue } from "@/models/venue";
-import { getOneItem } from "@/utilities/firebase/fetch-data";
 import { validateOfferFields } from "@/utilities/validate/validate-offer-fields";
 import {
   arrayUnion,
@@ -44,15 +42,6 @@ export function useCreateOffer() {
         throw new Error("User not authenticated.");
       }
 
-      //Create an ID for the offer
-      const generateID = () => {
-        return Math.random().toString(36).substring(2, 9);
-      };
-
-      //Grab the current venues name and state to put on the offer object so it's easy to display in feed without having to grab the venue data
-      const venueData = await getOneItem<Venue>(parentVenueId, "venues");
-      const offerId = generateID();
-
       //Create a collection for offers with all information and corresponding ID
       const newRef = doc(collection(db, "offers")); // auto ID
       await setDoc(newRef, {
@@ -71,7 +60,7 @@ export function useCreateOffer() {
 
       //Create an 'offers' array on the venue object, add the offer ID
       await updateDoc(doc(db, "venues", user.uid), {
-        offers: arrayUnion(offerId),
+        offers: arrayUnion(newRef.id),
       });
 
       return { success: true };

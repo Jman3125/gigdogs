@@ -3,7 +3,6 @@ import LogoTitle from "@/components/logo-title";
 import NavButton from "@/components/nav-button";
 import { colors } from "@/utilities/colors";
 import { Stack } from "expo-router";
-import { StyleSheet } from "react-native";
 
 const StackLayout = () => {
   return (
@@ -17,67 +16,59 @@ const StackLayout = () => {
       <Stack.Screen
         name="index"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerRight: () => <NavButton imageName="info" route={"/about"} />,
+          headerRight: () => (
+            <NavButton imageName="info-circle" route="/about" />
+          ),
         }}
       />
+
       <Stack.Screen
         name="about"
         options={{
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
       <Stack.Screen
         name="artist-view"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
       <Stack.Screen
         name="privacy"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
       <Stack.Screen
         name="terms"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
 
       <Stack.Screen
         name="venue-view"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
 
       <Stack.Screen
         name="offer-view"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
     </Stack>
   );
 };
-
-const styles = StyleSheet.create({
-  headerButton: {
-    alignItems: "center",
-    marginRight: 10,
-    flexDirection: "row",
-  },
-  headerText: {
-    color: "white",
-  },
-});
 
 export default StackLayout;

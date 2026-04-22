@@ -1,4 +1,5 @@
 //Sign up Page
+import IconInput from "@/components/icon-input";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
@@ -8,7 +9,7 @@ import { useImagePicker } from "@/hooks/use-image-picker";
 import { useSignupVenue } from "@/hooks/use-signup";
 import { States } from "@/models/venue";
 import { colors } from "@/utilities/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { FontAwesome } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
@@ -267,7 +268,8 @@ export default function VenueSingup() {
                 />
               </LabelWrapper>
               <LabelWrapper label="Instagram">
-                <TextInput
+                <IconInput
+                  icon="at"
                   placeholder="username"
                   placeholderTextColor={colors.placeholder}
                   style={styles.input}
@@ -278,7 +280,8 @@ export default function VenueSingup() {
                 />
               </LabelWrapper>
               <LabelWrapper label="Facebook">
-                <TextInput
+                <IconInput
+                  icon="at"
                   placeholder="username"
                   placeholderTextColor={colors.placeholder}
                   style={styles.input}
@@ -292,7 +295,7 @@ export default function VenueSingup() {
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
                   <ThemeText type="subtitle">Add Venue Picture</ThemeText>
-                  <Ionicons name="add" size={42} color="black" />
+                  <FontAwesome name="plus" size={42} color="black" />
                 </View>
 
                 {image && (

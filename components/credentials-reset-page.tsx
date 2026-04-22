@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function CredentialsReset() {
+export default function CredentialsResetPage() {
   //router
   const navigator = useRouter();
 
@@ -91,9 +91,9 @@ export default function CredentialsReset() {
           {reAuth && (
             <View style={styles.reAuthenticateContainer}>
               <ThemeText type="defaultSemiBold">
-                Please login to continue
+                Re-Authenticate required to change email.
               </ThemeText>
-              <LabelWrapper label="Email">
+              <LabelWrapper label="Current Email">
                 <TextInput
                   style={styles.input}
                   placeholder="123@music.com"
@@ -117,16 +117,11 @@ export default function CredentialsReset() {
                   }}
                 />
               </LabelWrapper>
-
-              <ThemeText type="default">
-                Enter your new email below and try again once these fields are
-                filled in.
-              </ThemeText>
             </View>
           )}
 
           <LabelWrapper
-            label="Update Email"
+            label={reAuth ? "New Email" : "Update Email"}
             footnote="Not seeing your email? Make sure you verified it."
           >
             <TextInput
@@ -149,7 +144,11 @@ export default function CredentialsReset() {
             </Pressable>
           </LabelWrapper>
 
-          {error ? <ThemeText type="error">{error}</ThemeText> : null}
+          {error ? (
+            <ThemeText type="error" style={styles.error}>
+              {error}
+            </ThemeText>
+          ) : null}
           <LabelWrapper label="Change Password">
             <ThemeText type="defaultSemiBold">
               To change your password, logout and click the forgot password
@@ -197,7 +196,8 @@ const styles = StyleSheet.create({
   //Show reauthentication fields
   reAuthenticateContainer: {
     padding: 5,
-    backgroundColor: "rgb(236, 236, 236)",
-    borderRadius: 10,
+  },
+  error: {
+    marginBottom: 25,
   },
 });

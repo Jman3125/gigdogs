@@ -144,10 +144,10 @@ export default function Index() {
             keyExtractor={(venue) => venue.id}
             renderItem={({ item }) => (
               <VenueCell
-                venueId={item.id}
+                id={item.id}
                 name={item.venueName}
                 offers={item.offers ? item.offers.length : 0}
-                venueImage={item.venueImage}
+                venueImage={item.picture}
                 //Just get the length of applied artists
               />
             )}

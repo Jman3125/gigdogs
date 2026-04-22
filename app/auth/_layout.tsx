@@ -18,6 +18,7 @@ const StackLayout = () => {
       <Stack.Screen
         name="index"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
         }}
       />
@@ -25,42 +26,34 @@ const StackLayout = () => {
       <Stack.Screen
         name="(artist)/artist-login"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
       <Stack.Screen
         name="(artist)/artist-signup"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
           headerRight: () => (
-            <NavButton
-              imageName="forward"
-              text="Login"
-              route="/auth/(artist)/artist-login"
-            />
+            <NavButton text="Login" route="/auth/(artist)/artist-login" />
           ),
         }}
       />
       <Stack.Screen
         name="(venue)/venue-login"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
       <Stack.Screen
         name="(venue)/venue-signup"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
           headerRight: () => (
-            <NavButton
-              imageName="forward"
-              text="Login"
-              route="/auth/(venue)/venue-login"
-            />
+            <NavButton text="Login" route="/auth/(venue)/venue-login" />
           ),
         }}
       />

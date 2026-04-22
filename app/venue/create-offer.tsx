@@ -4,6 +4,7 @@ import { ThemeText } from "@/components/theme-text";
 import { colors } from "@/utilities/colors";
 import { useState } from "react";
 
+import IconInput from "@/components/icon-input";
 import Loading from "@/components/loading";
 import { auth } from "@/config/firebaseConfig";
 import { useCreateOffer } from "@/hooks/use-create-offer";
@@ -184,7 +185,8 @@ export default function Modal() {
             </LabelWrapper>
 
             <LabelWrapper label="Offer Amount">
-              <TextInput
+              <IconInput
+                icon="dollar"
                 placeholder="Amount"
                 style={styles.input}
                 placeholderTextColor={colors.placeholder}

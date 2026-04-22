@@ -36,8 +36,8 @@ export default function VenueView() {
       setData(data);
       //Offers this venue has
       //Get all of the artists on the offer object
-      if (data?.offerIds && data.offerIds.length > 0) {
-        const offerData = await getItemsByIds<Offer>(data.offerIds, "offers");
+      if (data?.offers && data.offers.length > 0) {
+        const offerData = await getItemsByIds<Offer>(data.offers, "offers");
         setVenueOffers(offerData);
       }
 
@@ -96,7 +96,7 @@ export default function VenueView() {
           renderItem={({ item }) => (
             <OfferCell
               offerId={item.id}
-              name={venue?.venueName || ""}
+              name={item.eventName}
               date={item.date}
               time={item.time}
               offerAmount={item.offerAmount}
@@ -126,10 +126,7 @@ export default function VenueView() {
 
               <View style={styles.infoContainerMain}>
                 <ThemeText type="subtitle">Info</ThemeText>
-                <Image
-                  source={{ uri: venue?.venueImage }}
-                  style={styles.image}
-                />
+                <Image source={{ uri: venue?.picture }} style={styles.image} />
 
                 <View style={styles.profileContainerSub}>
                   <LabelWrapper label="Phone:">

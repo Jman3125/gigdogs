@@ -2,7 +2,7 @@ export interface Venue {
   id: string;
   role: string;
   venueName: string;
-  venueImage: string;
+  picture: string;
   state: string;
   address: string;
   //Venue contact information

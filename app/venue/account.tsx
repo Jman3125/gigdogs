@@ -1,4 +1,5 @@
 //This is where venues can access and edit their information once signed in
+import IconInput from "@/components/icon-input";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { ThemeText } from "@/components/theme-text";
@@ -10,7 +11,7 @@ import { useUpdateVenue } from "@/hooks/use-update";
 import { States } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { fetchAuthVenue } from "@/utilities/firebase/fetch-auth-venue";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { FontAwesome } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -188,13 +189,13 @@ export default function Account() {
                   }}
                 />
               </LabelWrapper>
-              <LabelWrapper label="Update Email & Password">
+              <LabelWrapper label="Authentication">
                 <Link href="/venue/credentials-reset" asChild>
                   <Pressable style={styles.emailPasswordLink}>
                     <ThemeText type="defaultSemiBold">
                       Email & Password
                     </ThemeText>
-                    <Ionicons name="chevron-forward" size={25} color="black" />
+                    <FontAwesome name="chevron-right" size={15} color="black" />
                   </Pressable>
                 </Link>
               </LabelWrapper>
@@ -239,7 +240,8 @@ export default function Account() {
               </LabelWrapper>
 
               <LabelWrapper label="Instagram">
-                <TextInput
+                <IconInput
+                  icon="at"
                   placeholder="username"
                   placeholderTextColor={"#464141cb"}
                   style={styles.input}
@@ -251,7 +253,8 @@ export default function Account() {
               </LabelWrapper>
 
               <LabelWrapper label="Facebook">
-                <TextInput
+                <IconInput
+                  icon="at"
                   placeholder="username"
                   placeholderTextColor={"#464141cb"}
                   style={styles.input}
@@ -265,7 +268,7 @@ export default function Account() {
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
                   <ThemeText type="subtitle">Add Profile Picture</ThemeText>
-                  <Ionicons name="add" size={42} color="black" />
+                  <FontAwesome name="plus" size={32} color="black" />
                 </View>
 
                 {image && (
@@ -333,6 +336,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 15,
+    gap: 5,
     maxWidth: "100%",
   },
   updateButton: {

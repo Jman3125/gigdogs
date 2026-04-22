@@ -1,4 +1,5 @@
 //This is where artists can access and edit their information once signed in
+import IconInput from "@/components/icon-input";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { ThemeText } from "@/components/theme-text";
@@ -10,7 +11,7 @@ import { useUpdateArtist } from "@/hooks/use-update";
 import { Genres } from "@/models/artist";
 import { colors } from "@/utilities/colors";
 import { fetchAuthArtist } from "@/utilities/firebase/fetch-auth-artist";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { FontAwesome } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -190,7 +191,7 @@ export default function Account() {
                     <ThemeText type="defaultSemiBold">
                       Email & Password
                     </ThemeText>
-                    <Ionicons name="chevron-forward" size={25} color="black" />
+                    <FontAwesome name="chevron-right" size={25} color="black" />
                   </Pressable>
                 </Link>
               </LabelWrapper>
@@ -240,7 +241,8 @@ export default function Account() {
                 Socials (must have at least one)
               </ThemeText>
               <LabelWrapper label="Instagram">
-                <TextInput
+                <IconInput
+                  icon="at"
                   placeholder="username"
                   placeholderTextColor={"#464141cb"}
                   style={styles.input}
@@ -251,7 +253,8 @@ export default function Account() {
                 />
               </LabelWrapper>
               <LabelWrapper label="Facebook">
-                <TextInput
+                <IconInput
+                  icon="at"
                   placeholder="username"
                   placeholderTextColor={"#464141cb"}
                   style={styles.input}
@@ -264,7 +267,7 @@ export default function Account() {
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
                   <ThemeText type="subtitle">Add Profile Picture</ThemeText>
-                  <Ionicons name="add" size={42} color="black" />
+                  <FontAwesome name="plus" size={42} color="black" />
                 </View>
 
                 {image && (

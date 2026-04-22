@@ -1,4 +1,5 @@
 //Sign up Page
+import IconInput from "@/components/icon-input";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
@@ -8,7 +9,7 @@ import { useImagePicker } from "@/hooks/use-image-picker";
 import { useSignupArtist } from "@/hooks/use-signup";
 import { Genres } from "@/models/artist";
 import { colors } from "@/utilities/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { FontAwesome } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
@@ -252,7 +253,8 @@ export default function ArtistSingup() {
                 Socials (please provide at least 1)
               </ThemeText>
               <LabelWrapper label="Instagram">
-                <TextInput
+                <IconInput
+                  icon="at"
                   placeholder="username"
                   placeholderTextColor={colors.placeholder}
                   style={styles.input}
@@ -264,7 +266,8 @@ export default function ArtistSingup() {
               </LabelWrapper>
 
               <LabelWrapper label="Facebook">
-                <TextInput
+                <IconInput
+                  icon="at"
                   placeholder="username"
                   placeholderTextColor={colors.placeholder}
                   style={styles.input}
@@ -278,7 +281,7 @@ export default function ArtistSingup() {
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
                   <ThemeText type="subtitle">Add Profile Picture</ThemeText>
-                  <Ionicons name="add" size={42} color="black" />
+                  <FontAwesome name="plus" size={42} color="black" />
                 </View>
 
                 {image && (

@@ -28,16 +28,16 @@ const StackLayout = () => {
       <Stack.Screen
         name="account"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
 
       <Stack.Screen
-        name="credentials-reset"
+        name="credentials-reset-artist"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
-          headerLeft: () => <NavButton imageName="backward" text="Back" />,
         }}
       />
     </Stack>
