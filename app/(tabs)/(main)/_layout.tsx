@@ -31,13 +31,6 @@ const StackLayout = () => {
         }}
       />
       <Stack.Screen
-        name="artist-view"
-        options={{
-          title: "",
-          headerTitle: () => <LogoTitle />,
-        }}
-      />
-      <Stack.Screen
         name="privacy"
         options={{
           title: "",
@@ -46,22 +39,6 @@ const StackLayout = () => {
       />
       <Stack.Screen
         name="terms"
-        options={{
-          title: "",
-          headerTitle: () => <LogoTitle />,
-        }}
-      />
-
-      <Stack.Screen
-        name="venue-view"
-        options={{
-          title: "",
-          headerTitle: () => <LogoTitle />,
-        }}
-      />
-
-      <Stack.Screen
-        name="offer-view"
         options={{
           title: "",
           headerTitle: () => <LogoTitle />,

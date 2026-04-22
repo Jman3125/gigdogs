@@ -4,6 +4,7 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
+import { auth } from "@/config/firebaseConfig";
 import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
 import { colors } from "@/utilities/colors";
@@ -35,13 +36,22 @@ export default function OfferView() {
   //These are the applied artists on this offer
   const [artists, setArtists] = useState<Artist[]>([]);
 
+  //Is the current user a venue who owns this offer? If so show actions to accept an artist and see artists that have applied
+  const [showActions, setShowActions] = useState(false);
+
   //fetch the selected bands data
   const populateData = useCallback(async () => {
     if (!offerId) return;
 
+    const currentUserId = auth.currentUser?.uid;
+
     const data = await getOneItem<Offer>(offerId, "offers");
 
     setOfferData(data);
+
+    if (currentUserId == data?.parentVenueId) {
+      setShowActions(true);
+    }
 
     //Get all of the artists on the offer object
     const appliedArtists = data?.appliedArtistIds ?? [];
@@ -69,7 +79,7 @@ export default function OfferView() {
       .then(() => {
         Alert.alert(
           "Success",
-          "You have successfully applied to this offer! The venue will be notified and can view your profile and contact you through the information provided.",
+          "You have successfully applied to this offer! The venue may contact you. Offers you have applied to will show up on your profile page.",
         );
       })
       .catch((error) => {
@@ -78,7 +88,7 @@ export default function OfferView() {
   };
 
   const openVenuePage = () => {
-    navigator.navigate({
+    navigator.push({
       pathname: "/venue-view",
       params: { id: offerData?.parentVenueId },
     });
@@ -101,7 +111,8 @@ export default function OfferView() {
           renderItem={({ item }) => (
             <ArtistCell
               //Set this to the uid of the artist
-              id={item.id}
+              artistId={item.id}
+              offerId={offerData?.id || ""}
               name={item.artistName}
               genre={item.genre}
               picture={item.picture}
@@ -118,48 +129,50 @@ export default function OfferView() {
             <View>
               <View style={styles.infoContainerMain}>
                 <ThemeText type="subtitle">{offerData?.eventName}</ThemeText>
+                <Pressable onPress={openVenuePage}>
+                  <ThemeText type="link">View Venue Page</ThemeText>
+                </Pressable>
 
                 <View style={styles.profileContainerSub}>
-                  <LabelWrapper label="Venue">
-                    <Pressable onPress={openVenuePage}>
-                      <ThemeText type="link">
-                        See venue details about {offerData?.eventName}
-                      </ThemeText>
-                    </Pressable>
-                  </LabelWrapper>
+                  <View style={styles.infoGrid}>
+                    <View style={styles.verticalInfo}>
+                      <LabelWrapper label="Amount">
+                        <ThemeText type="defaultSemiBold">
+                          ${offerData?.offerAmount}
+                        </ThemeText>
+                      </LabelWrapper>
 
+                      <LabelWrapper label="Date">
+                        <ThemeText type="defaultSemiBold">
+                          {offerData?.date &&
+                            new Date(offerData.date).toLocaleDateString()}
+                        </ThemeText>
+                      </LabelWrapper>
+                    </View>
+                    <View style={styles.verticalInfo}>
+                      <LabelWrapper label="Arrival Time">
+                        <ThemeText type="defaultSemiBold">
+                          {offerData?.arrivalTime &&
+                            new Date(offerData.arrivalTime).toLocaleTimeString(
+                              [],
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              },
+                            )}
+                        </ThemeText>
+                      </LabelWrapper>
+
+                      <LabelWrapper label="Time">
+                        <ThemeText type="defaultSemiBold">
+                          {offerData?.time && formatTimeRange(offerData.time)}
+                        </ThemeText>
+                      </LabelWrapper>
+                    </View>
+                  </View>
                   <LabelWrapper label="Description">
                     <ThemeText type="defaultSemiBold">
                       {offerData?.description}
-                    </ThemeText>
-                  </LabelWrapper>
-
-                  <LabelWrapper label="Amount">
-                    <ThemeText type="defaultSemiBold">
-                      {offerData?.offerAmount}
-                    </ThemeText>
-                  </LabelWrapper>
-
-                  <LabelWrapper label="Date">
-                    <ThemeText type="defaultSemiBold">
-                      {offerData?.date &&
-                        new Date(offerData.date).toLocaleDateString()}
-                    </ThemeText>
-                  </LabelWrapper>
-
-                  <LabelWrapper label="Time">
-                    <ThemeText type="defaultSemiBold">
-                      {offerData?.time && formatTimeRange(offerData.time)}
-                    </ThemeText>
-                  </LabelWrapper>
-
-                  <LabelWrapper label="Arrival Time">
-                    <ThemeText type="defaultSemiBold">
-                      {offerData?.arrivalTime &&
-                        new Date(offerData.arrivalTime).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
                     </ThemeText>
                   </LabelWrapper>
 
@@ -168,27 +181,41 @@ export default function OfferView() {
                       {offerData?.providedEquipment}
                     </ThemeText>
                   </LabelWrapper>
-                </View>
 
-                <View style={styles.contactContainer}>
-                  {/* THIS WILL NEED TO BE DYNAMIC IF CURRENT USER IS NOT AN ARTIST */}
-                  <Pressable
-                    onPress={openBookingForm}
-                    style={styles.contactButton}
-                  >
-                    <ThemeText type="defaultSemiBold">Apply For Gig</ThemeText>
-                  </Pressable>
-
-                  <ThemeText type="caption">
-                    By proceeding to book you agree to GigDogs{" "}
-                    <TermsPrivacyLinks />
-                  </ThemeText>
-                  <Pressable onPress={handleReport} style={styles.report}>
-                    <ThemeText type="link">Report Offer</ThemeText>
-                  </Pressable>
+                  {offerData?.extraNotes && (
+                    <LabelWrapper label="Extra Notes">
+                      <ThemeText type="defaultSemiBold">
+                        {offerData?.extraNotes}
+                      </ThemeText>
+                    </LabelWrapper>
+                  )}
                 </View>
+                {!showActions && (
+                  <View style={styles.contactContainer}>
+                    {/* THIS WILL NEED TO BE DYNAMIC IF CURRENT USER IS NOT AN ARTIST */}
+                    <Pressable
+                      onPress={openBookingForm}
+                      style={styles.contactButton}
+                    >
+                      <ThemeText type="defaultSemiBold">
+                        Apply For Gig
+                      </ThemeText>
+                    </Pressable>
+
+                    <ThemeText type="caption">
+                      By proceeding to book you agree to GigDogs{" "}
+                      <TermsPrivacyLinks />
+                    </ThemeText>
+                    <Pressable onPress={handleReport} style={styles.report}>
+                      <ThemeText type="link">Report Offer</ThemeText>
+                    </Pressable>
+                  </View>
+                )}
               </View>
               <ThemeText type="subtitle">Applied Artists</ThemeText>
+              <ThemeText type="caption" style={styles.listTop}>
+                Select an artist for this event
+              </ThemeText>
             </View>
           }
         />
@@ -226,6 +253,26 @@ const styles = StyleSheet.create({
   profileContainerSub: {
     flexDirection: "column",
     justifyContent: "space-between",
+    gap: 15,
+  },
+  //This holds infor about times and price
+  infoGrid: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "rgb(236, 236, 236)",
+    padding: 10,
+    borderRadius: 10,
+    // iOS
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    // Android
+    elevation: 6,
+  },
+  verticalInfo: {
+    flexDirection: "column",
   },
   image: {
     position: "absolute",
@@ -273,5 +320,9 @@ const styles = StyleSheet.create({
   //This is for the applied bands on the offer
   flatListContainer: {
     flex: 1,
+  },
+
+  listTop: {
+    marginBottom: 15,
   },
 });

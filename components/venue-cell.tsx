@@ -15,7 +15,7 @@ export function VenueCell({ id, name, offers, venueImage }: Props) {
   const router = useRouter();
 
   const openProfile = () => {
-    router.navigate({
+    router.push({
       pathname: "/venue-view",
       params: { id },
     });

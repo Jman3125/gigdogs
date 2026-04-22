@@ -36,7 +36,10 @@ const StackLayout = () => {
           title: "",
           headerTitle: () => <LogoTitle />,
           headerRight: () => (
-            <NavButton text="Login" route="/auth/(artist)/artist-login" />
+            <NavButton
+              text="Login"
+              route="/(tabs)/auth/(artist)/artist-login"
+            />
           ),
         }}
       />
@@ -53,7 +56,7 @@ const StackLayout = () => {
           title: "",
           headerTitle: () => <LogoTitle />,
           headerRight: () => (
-            <NavButton text="Login" route="/auth/(venue)/venue-login" />
+            <NavButton text="Login" route="/(tabs)/auth/(venue)/venue-login" />
           ),
         }}
       />

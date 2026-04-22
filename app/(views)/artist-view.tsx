@@ -2,7 +2,9 @@
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { ThemeText } from "@/components/theme-text";
+import { useApproveOffer } from "@/hooks/use-approve-offer";
 import { Artist } from "@/models/artist";
+import { colors } from "@/utilities/colors";
 import { getOneItem } from "@/utilities/firebase/fetch-data";
 import { getGenre } from "@/utilities/getGenreLabel";
 import { useLocalSearchParams } from "expo-router";
@@ -20,7 +22,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ArtistView() {
   // Going to match the id to a band and get attributes so I don't pass them all through URL
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { artistId, offerId } = useLocalSearchParams<{
+    artistId: string;
+    offerId: string;
+  }>();
   // Find the band in the db that matches the id passed through the URL params
   const [artistData, setData] = useState<Artist | null>();
   const [loading, setLoading] = useState(true);
@@ -31,7 +36,7 @@ export default function ArtistView() {
   //fetch the selected bands data
   const fetchArtistData = useCallback(async () => {
     try {
-      const data = await getOneItem<Artist>(id, "users");
+      const data = await getOneItem<Artist>(artistId, "users");
       setData(data);
       setLoading(false);
     } catch (error: any) {
@@ -42,7 +47,7 @@ export default function ArtistView() {
         "Failed to fetch artist data. Please try again later.",
       );
     }
-  }, [id]);
+  }, [artistId, offerId]);
 
   //fetch bands data on load
   useEffect(() => {
@@ -65,6 +70,34 @@ export default function ArtistView() {
   const handleReport = () => {
     Linking.openURL(
       `mailto:gigdogscontact@gmail.com?subject=Report&Inquiry&body=Please give the account name and problem so we can review it as soon as possible.`,
+    );
+  };
+
+  const { approve } = useApproveOffer();
+
+  const handleConfirm = async () => {
+    try {
+      await approve(offerId, artistId);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
+  //Select an artist for the corresponding offer
+  const selectArtist = () => {
+    Alert.alert(
+      "Notice",
+      "This locks you in with this artist and will close the offer, removing all other artists.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Confirm",
+          onPress: () => {
+            // wrap async call so Alert doesn't complain
+            handleConfirm();
+          },
+        },
+      ],
     );
   };
   return (
@@ -132,6 +165,20 @@ export default function ArtistView() {
               </LabelWrapper>
             </View>
 
+            <View>
+              <Pressable onPress={selectArtist} style={styles.selectButton}>
+                <ThemeText
+                  type="defaultSemiBold"
+                  style={styles.selectButtonText}
+                >
+                  Select This Artist
+                </ThemeText>
+              </Pressable>
+              <ThemeText type="caption">
+                Lock this artist in for your event
+              </ThemeText>
+            </View>
+
             <Pressable onPress={handleReport} style={styles.report}>
               <ThemeText type="link">Report Account</ThemeText>
             </Pressable>
@@ -187,6 +234,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   headerText: {
+    color: "white",
+  },
+  selectButton: {
+    width: "100%",
+    height: 60,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    borderRadius: 25,
+  },
+  selectButtonText: {
     color: "white",
   },
   artistName: {

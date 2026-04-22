@@ -1,4 +1,5 @@
 //Sign up Page
+import FacebookInput from "@/components/facebook-input";
 import IconInput from "@/components/icon-input";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
@@ -6,8 +7,8 @@ import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
-import { useSignupArtist } from "@/hooks/use-signup";
-import { Genres } from "@/models/artist";
+import { useSignupVenue } from "@/hooks/use-signup";
+import { States } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
@@ -27,7 +28,7 @@ import {
 import DropDownPicker from "react-native-dropdown-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function ArtistSingup() {
+export default function VenueSingup() {
   //Will use context after signup to update home feed so user sees changes
   const { setReload } = useContext(ReloadFeedContext);
   //Navigator
@@ -37,12 +38,12 @@ export default function ArtistSingup() {
   const [loading, setLoading] = useState(false);
 
   //Sign up function
-  const { signup } = useSignupArtist();
+  const { signup } = useSignupVenue();
 
   const { pickImage } = useImagePicker();
 
-  //For band name
-  const [bandName, setBandName] = useState("");
+  //For venue name
+  const [venueName, setVenueName] = useState("");
 
   //For email
   const [email, setEmail] = useState("");
@@ -53,16 +54,20 @@ export default function ArtistSingup() {
   //For password confirmation
   const [password2, setPassword2] = useState("");
 
-  //For Genre picker selection
-  const [openGenre, setOpenGenre] = useState(false);
-  const [selectedGenre, selectGenre] = useState("");
-  const [genres, setGenres] = useState(Genres);
+  //For Venue Adress
+  const [address, setAddress] = useState("");
 
-  //For bio
-  const [bio, setBio] = useState("");
+  //For State picker selection
+  const [openState, setOpenState] = useState(false);
+  const [selectedState, selectState] = useState("xyz");
+  const [states, setStates] = useState(States);
 
   //For Phone
   const [phone, setPhone] = useState("");
+
+  //LINKS
+  //For venue website username
+  const [website, setWebsite] = useState("");
 
   //For instagram username
   const [instagram, setInstagram] = useState("");
@@ -89,13 +94,14 @@ export default function ArtistSingup() {
     try {
       setLoading(true);
       await signup(
-        bandName,
+        venueName,
         email,
         password,
         password2,
-        selectedGenre,
-        bio.trimEnd().trimStart(),
+        selectedState,
+        address,
         image || "",
+        website,
         instagram,
         facebook,
         phone,
@@ -143,18 +149,18 @@ export default function ArtistSingup() {
           >
             <ScrollView>
               <ThemeText type="title" style={styles.title}>
-                Artist Signup
+                Venue Signup
               </ThemeText>
 
-              <LabelWrapper label="Artist Name" footnote="Max Length: 50">
+              <LabelWrapper label="Venue Name" footnote="Max Length: 40">
                 <TextInput
-                  placeholder="Artist Name"
-                  maxLength={35}
+                  placeholder="Venue Name"
+                  maxLength={40}
                   style={styles.input}
                   placeholderTextColor={colors.placeholder}
-                  value={bandName}
+                  value={venueName}
                   onChangeText={(value) => {
-                    setBandName(value);
+                    setVenueName(value);
                   }}
                 />
               </LabelWrapper>
@@ -206,52 +212,62 @@ export default function ArtistSingup() {
                 />
               </LabelWrapper>
 
-              <LabelWrapper label="What type of music do you play">
-                <DropDownPicker
-                  open={openGenre}
-                  value={selectedGenre}
-                  items={genres}
-                  setOpen={setOpenGenre}
-                  setValue={selectGenre}
-                  setItems={setGenres}
-                  placeholder="Select a genre"
-                  listMode="MODAL"
-                  style={styles.picker}
+              <LabelWrapper
+                label="Address"
+                footnote="So artists you hire can find you"
+              >
+                <TextInput
+                  placeholder="123 Main St, City"
+                  style={styles.input}
+                  placeholderTextColor={colors.placeholder}
+                  value={address}
+                  onChangeText={(value) => {
+                    setAddress(value);
+                  }}
                 />
               </LabelWrapper>
 
-              <LabelWrapper label="Bio" footnote="Max Length: 280">
-                <TextInput
-                  placeholder="Tell us about the music you play, your experience, or anything else you want venues to know!"
-                  multiline
-                  numberOfLines={5}
-                  maxLength={280}
-                  style={styles.multiline}
-                  placeholderTextColor={colors.placeholder}
-                  value={bio}
-                  onChangeText={(value) => {
-                    setBio(value);
-                  }}
+              <LabelWrapper label="State">
+                <DropDownPicker
+                  open={openState}
+                  value={selectedState}
+                  items={States}
+                  setOpen={setOpenState}
+                  setValue={selectState}
+                  placeholder="Select a State"
+                  listMode="MODAL"
+                  style={styles.picker}
                 />
               </LabelWrapper>
 
               <LabelWrapper label="Phone Number">
                 <TextInput
                   placeholder="1234567890"
-                  inputMode="numeric"
+                  inputMode="tel"
                   style={styles.input}
                   placeholderTextColor={colors.placeholder}
                   value={phone}
                   onChangeText={(value) => {
                     setPhone(value);
                   }}
-                  maxLength={10}
+                  maxLength={11}
                 />
               </LabelWrapper>
 
               <ThemeText type="defaultSemiBold">
                 Socials (please provide at least 1)
               </ThemeText>
+              <LabelWrapper label="Website">
+                <TextInput
+                  placeholder="VenueWebsite.com"
+                  placeholderTextColor={colors.placeholder}
+                  style={styles.input}
+                  value={website}
+                  onChangeText={(value) => {
+                    setWebsite(value);
+                  }}
+                />
+              </LabelWrapper>
               <LabelWrapper label="Instagram">
                 <IconInput
                   icon="at"
@@ -264,23 +280,21 @@ export default function ArtistSingup() {
                   }}
                 />
               </LabelWrapper>
-
               <LabelWrapper label="Facebook">
-                <IconInput
-                  icon="at"
+                <FacebookInput
                   placeholder="username"
-                  placeholderTextColor={colors.placeholder}
+                  placeholderTextColor={"#464141cb"}
                   style={styles.input}
-                  value={instagram}
-                  onChangeText={(value) => {
-                    setInstagram(value);
+                  value={facebook}
+                  onValueChange={(value) => {
+                    setFacebook(value);
                   }}
                 />
               </LabelWrapper>
 
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
-                  <ThemeText type="subtitle">Add Profile Picture</ThemeText>
+                  <ThemeText type="subtitle">Add Venue Picture</ThemeText>
                   <FontAwesome name="plus" size={42} color="black" />
                 </View>
 

@@ -25,7 +25,7 @@ export function OfferCell({
   const router = useRouter();
 
   const openProfile = () => {
-    router.navigate({
+    router.push({
       pathname: "/offer-view",
       params: { offerId },
     });

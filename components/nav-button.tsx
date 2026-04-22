@@ -1,5 +1,5 @@
 //Reusable buttons component in the nav bar
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Href, useRouter } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
 import { ThemeText } from "./theme-text";
@@ -8,11 +8,17 @@ type FontAwesomeIconName = React.ComponentProps<typeof FontAwesome>["name"];
 
 //To pass from parent view
 type Props = {
+  isBackButton?: boolean;
   imageName?: FontAwesomeIconName;
   text?: string;
   route?: Href;
 };
-export default function NavButton({ imageName, text, route }: Props) {
+export default function NavButton({
+  isBackButton,
+  imageName,
+  text,
+  route,
+}: Props) {
   const navigator = useRouter();
   return (
     //If there is a route passed then navigate to the route, else just go back to previous page
@@ -20,6 +26,14 @@ export default function NavButton({ imageName, text, route }: Props) {
       style={text ? styles.textOnly : styles.header}
       onPress={() => (route ? navigator.push(route) : navigator.back())}
     >
+      {isBackButton && (
+        <Ionicons
+          name="chevron-back"
+          size={28}
+          color={"white"}
+          style={styles.backButton}
+        />
+      )}
       {imageName && (
         <FontAwesome
           name={imageName}
@@ -44,6 +58,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     flexDirection: "row",
+  },
+  backButton: {
+    marginTop: 4,
+    marginLeft: 2,
   },
   header: {
     alignItems: "center",

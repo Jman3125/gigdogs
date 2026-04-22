@@ -1,4 +1,5 @@
 //This is where venues can access and edit their information once signed in
+import FacebookInput from "@/components/facebook-input";
 import IconInput from "@/components/icon-input";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
@@ -253,13 +254,12 @@ export default function Account() {
               </LabelWrapper>
 
               <LabelWrapper label="Facebook">
-                <IconInput
-                  icon="at"
+                <FacebookInput
                   placeholder="username"
                   placeholderTextColor={"#464141cb"}
                   style={styles.input}
                   value={facebook}
-                  onChangeText={(value) => {
+                  onValueChange={(value) => {
                     setFacebook(value);
                   }}
                 />

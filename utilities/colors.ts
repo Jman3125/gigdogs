@@ -5,4 +5,5 @@ export const colors = {
   text: "#212121",
   error: "#b50c00",
   placeholder: "#666666ce",
+  link: "#0a7ea4",
 };
