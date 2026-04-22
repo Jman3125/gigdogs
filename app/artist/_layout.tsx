@@ -18,6 +18,7 @@ const StackLayout = () => {
       <Stack.Screen
         name="index"
         options={{
+          title: "",
           headerTitle: () => <LogoTitle />,
           headerRight: () => (
             <NavButton imageName="cog" route={"/artist/account"} />

@@ -190,7 +190,7 @@ export default function Account() {
                 />
               </LabelWrapper>
               <LabelWrapper label="Authentication">
-                <Link href="/venue/credentials-reset" asChild>
+                <Link href="/venue/credentials-reset-venue" asChild>
                   <Pressable style={styles.emailPasswordLink}>
                     <ThemeText type="defaultSemiBold">
                       Email & Password
@@ -267,7 +267,7 @@ export default function Account() {
 
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
-                  <ThemeText type="subtitle">Add Profile Picture</ThemeText>
+                  <ThemeText type="subtitle">Change Profile Picture</ThemeText>
                   <FontAwesome name="plus" size={32} color="black" />
                 </View>
 

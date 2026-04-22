@@ -17,15 +17,17 @@ export default function NavButton({ imageName, text, route }: Props) {
   return (
     //If there is a route passed then navigate to the route, else just go back to previous page
     <Pressable
-      style={styles.header}
+      style={text ? styles.textOnly : styles.header}
       onPress={() => (route ? navigator.push(route) : navigator.back())}
     >
-      <FontAwesome
-        name={imageName}
-        size={28}
-        color="white"
-        style={styles.headerButton}
-      />
+      {imageName && (
+        <FontAwesome
+          name={imageName}
+          size={28}
+          color="white"
+          style={styles.headerButton}
+        />
+      )}
 
       {text && (
         <ThemeText type="defaultSemiBold" style={styles.headerText}>
@@ -37,6 +39,12 @@ export default function NavButton({ imageName, text, route }: Props) {
 }
 
 const styles = StyleSheet.create({
+  textOnly: {
+    alignItems: "center",
+    paddingLeft: 10,
+    paddingRight: 10,
+    flexDirection: "row",
+  },
   header: {
     alignItems: "center",
     marginRight: 10,
@@ -48,7 +56,6 @@ const styles = StyleSheet.create({
   headerButton: {
     alignItems: "center",
     marginLeft: 10,
-
     flexDirection: "row",
   },
 });

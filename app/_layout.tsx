@@ -55,7 +55,7 @@ const TabsLayout = () => {
           options={{
             title: "Account",
             headerShown: false,
-            href: isSignedIn && role === "artist" ? "/artist" : null,
+            href: isSignedIn && role === "artist" ? undefined : null,
             //This is the actions page for authenticated artists
             tabBarIcon: ({ color }) => (
               <FontAwesome name="send" size={24} color={color} />
@@ -71,7 +71,7 @@ const TabsLayout = () => {
           options={{
             title: "Account",
             headerShown: false,
-            href: isSignedIn && role === "venue" ? "/venue" : null,
+            href: isSignedIn && role === "venue" ? undefined : null,
 
             tabBarIcon: ({ color }) => (
               <FontAwesome name="send" size={24} color={color} />
@@ -87,7 +87,7 @@ const TabsLayout = () => {
           options={{
             title: "Account",
             headerShown: false,
-            href: !isSignedIn ? "/auth" : null,
+            href: !isSignedIn ? undefined : null,
 
             tabBarIcon: ({ color }) => (
               <FontAwesome name="plus" size={24} color={color} />

@@ -1,4 +1,4 @@
-import { auth } from "@/config/firebaseConfig";
+import { auth, db } from "@/config/firebaseConfig";
 import { validateUserEmailUpdate } from "@/utilities/validate/authenticate-email-update";
 import { validateLoginFields } from "@/utilities/validate/authenticate-login";
 import {
@@ -6,8 +6,8 @@ import {
   reauthenticateWithCredential,
   verifyBeforeUpdateEmail,
 } from "firebase/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { useLogout } from "./use-logout";
-
 //Update user email
 export function useUpdateEmail() {
   //Logout function that will be implemented on email change
@@ -30,16 +30,21 @@ export function useUpdateEmail() {
       throw new Error("User not authenticated.");
     }
 
-    // Check if ANY other band has this email
-    //const allBands = await getAllBands();
+    // Check if ANY other venue/artist has this email
+    const q1 = query(collection(db, "users"), where("email", "==", newEmail));
 
-    // const emailTakenByAnotherBand = allBands.some(
-    //   (band) => band.email === newEmail && band.id !== user.uid,
-    // );
+    const q2 = query(collection(db, "venues"), where("email", "==", newEmail));
 
-    // if (emailTakenByAnotherBand) {
-    //   throw new Error("That email is already in use.");
-    // }
+    const snapshot1 = await getDocs(q1);
+    const snapshot2 = await getDocs(q2);
+
+    const emailTakenByAnotherUser =
+      (!snapshot1.empty && snapshot1.docs.some((doc) => doc.id !== user.uid)) ||
+      (!snapshot2.empty && snapshot2.docs.some((doc) => doc.id !== user.uid));
+
+    if (emailTakenByAnotherUser) {
+      throw new Error("That email is already in use.");
+    }
 
     //Ensure user is authenticated before updating if needed (error would have been thrown and this would be users second time after passing email and password)
     if (email && password) {

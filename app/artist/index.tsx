@@ -7,7 +7,7 @@ import { Offer } from "@/models/offer";
 import { colors } from "@/utilities/colors";
 import { getItemsByIds, getOneItem } from "@/utilities/firebase/fetch-data";
 import { useEffect, useState } from "react";
-import { FlatList, ScrollView, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account() {
@@ -24,7 +24,7 @@ export default function Account() {
       const data = await getItemsByIds<Offer>(appliedOfferIds, "offers");
       setOffersData(data);
     } catch (error) {
-      console.error("Error fetching artist data:", error);
+      console.error("Error fetching offer data:", error);
     }
   };
 
@@ -34,41 +34,39 @@ export default function Account() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView>
-        <FlatList
-          data={offersData}
-          keyExtractor={(offer) => offer.id}
-          renderItem={({ item }) => (
-            <OfferCell
-              offerId={item.id}
-              name={item.eventName}
-              date={item.date}
-              time={item.time}
-              offerAmount={item.offerAmount}
-              artistsApplied={
-                item.appliedArtistIds ? item.appliedArtistIds.length : 0
-              }
-            />
-          )}
-          keyboardShouldPersistTaps="always"
-          ListEmptyComponent={
-            <View>
-              <ThemeText type="subtitle">
-                You have not applied to any offers yet.
-              </ThemeText>
-            </View>
-          }
-          ListHeaderComponent={
-            <View>
-              <ThemeText type="title">Offers</ThemeText>
-              <ThemeText type="default">
-                To apply to offers, go to the search page and click on an offer
-                to see details and apply.
-              </ThemeText>
-            </View>
-          }
-        />
-      </ScrollView>
+      <FlatList
+        data={offersData}
+        keyExtractor={(offer) => offer.id}
+        renderItem={({ item }) => (
+          <OfferCell
+            offerId={item.id}
+            name={item.eventName}
+            date={item.date}
+            time={item.time}
+            offerAmount={item.offerAmount}
+            artistsApplied={
+              item.appliedArtistIds ? item.appliedArtistIds.length : 0
+            }
+          />
+        )}
+        keyboardShouldPersistTaps="always"
+        ListEmptyComponent={
+          <View>
+            <ThemeText type="subtitle">
+              You have not applied to any offers yet.
+            </ThemeText>
+          </View>
+        }
+        ListHeaderComponent={
+          <View>
+            <ThemeText type="title">Offers</ThemeText>
+            <ThemeText type="default">
+              To apply to offers, go to the search page and click on an offer to
+              see details and apply.
+            </ThemeText>
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 }

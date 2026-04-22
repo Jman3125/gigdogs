@@ -186,7 +186,7 @@ export default function Account() {
                 />
               </LabelWrapper>
               <LabelWrapper label="Update Email & Password">
-                <Link href="/artist/credentials-reset" asChild>
+                <Link href="/artist/credentials-reset-artist" asChild>
                   <Pressable style={styles.emailPasswordLink}>
                     <ThemeText type="defaultSemiBold">
                       Email & Password
@@ -266,7 +266,7 @@ export default function Account() {
               </LabelWrapper>
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
-                  <ThemeText type="subtitle">Add Profile Picture</ThemeText>
+                  <ThemeText type="subtitle">Change Profile Picture</ThemeText>
                   <FontAwesome name="plus" size={42} color="black" />
                 </View>
 

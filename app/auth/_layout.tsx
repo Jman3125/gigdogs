@@ -9,7 +9,7 @@ const StackLayout = () => {
   return (
     <Stack
       screenOptions={{
-        animation: pathname.startsWith("/actions") ? "default" : "none",
+        animation: pathname.startsWith("/auth") ? "default" : "none",
         headerStyle: {
           backgroundColor: colors.primary,
         },
