@@ -9,7 +9,6 @@ import {
 } from "firebase/firestore";
 export function useCreateOffer() {
   const create = async (
-    parentVenueId: string,
     eventName: string,
     date: Date,
     startTime: Date,

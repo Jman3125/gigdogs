@@ -60,8 +60,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   backButton: {
-    marginTop: 4,
-    marginLeft: 2,
+    marginTop: 2,
+    position: "fixed",
+    left: 2,
+    top: 0,
   },
   header: {
     alignItems: "center",

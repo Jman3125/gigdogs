@@ -1,4 +1,5 @@
 //Signed in bands booking offers page
+import Loading from "@/components/loading";
 import { OfferCell } from "@/components/offer-cell";
 import { ThemeText } from "@/components/theme-text";
 import { auth } from "@/config/firebaseConfig";
@@ -20,6 +21,9 @@ export default function Account() {
   //Get the offers that this artist has applied to through appliedOfferIds
   const [offersData, setOffersData] = useState<Offer[]>([]);
 
+  //loading state
+  const [loading, setLoading] = useState(true);
+
   const fetchArtistData = async () => {
     try {
       const currentVenue = await getOneItem<Venue>(
@@ -29,6 +33,7 @@ export default function Account() {
       const offerIds = currentVenue?.offers || [];
       const data = await getItemsByIds<Offer>(offerIds, "offers");
       setOffersData(data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching artist data:", error);
     }
@@ -40,42 +45,52 @@ export default function Account() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <FlatList
-        data={offersData}
-        keyExtractor={(offer) => offer.id}
-        renderItem={({ item }) => (
-          <OfferCell
-            offerId={item.id}
-            name={item.eventName}
-            date={item.date}
-            time={item.time}
-            offerAmount={item.offerAmount}
-            artistsApplied={
-              item.appliedArtistIds ? item.appliedArtistIds.length : 0
-            }
-          />
-        )}
-        keyboardShouldPersistTaps="always"
-        ListEmptyComponent={
-          <View>
-            <ThemeText type="defaultSemiBold">
-              You have not applied to any offers yet.
-            </ThemeText>
-          </View>
-        }
-        ListHeaderComponent={
-          <View>
-            <Pressable style={styles.createEventButton} onPress={openModal}>
-              <ThemeText type="subtitle">Create Offer</ThemeText>
-              <FontAwesome name="plus" size={34} color={"black"}></FontAwesome>
-            </Pressable>
-
+      {loading && <Loading />}
+      {!loading && (
+        <FlatList
+          data={offersData}
+          keyExtractor={(offer) => offer.id}
+          renderItem={({ item }) => (
+            <OfferCell
+              offerId={item.id}
+              name={item.eventName}
+              showDelete={true}
+              type="venue"
+              date={item.date}
+              time={item.time}
+              offerAmount={item.offerAmount}
+              artistsApplied={
+                item.appliedArtistIds ? item.appliedArtistIds.length : 0
+              }
+              setLoading={setLoading}
+            />
+          )}
+          keyboardShouldPersistTaps="always"
+          ListEmptyComponent={
             <View>
-              <ThemeText type="subtitle">Your Offers</ThemeText>
+              <ThemeText type="defaultSemiBold">
+                You have not applied to any offers yet.
+              </ThemeText>
             </View>
-          </View>
-        }
-      />
+          }
+          ListHeaderComponent={
+            <View>
+              <Pressable style={styles.createEventButton} onPress={openModal}>
+                <ThemeText type="subtitle">Create Offer</ThemeText>
+                <FontAwesome
+                  name="plus"
+                  size={34}
+                  color={"black"}
+                ></FontAwesome>
+              </Pressable>
+
+              <View>
+                <ThemeText type="subtitle">Your Offers</ThemeText>
+              </View>
+            </View>
+          }
+        />
+      )}
     </SafeAreaView>
   );
 }

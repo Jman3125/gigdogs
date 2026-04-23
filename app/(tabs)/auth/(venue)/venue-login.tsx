@@ -71,7 +71,7 @@ export default function VenueLogin() {
       setLoading(false);
 
       //return to feed but delay so reload state updates
-      navigator.replace("/(main)");
+      navigator.replace("/");
 
       //reload home page
       setReload(true);

@@ -11,9 +11,19 @@ export interface Artist {
   facebook?: string;
   instagram?: string;
   phone: string;
+  originalCover: string;
+  songs: string;
   //The events the artist has applied to
   appliedOfferIds: string[];
 }
+
+//Original or cover band selection
+
+export const OriginalCoverOptions = [
+  { label: "Originals/Covers", value: "original_covers" },
+  { label: "Original", value: "original" },
+  { label: "Cover", value: "cover" },
+];
 
 //Genres
 

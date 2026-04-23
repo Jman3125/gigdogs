@@ -41,6 +41,8 @@ export default function Account() {
           <OfferCell
             offerId={item.id}
             name={item.eventName}
+            showDelete={true}
+            type="artist"
             date={item.date}
             time={item.time}
             offerAmount={item.offerAmount}

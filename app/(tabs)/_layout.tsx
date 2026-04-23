@@ -86,6 +86,7 @@ const TabsLayout = () => {
           name="auth"
           options={{
             title: "Account",
+            popToTopOnBlur: true,
             headerShown: false,
             href: !isSignedIn ? undefined : null,
 

@@ -18,6 +18,8 @@ export function useSignupArtist() {
     password: string,
     password2: string,
     genre: string,
+    originalsCovers: string,
+    songs: string,
     bio: string,
     picture: string,
     //Socials
@@ -35,6 +37,8 @@ export function useSignupArtist() {
       password,
       password2,
       genre,
+      originalsCovers,
+      songs,
       bio,
       picture,
       instagram,
@@ -74,8 +78,9 @@ export function useSignupArtist() {
         role,
         artistName,
         email,
-        location,
         genre,
+        originalsCovers,
+        songs,
         bio,
         picture: imageURL,
         instagram,
@@ -157,7 +162,7 @@ export function useSignupVenue() {
       const imageURL = picture ? await uploadImageAsync(picture, uid) : null;
 
       // 3 Create Firestore user doc
-      await setDoc(doc(db, "venues"), {
+      await setDoc(doc(db, "venues", uid), {
         role,
         venueName,
         email,

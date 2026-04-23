@@ -11,6 +11,8 @@ export function validateSignupFieldsArtist(
   password: string,
   password2: string,
   genre: string,
+  originalsCovers: string,
+  songs: string,
   bio: string,
   picture: string,
   instagram: string,
@@ -44,6 +46,14 @@ export function validateSignupFieldsArtist(
 
   if (!genre.trim()) {
     return { valid: false, message: "Please select a genre." };
+  }
+
+  if (!originalsCovers.trim()) {
+    return { valid: false, message: "Please select originals/covers." };
+  }
+
+  if (!songs.trim()) {
+    return { valid: false, message: "Please add your songs." };
   }
 
   if (!picture || !picture.trim()) {

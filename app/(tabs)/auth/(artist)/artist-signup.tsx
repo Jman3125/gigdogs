@@ -8,7 +8,7 @@ import { ThemeText } from "@/components/theme-text";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useSignupArtist } from "@/hooks/use-signup";
-import { Genres } from "@/models/artist";
+import { Genres, OriginalCoverOptions } from "@/models/artist";
 import { colors } from "@/utilities/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
@@ -59,6 +59,14 @@ export default function ArtistSingup() {
   const [selectedGenre, selectGenre] = useState("");
   const [genres, setGenres] = useState(Genres);
 
+  //For Orignals/Covers picker selection
+  const [openType, setOpenType] = useState(false);
+  const [selectedType, selectType] = useState("");
+  const [types, setTypes] = useState(OriginalCoverOptions);
+
+  //For songs
+  const [songs, setSongs] = useState("");
+
   //For bio
   const [bio, setBio] = useState("");
 
@@ -95,6 +103,8 @@ export default function ArtistSingup() {
         password,
         password2,
         selectedGenre,
+        selectedType,
+        songs,
         bio.trimEnd().trimStart(),
         image || "",
         instagram,
@@ -114,7 +124,7 @@ export default function ArtistSingup() {
             onPress: async () => {
               setLoading(false);
               setReload(true);
-              navigator.replace("/(main)");
+              navigator.replace("/");
             },
           },
         ],
@@ -146,8 +156,7 @@ export default function ArtistSingup() {
               <ThemeText type="title" style={styles.title}>
                 Artist Signup
               </ThemeText>
-
-              <LabelWrapper label="Artist Name" footnote="Max Length: 50">
+              <LabelWrapper label="Artist Name" footnote="Max Length: 35">
                 <TextInput
                   placeholder="Artist Name"
                   maxLength={35}
@@ -159,7 +168,6 @@ export default function ArtistSingup() {
                   }}
                 />
               </LabelWrapper>
-
               <LabelWrapper label="Email">
                 <TextInput
                   placeholder="123@music.com"
@@ -172,7 +180,6 @@ export default function ArtistSingup() {
                   }}
                 />
               </LabelWrapper>
-
               <LabelWrapper
                 label="Password"
                 footnote="Must be at least 6 characters"
@@ -189,7 +196,6 @@ export default function ArtistSingup() {
                   autoCapitalize="none"
                 />
               </LabelWrapper>
-
               <LabelWrapper
                 label="Confirm Password"
                 footnote="Passwords must match"
@@ -206,7 +212,6 @@ export default function ArtistSingup() {
                   autoCapitalize="none"
                 />
               </LabelWrapper>
-
               <LabelWrapper label="What type of music do you play">
                 <DropDownPicker
                   open={openGenre}
@@ -218,6 +223,33 @@ export default function ArtistSingup() {
                   placeholder="Select a genre"
                   listMode="MODAL"
                   style={styles.picker}
+                />
+              </LabelWrapper>
+              <LabelWrapper label="Covers, Originals, or Both?">
+                <DropDownPicker
+                  open={openType}
+                  value={selectedType}
+                  items={types}
+                  setOpen={setOpenType}
+                  setValue={selectType}
+                  setItems={setTypes}
+                  placeholder="Select a type"
+                  listMode="MODAL"
+                  style={styles.picker}
+                />
+              </LabelWrapper>
+              <LabelWrapper label="Songs" footnote="Max Length: 50">
+                <TextInput
+                  placeholder="List some of your songs or link your music!"
+                  maxLength={100}
+                  numberOfLines={3}
+                  multiline
+                  style={styles.input}
+                  placeholderTextColor={colors.placeholder}
+                  value={songs}
+                  onChangeText={(value) => {
+                    setSongs(value);
+                  }}
                 />
               </LabelWrapper>
 
@@ -235,7 +267,6 @@ export default function ArtistSingup() {
                   }}
                 />
               </LabelWrapper>
-
               <LabelWrapper label="Phone Number">
                 <TextInput
                   placeholder="1234567890"
@@ -249,7 +280,6 @@ export default function ArtistSingup() {
                   maxLength={10}
                 />
               </LabelWrapper>
-
               <ThemeText type="defaultSemiBold">
                 Socials (please provide at least 1)
               </ThemeText>
@@ -265,7 +295,6 @@ export default function ArtistSingup() {
                   }}
                 />
               </LabelWrapper>
-
               <LabelWrapper label="Facebook">
                 <FacebookInput
                   placeholder="username"
@@ -277,7 +306,6 @@ export default function ArtistSingup() {
                   }}
                 />
               </LabelWrapper>
-
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
                   <ThemeText type="subtitle">Add Profile Picture</ThemeText>
@@ -288,7 +316,6 @@ export default function ArtistSingup() {
                   <Image source={{ uri: image }} style={styles.image} />
                 )}
               </Pressable>
-
               <TextInput
                 value={honey}
                 onChangeText={setHoney}
@@ -299,7 +326,6 @@ export default function ArtistSingup() {
                 accessibilityElementsHidden
                 placeholder="Leave this field empty"
               />
-
               <View style={styles.horizontalWrap}>
                 <ThemeText type="default" style={styles.termsText}>
                   I give GigDogs permission to openly display my information
@@ -321,9 +347,7 @@ export default function ArtistSingup() {
                   style={styles.checkbox}
                 />
               </View>
-
               {error ? <ThemeText type="error">{error}</ThemeText> : null}
-
               <Pressable style={styles.signupButton} onPress={() => submit()}>
                 <ThemeText type="defaultSemiBold">Submit</ThemeText>
               </Pressable>

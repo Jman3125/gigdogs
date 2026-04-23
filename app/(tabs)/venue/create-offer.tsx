@@ -102,7 +102,6 @@ export default function Modal() {
     setLoading(true);
     try {
       await create(
-        parentVenueId,
         eventName,
         date,
         startTime,

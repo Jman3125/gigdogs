@@ -71,7 +71,7 @@ export default function ArtistLogin() {
       setLoading(false);
 
       //return to home but delay so reload state updates
-      navigator.replace("/(main)");
+      navigator.replace("/");
 
       //reload home page
       setReload(true);

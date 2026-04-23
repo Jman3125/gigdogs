@@ -119,7 +119,7 @@ export default function VenueSingup() {
             onPress: async () => {
               setLoading(false);
               setReload(true);
-              navigator.replace("/(main)");
+              navigator.replace("/");
             },
           },
         ],
