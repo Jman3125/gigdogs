@@ -19,7 +19,6 @@ export function useSignupArtist() {
     password2: string,
     genre: string,
     originalsCovers: string,
-    songs: string,
     bio: string,
     picture: string,
     //Socials
@@ -38,7 +37,6 @@ export function useSignupArtist() {
       password2,
       genre,
       originalsCovers,
-      songs,
       bio,
       picture,
       instagram,
@@ -80,12 +78,10 @@ export function useSignupArtist() {
         email,
         genre,
         originalsCovers,
-        songs,
         bio,
         picture: imageURL,
         instagram,
         facebook,
-        phone,
         createdAt: serverTimestamp(),
       });
 
@@ -113,7 +109,6 @@ export function useSignupVenue() {
     website: string,
     instagram: string,
     facebook: string,
-    phone: string,
     honey: string,
     readTerms: boolean,
     readInfo: boolean,
@@ -130,7 +125,6 @@ export function useSignupVenue() {
       website,
       instagram,
       facebook,
-      phone,
       honey,
       readTerms,
       readInfo,
@@ -170,7 +164,6 @@ export function useSignupVenue() {
         website,
         instagram,
         facebook,
-        phone,
         createdAt: serverTimestamp(),
       });
 

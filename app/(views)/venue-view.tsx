@@ -75,7 +75,7 @@ export default function VenueView() {
   //open venues facebook account
   const linkFacebook = () => {
     Linking.openURL(
-      `https://instagram.com/${venue?.instagram?.trimEnd().toLowerCase()}`,
+      `https://facebook.com/${venue?.facebook?.trimEnd().toLowerCase()}`,
     );
   };
 
@@ -135,16 +135,10 @@ export default function VenueView() {
                 <Image source={{ uri: venue?.picture }} style={styles.image} />
 
                 <View style={styles.profileContainerSub}>
-                  <LabelWrapper label="Phone:">
-                    <ThemeText type="defaultSemiBold">
-                      ${venue?.phone}
-                    </ThemeText>
-                  </LabelWrapper>
-
                   <LabelWrapper label="Email:">
                     <Pressable onPress={openEmail}>
                       <ThemeText type="defaultSemiBold">
-                        ${venue?.email}
+                        {venue?.email}
                       </ThemeText>
                     </Pressable>
                   </LabelWrapper>
@@ -152,14 +146,14 @@ export default function VenueView() {
                   {venue?.instagram && (
                     <LabelWrapper label="Instagram:">
                       <Pressable onPress={linkInstagram}>
-                        <ThemeText type="link">{venue?.instagram}</ThemeText>
+                        <ThemeText type="link">@{venue?.instagram}</ThemeText>
                       </Pressable>
                     </LabelWrapper>
                   )}
                   {venue?.facebook && (
                     <LabelWrapper label="Facebook:">
                       <Pressable onPress={linkFacebook}>
-                        <ThemeText type="link">{venue?.facebook}</ThemeText>
+                        <ThemeText type="link">@{venue?.facebook}</ThemeText>
                       </Pressable>
                     </LabelWrapper>
                   )}

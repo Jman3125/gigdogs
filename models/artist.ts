@@ -12,7 +12,6 @@ export interface Artist {
   instagram?: string;
   phone: string;
   originalCover: string;
-  songs: string;
   //The events the artist has applied to
   appliedOfferIds: string[];
 }

@@ -6,16 +6,21 @@ export function LabelWrapper({
   label,
   children,
   footnote,
+  color,
   isBold,
 }: {
   label: string;
   footnote?: string;
   isBold?: boolean;
+  color?: string;
   children: React.ReactNode;
 }): React.ReactElement {
   return (
     <View style={styles.container}>
-      <ThemeText type={isBold ? "defaultSemiBold" : "default"}>
+      <ThemeText
+        type={isBold ? "defaultSemiBold" : "default"}
+        style={{ color: color }}
+      >
         {label}
       </ThemeText>
       {children}

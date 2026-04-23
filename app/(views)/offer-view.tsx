@@ -46,14 +46,18 @@ export default function OfferView() {
 
   //fetch the selected bands data
   const populateData = useCallback(async () => {
-    if (!offerId) return;
+    setLoading(true);
+    if (!offerId) {
+      setLoading(false);
+      return;
+    }
 
     const data = await getOneItem<Offer>(offerId, "offers");
 
     setOfferData(data);
 
     if (role === "venue") {
-      setEmptyStateText("No artists have applied to this offer yet.");
+      setEmptyStateText("Artists that apply will display here.");
       //Get all of the artists on the offer object
       const appliedArtists = data?.appliedArtistIds ?? [];
 
@@ -73,7 +77,7 @@ export default function OfferView() {
       );
     }
     setLoading(false);
-  }, [offerId]);
+  }, [offerId, role]);
 
   //fetch bands data on load
   useEffect(() => {
@@ -103,13 +107,6 @@ export default function OfferView() {
     }
   };
 
-  const openVenuePage = () => {
-    navigator.push({
-      pathname: "/venue-view",
-      params: { id: offerData?.parentVenueId },
-    });
-  };
-
   //User wants to report content
   const handleReport = () => {
     Linking.openURL(
@@ -121,135 +118,150 @@ export default function OfferView() {
       {loading && <Loading />}
 
       {!loading && (
-        <FlatList
-          data={artists}
-          keyExtractor={(artist) => artist.id}
-          renderItem={({ item }) => (
-            <ArtistCell
-              //Set this to the uid of the artist
-              artistId={item.id}
-              offerId={offerData?.id || ""}
-              name={item.artistName}
-              genre={item.genre}
-              picture={item.picture}
-            />
-          )}
-          keyboardShouldPersistTaps="always"
-          style={styles.flatListContainer}
-          ListEmptyComponent={
-            <View style={styles.emptyStateContainer}>
-              <ThemeText type="error">{emptyStateText}</ThemeText>
-            </View>
-          }
-          ListHeaderComponent={
-            <View>
-              <View style={styles.infoContainerMain}>
-                <ThemeText type="subtitle">{offerData?.eventName}</ThemeText>
-                <Pressable onPress={openVenuePage}>
-                  <ThemeText type="link">View Venue Page</ThemeText>
-                </Pressable>
+        <>
+          <FlatList
+            data={artists}
+            keyExtractor={(artist) => artist.id}
+            renderItem={({ item }) => (
+              <ArtistCell
+                //Set this to the uid of the artist
+                artistId={item.id}
+                offerId={offerData?.id || ""}
+                name={item.artistName}
+                genre={item.genre}
+                picture={item.picture}
+              />
+            )}
+            keyboardShouldPersistTaps="always"
+            style={styles.flatListContainer}
+            ListEmptyComponent={
+              <View style={styles.emptyStateContainer}>
+                <ThemeText type="error">{emptyStateText}</ThemeText>
+              </View>
+            }
+            ListHeaderComponent={
+              <View style={styles.main}>
+                <ThemeText type="title">Offer</ThemeText>
 
-                <View style={styles.profileContainerSub}>
-                  <View style={styles.infoGrid}>
-                    <View style={styles.verticalInfo}>
-                      <LabelWrapper label="Amount">
-                        {isSignedIn ? (
+                <View style={styles.infoContainerMain}>
+                  <ThemeText type="subtitle">{offerData?.eventName}</ThemeText>
+
+                  <View style={styles.profileContainerSub}>
+                    <View style={styles.infoGrid}>
+                      <View style={styles.verticalInfo}>
+                        <LabelWrapper label="Amount">
+                          {isSignedIn ? (
+                            <ThemeText type="defaultSemiBold">
+                              ${offerData?.offerAmount}
+                            </ThemeText>
+                          ) : (
+                            <FontAwesome
+                              name="lock"
+                              size={18}
+                              color={colors.placeholder}
+                            />
+                          )}
+                        </LabelWrapper>
+
+                        <LabelWrapper label="Date">
                           <ThemeText type="defaultSemiBold">
-                            ${offerData?.offerAmount}
+                            {offerData?.date &&
+                              new Date(offerData.date).toLocaleDateString()}
                           </ThemeText>
-                        ) : (
-                          <FontAwesome
-                            name="lock"
-                            size={18}
-                            color={colors.placeholder}
-                          />
-                        )}
-                      </LabelWrapper>
-
-                      <LabelWrapper label="Date">
-                        <ThemeText type="defaultSemiBold">
-                          {offerData?.date &&
-                            new Date(offerData.date).toLocaleDateString()}
-                        </ThemeText>
-                      </LabelWrapper>
-                    </View>
-                    <View style={styles.verticalInfo}>
-                      <LabelWrapper label="Arrival Time">
-                        <ThemeText type="defaultSemiBold">
-                          {offerData?.arrivalTime &&
-                            new Date(offerData.arrivalTime).toLocaleTimeString(
-                              [],
-                              {
+                        </LabelWrapper>
+                      </View>
+                      <View style={styles.verticalInfo}>
+                        <LabelWrapper label="Arrival Time">
+                          <ThemeText type="defaultSemiBold">
+                            {offerData?.arrivalTime &&
+                              new Date(
+                                offerData.arrivalTime,
+                              ).toLocaleTimeString([], {
                                 hour: "2-digit",
                                 minute: "2-digit",
-                              },
-                            )}
-                        </ThemeText>
-                      </LabelWrapper>
+                              })}
+                          </ThemeText>
+                        </LabelWrapper>
 
-                      <LabelWrapper label="Time">
-                        <ThemeText type="defaultSemiBold">
-                          {offerData?.time && formatTimeRange(offerData.time)}
-                        </ThemeText>
-                      </LabelWrapper>
+                        <LabelWrapper label="Time">
+                          <ThemeText type="defaultSemiBold">
+                            {offerData?.time && formatTimeRange(offerData.time)}
+                          </ThemeText>
+                        </LabelWrapper>
+                      </View>
                     </View>
-                  </View>
-                  <LabelWrapper label="Description">
-                    <ThemeText type="defaultSemiBold">
-                      {offerData?.description}
-                    </ThemeText>
-                  </LabelWrapper>
-
-                  <LabelWrapper label="Equipment Provided">
-                    <ThemeText type="defaultSemiBold">
-                      {offerData?.providedEquipment}
-                    </ThemeText>
-                  </LabelWrapper>
-
-                  {offerData?.extraNotes && (
-                    <LabelWrapper label="Extra Notes">
+                    <LabelWrapper label="Description">
                       <ThemeText type="defaultSemiBold">
-                        {offerData?.extraNotes}
+                        {offerData?.description}
                       </ThemeText>
                     </LabelWrapper>
+
+                    <LabelWrapper label="Equipment Provided">
+                      <ThemeText type="defaultSemiBold">
+                        {offerData?.providedEquipment}
+                      </ThemeText>
+                    </LabelWrapper>
+
+                    {offerData?.extraNotes && (
+                      <LabelWrapper label="Extra Notes">
+                        <ThemeText type="defaultSemiBold">
+                          {offerData?.extraNotes}
+                        </ThemeText>
+                      </LabelWrapper>
+                    )}
+                  </View>
+                  {role == "artist" && offerData?.status == "accepted" && (
+                    <View style={styles.accepted}>
+                      <ThemeText type="defaultSemiBold">Accepted</ThemeText>
+
+                      <ThemeText type="default">
+                        This venue has approved your application. All
+                        information is on this page. Contact the venue for
+                        questions or contact support if you need to cancel.
+                      </ThemeText>
+                    </View>
+                  )}
+                  {/* User is not a venue, show apply for offer button */}
+                  {!(role === "venue") && (
+                    <View style={styles.contactContainer}>
+                      <Pressable
+                        onPress={openBookingForm}
+                        style={styles.contactButton}
+                      >
+                        <ThemeText type="defaultSemiBold">
+                          Apply For Gig
+                        </ThemeText>
+                      </Pressable>
+
+                      <ThemeText type="caption">
+                        By proceeding to apply you agree to GigDogs{" "}
+                        <TermsPrivacyLinks />
+                      </ThemeText>
+                      <Pressable onPress={handleReport} style={styles.report}>
+                        <ThemeText type="link">Report Offer</ThemeText>
+                      </Pressable>
+                    </View>
                   )}
                 </View>
-                {/* User is not a venue, show apply for offer button */}
-                {!(role === "venue") && (
-                  <View style={styles.contactContainer}>
-                    <Pressable
-                      onPress={openBookingForm}
-                      style={styles.contactButton}
-                    >
-                      <ThemeText type="defaultSemiBold">
-                        Apply For Gig
-                      </ThemeText>
-                    </Pressable>
+                <ThemeText type="subtitle">
+                  {offerData?.status === "open"
+                    ? `Applied Artists: ${offerData?.appliedArtistIds.length}`
+                    : "Locked In"}
+                </ThemeText>
 
-                    <ThemeText type="caption">
-                      By proceeding to apply you agree to GigDogs{" "}
-                      <TermsPrivacyLinks />
+                {role === "venue" && (
+                  <>
+                    <ThemeText type="caption" style={styles.listTop}>
+                      {offerData?.status === "open"
+                        ? "Select an artist for this event"
+                        : "Artist has been notified."}
                     </ThemeText>
-                    <Pressable onPress={handleReport} style={styles.report}>
-                      <ThemeText type="link">Report Offer</ThemeText>
-                    </Pressable>
-                  </View>
+                  </>
                 )}
               </View>
-              <ThemeText type="subtitle">
-                Applied Artists: {offerData?.appliedArtistIds.length}
-              </ThemeText>
-
-              {role === "venue" && (
-                <>
-                  <ThemeText type="caption" style={styles.listTop}>
-                    Select an artist for this event
-                  </ThemeText>
-                </>
-              )}
-            </View>
-          }
-        />
+            }
+          />
+        </>
       )}
     </SafeAreaView>
   );
@@ -260,11 +272,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
   },
-  headerContainer: {
-    width: "100%",
-    height: "auto",
-    justifyContent: "center",
+  main: {
     alignItems: "center",
+    gap: 10,
   },
   infoContainerMain: {
     padding: 15,
@@ -316,6 +326,11 @@ const styles = StyleSheet.create({
   contactContainer: {
     flexDirection: "column",
   },
+  accepted: {
+    width: "100%",
+    backgroundColor: "rgba(96, 192, 99, 0.7)",
+    padding: 10,
+  },
   contactButton: {
     width: "100%",
     height: 50,
@@ -351,10 +366,12 @@ const styles = StyleSheet.create({
   //This is for the applied bands on the offer
   flatListContainer: {
     flex: 1,
+    marginBottom: 25,
   },
 
   emptyStateContainer: {
     marginTop: 15,
+    marginBottom: 25,
   },
 
   listTop: {

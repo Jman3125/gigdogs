@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import IconInput from "@/components/icon-input";
 import Loading from "@/components/loading";
+import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { useCreateOffer } from "@/hooks/use-create-offer";
@@ -21,6 +22,7 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -152,48 +154,64 @@ export default function Modal() {
               />
             </LabelWrapper>
 
-            <LabelWrapper label="Date">
-              <DateTimePicker
-                value={date}
-                mode={"date"}
-                is24Hour={true}
-                onChange={(event, selectedDate) =>
-                  setDate(selectedDate || date)
-                }
-              />
-            </LabelWrapper>
-            <LabelWrapper label="Start Time">
-              <DateTimePicker
-                value={startTime}
-                mode={"time"}
-                is24Hour={true}
-                onChange={(event, selectedTime) =>
-                  setStartTime(selectedTime || startTime)
-                }
-              />
-            </LabelWrapper>
-            <LabelWrapper label="End Time">
-              <DateTimePicker
-                value={endTime}
-                mode={"time"}
-                is24Hour={true}
-                onChange={(event, selectedTime) =>
-                  setEndTime(selectedTime || endTime)
-                }
-              />
-            </LabelWrapper>
-            <LabelWrapper label="Arrival Time">
-              <DateTimePicker
-                value={arrival}
-                mode={"time"}
-                is24Hour={true}
-                onChange={(event, selectedTime) =>
-                  setArrival(selectedTime || arrival)
-                }
-              />
+            <LabelWrapper label="Important Information">
+              <View style={styles.horizontalSelectionSection}>
+                <View style={styles.verticalSelectionSection}>
+                  <LabelWrapper label="Arrival Time" color="white">
+                    <DateTimePicker
+                      value={arrival}
+                      mode={"time"}
+                      is24Hour={true}
+                      accentColor="white"
+                      onChange={(event, selectedTime) =>
+                        setArrival(selectedTime || arrival)
+                      }
+                    />
+                  </LabelWrapper>
+                  <LabelWrapper label="Start Time" color="white">
+                    <DateTimePicker
+                      value={startTime}
+                      mode={"time"}
+                      is24Hour={true}
+                      accentColor="white"
+                      onChange={(event, selectedTime) =>
+                        setStartTime(selectedTime || startTime)
+                      }
+                    />
+                  </LabelWrapper>
+                </View>
+
+                <View style={styles.verticalSelectionSection}>
+                  <LabelWrapper label="Gig Date" color="white">
+                    <DateTimePicker
+                      value={date}
+                      mode={"date"}
+                      is24Hour={true}
+                      accentColor="white"
+                      onChange={(event, selectedDate) =>
+                        setDate(selectedDate || date)
+                      }
+                    />
+                  </LabelWrapper>
+                  <LabelWrapper label="End Time" color="white">
+                    <DateTimePicker
+                      value={endTime}
+                      mode={"time"}
+                      is24Hour={true}
+                      accentColor="white"
+                      onChange={(event, selectedTime) =>
+                        setEndTime(selectedTime || endTime)
+                      }
+                    />
+                  </LabelWrapper>
+                </View>
+              </View>
             </LabelWrapper>
 
-            <LabelWrapper label="Offer Amount">
+            <LabelWrapper
+              label="Offer Amount"
+              footnote="This will only be shown to authenticated artists"
+            >
               <IconInput
                 icon="dollar"
                 placeholder="Amount"
@@ -256,9 +274,18 @@ export default function Modal() {
 
             {error ? <ThemeText type="error">{error}</ThemeText> : null}
 
-            <Pressable style={styles.signupButton} onPress={() => submit()}>
-              <ThemeText type="defaultSemiBold">Submit</ThemeText>
-            </Pressable>
+            <View>
+              <Pressable style={styles.signupButton} onPress={() => submit()}>
+                <ThemeText type="defaultSemiBold" style={{ color: "white" }}>
+                  Post Offer
+                </ThemeText>
+              </Pressable>
+
+              <ThemeText type="caption">
+                Posted offers are public. See <TermsPrivacyLinks /> before
+                continuing
+              </ThemeText>
+            </View>
           </ScrollView>
         </KeyboardAvoidingView>
       )}
@@ -291,12 +318,32 @@ const styles = StyleSheet.create({
 
   signupButton: {
     marginTop: 25,
-    marginBottom: 25,
+    marginBottom: 5,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.primary,
     width: "100%",
     height: 50,
     borderRadius: 15,
+  },
+
+  horizontalSelectionSection: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: colors.primary,
+    padding: 20,
+    borderRadius: 25,
+    // iOS
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    // Android
+    elevation: 6,
+  },
+
+  verticalSelectionSection: {
+    flexDirection: "column",
   },
 });

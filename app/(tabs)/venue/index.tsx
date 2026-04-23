@@ -14,7 +14,7 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import { Alert, FlatList, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account() {
@@ -69,6 +69,14 @@ export default function Account() {
     }, [reload, fetchOffersdata, setReload]),
   );
 
+  //User wants information about the page
+  const openInfoAlert = () => {
+    Alert.alert(
+      "Information",
+      "This page is where you'll see and manage all offers you've posted on GigDogs. You will also see offers you have locked in an artist for.",
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       {loading && <Loading />}
@@ -100,7 +108,7 @@ export default function Account() {
             </View>
           }
           ListHeaderComponent={
-            <View>
+            <View style={styles.mainHeaderContainer}>
               <Pressable style={styles.createEventButton} onPress={openModal}>
                 <ThemeText type="subtitle">Create Offer</ThemeText>
                 <FontAwesome
@@ -109,14 +117,23 @@ export default function Account() {
                   color={"black"}
                 ></FontAwesome>
               </Pressable>
+              <Pressable onPress={openInfoAlert}>
+                <ThemeText type="subtitle">
+                  Events Dashboard{" "}
+                  <FontAwesome name="info-circle" size={22} color={"gray"} />
+                </ThemeText>
+              </Pressable>
 
-              <View>
-                <ThemeText type="subtitle">Your Offers</ThemeText>
-              </View>
+              <ThemeText type="caption">
+                Select an offer to see details
+              </ThemeText>
 
-              <View>
+              <View style={styles.acceptedContainer}>
                 {/* This is where we put all of the accepted offers in a list */}
-                <ThemeText type="subtitle">Accepted Offers</ThemeText>
+                <ThemeText type="subtitle" style={{ marginBottom: 10 }}>
+                  Coming up{" "}
+                  <FontAwesome name="calendar" size={28} color={"black"} />
+                </ThemeText>
 
                 {offersDataAccepted.map((item) => (
                   <OfferCell
@@ -128,14 +145,22 @@ export default function Account() {
                     date={item.date}
                     time={item.time}
                     offerAmount={item.offerAmount}
-                    artistsApplied={
-                      item.appliedArtistIds ? item.appliedArtistIds.length : 0
-                    }
+                    artistsApplied={"Locked"}
                     setLoading={setLoading}
                   />
                 ))}
 
+                <ThemeText type="default">
+                  <ThemeText type="link">Contact Us</ThemeText> for
+                  cancellations & questions
+                </ThemeText>
+              </View>
+
+              <View>
                 <ThemeText type="subtitle">Open Offers</ThemeText>
+                <ThemeText type="caption">
+                  Select an artist to lock in a date or remove an offer.
+                </ThemeText>
               </View>
             </View>
           }
@@ -150,6 +175,24 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
+  mainHeaderContainer: {
+    alignItems: "center",
+  },
+  acceptedContainer: {
+    width: "100%",
+    padding: 10,
+    backgroundColor: "white",
+    borderRadius: 15,
+    marginTop: 15,
+    marginBottom: 25,
+    // iOS
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    // Android
+    elevation: 6,
+  },
   createEventButton: {
     flexDirection: "row",
     backgroundColor: colors.primary,
@@ -157,6 +200,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 15,
     borderRadius: 10,
+    marginBottom: 10,
   },
   input: {
     height: 50,

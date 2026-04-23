@@ -64,9 +64,6 @@ export default function ArtistSingup() {
   const [selectedType, selectType] = useState("");
   const [types, setTypes] = useState(OriginalCoverOptions);
 
-  //For songs
-  const [songs, setSongs] = useState("");
-
   //For bio
   const [bio, setBio] = useState("");
 
@@ -104,7 +101,6 @@ export default function ArtistSingup() {
         password2,
         selectedGenre,
         selectedType,
-        songs,
         bio.trimEnd().trimStart(),
         image || "",
         instagram,
@@ -238,20 +234,6 @@ export default function ArtistSingup() {
                   style={styles.picker}
                 />
               </LabelWrapper>
-              <LabelWrapper label="Songs" footnote="Max Length: 50">
-                <TextInput
-                  placeholder="List some of your songs or link your music!"
-                  maxLength={100}
-                  numberOfLines={3}
-                  multiline
-                  style={styles.input}
-                  placeholderTextColor={colors.placeholder}
-                  value={songs}
-                  onChangeText={(value) => {
-                    setSongs(value);
-                  }}
-                />
-              </LabelWrapper>
 
               <LabelWrapper label="Bio" footnote="Max Length: 280">
                 <TextInput
@@ -308,8 +290,13 @@ export default function ArtistSingup() {
               </LabelWrapper>
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
-                  <ThemeText type="subtitle">Add Profile Picture</ThemeText>
-                  <FontAwesome name="plus" size={42} color="black" />
+                  <ThemeText type="subtitle">Add Artist Picture</ThemeText>
+                  <FontAwesome
+                    name="plus"
+                    size={32}
+                    color="black"
+                    style={{ marginLeft: 10 }}
+                  />
                 </View>
 
                 {image && (

@@ -29,7 +29,7 @@ export function ArtistCell({ artistId, offerId, name, genre, picture }: Props) {
         <Image source={{ uri: picture }} style={styles.image} />
         <View style={styles.infoContainer}>
           <ThemeText type="subtitle" style={styles.name}>
-            {name} Antigravity
+            {name}
           </ThemeText>
           <ThemeText type="default">
             Genre:{" "}

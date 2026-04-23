@@ -12,7 +12,6 @@ export function validateSignupFieldsArtist(
   password2: string,
   genre: string,
   originalsCovers: string,
-  songs: string,
   bio: string,
   picture: string,
   instagram: string,
@@ -51,11 +50,6 @@ export function validateSignupFieldsArtist(
   if (!originalsCovers.trim()) {
     return { valid: false, message: "Please select originals/covers." };
   }
-
-  if (!songs.trim()) {
-    return { valid: false, message: "Please add your songs." };
-  }
-
   if (!picture || !picture.trim()) {
     return { valid: false, message: "Please add a profile picture." };
   }
@@ -113,7 +107,6 @@ export function validateSignupFieldsVenue(
   website: string,
   instagram: string,
   facebook: string,
-  phone: string,
   honey: string,
   readTerms: boolean,
   readInfo: boolean,
@@ -150,10 +143,6 @@ export function validateSignupFieldsVenue(
 
   if (!picture || !picture.trim()) {
     return { valid: false, message: "Please add a profile picture." };
-  }
-
-  if (!phone.trim()) {
-    return { valid: false, message: "Please add a phone number." };
   }
 
   if (!instagram.trim() && !facebook.trim() && !website.trim()) {

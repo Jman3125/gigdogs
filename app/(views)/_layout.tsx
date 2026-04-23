@@ -46,6 +46,32 @@ const ViewsLayout = () => {
           },
         }}
       />
+
+      <Stack.Screen
+        name="terms"
+        options={{
+          title: "",
+          //If the previous path is to the tabs layout, provide a back button
+          headerLeft: () => {
+            if (navigator.canGoBack()) {
+              return <NavButton isBackButton={true} />;
+            }
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="privacy"
+        options={{
+          title: "",
+          //If the previous path is to the tabs layout, provide a back button
+          headerLeft: () => {
+            if (navigator.canGoBack()) {
+              return <NavButton isBackButton={true} />;
+            }
+          },
+        }}
+      />
     </Stack>
   );
 };

@@ -20,7 +20,7 @@ type Props = {
   date: string;
   time: string;
   offerAmount: number;
-  artistsApplied: number;
+  artistsApplied: string | number;
   setLoading?: (loading: boolean) => void;
 };
 
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     padding: 10,
-    marginBottom: 25,
+    marginBottom: 15,
     borderRadius: 10,
     flexDirection: "row",
     gap: 10,

@@ -62,9 +62,6 @@ export default function VenueSingup() {
   const [selectedState, selectState] = useState("xyz");
   const [states, setStates] = useState(States);
 
-  //For Phone
-  const [phone, setPhone] = useState("");
-
   //LINKS
   //For venue website username
   const [website, setWebsite] = useState("");
@@ -104,7 +101,6 @@ export default function VenueSingup() {
         website,
         instagram,
         facebook,
-        phone,
         honey,
         isCheckedTerms,
         isCheckedInfo,
@@ -231,26 +227,12 @@ export default function VenueSingup() {
                 <DropDownPicker
                   open={openState}
                   value={selectedState}
-                  items={States}
+                  items={states}
                   setOpen={setOpenState}
                   setValue={selectState}
                   placeholder="Select a State"
                   listMode="MODAL"
                   style={styles.picker}
-                />
-              </LabelWrapper>
-
-              <LabelWrapper label="Phone Number">
-                <TextInput
-                  placeholder="1234567890"
-                  inputMode="tel"
-                  style={styles.input}
-                  placeholderTextColor={colors.placeholder}
-                  value={phone}
-                  onChangeText={(value) => {
-                    setPhone(value);
-                  }}
-                  maxLength={11}
                 />
               </LabelWrapper>
 
@@ -295,7 +277,12 @@ export default function VenueSingup() {
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
                   <ThemeText type="subtitle">Add Venue Picture</ThemeText>
-                  <FontAwesome name="plus" size={42} color="black" />
+                  <FontAwesome
+                    name="plus"
+                    size={32}
+                    color="black"
+                    style={{ marginLeft: 10 }}
+                  />
                 </View>
 
                 {image && (
