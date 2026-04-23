@@ -11,6 +11,7 @@ import { colors } from "@/utilities/colors";
 import { applyToOffer } from "@/utilities/firebase/apply-offer";
 import { getItemsByIds, getOneItem } from "@/utilities/firebase/fetch-data";
 import { formatTimeRange } from "@/utilities/format-time-range";
+import { FontAwesome } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -31,13 +32,17 @@ export default function OfferView() {
   }>();
   // Find the band in the db that matches the id passed through the URL params
   const [offerData, setOfferData] = useState<Offer | null>();
+
+  //Emtpy state text for applied artists. If it's a venue, show that no artists have applied. If it's an artist or user not signed in, tell them only venues can see applied artists.
+  const [emptyStateText, setEmptyStateText] = useState("");
+
   const [loading, setLoading] = useState(true);
 
   //These are the applied artists on this offer
   const [artists, setArtists] = useState<Artist[]>([]);
 
   //Check if user is signed in and if they are an artist or venue to determine what actions they can take on this offer
-  const { role } = useAuthWithRole();
+  const { role, isSignedIn } = useAuthWithRole();
 
   //fetch the selected bands data
   const populateData = useCallback(async () => {
@@ -47,11 +52,18 @@ export default function OfferView() {
 
     setOfferData(data);
 
-    //Get all of the artists on the offer object
-    const appliedArtists = data?.appliedArtistIds ?? [];
+    if (role === "venue") {
+      setEmptyStateText("No artists have applied to this offer yet.");
+      //Get all of the artists on the offer object
+      const appliedArtists = data?.appliedArtistIds ?? [];
 
-    const artistsData = await getItemsByIds<Artist>(appliedArtists, "users");
-    setArtists(artistsData);
+      const artistsData = await getItemsByIds<Artist>(appliedArtists, "users");
+      setArtists(artistsData);
+    } else {
+      setEmptyStateText(
+        "Only venues can see artists that have applied to offers.",
+      );
+    }
 
     try {
     } catch (error) {
@@ -125,8 +137,8 @@ export default function OfferView() {
           keyboardShouldPersistTaps="always"
           style={styles.flatListContainer}
           ListEmptyComponent={
-            <View>
-              <ThemeText type="error">No artists have applied</ThemeText>
+            <View style={styles.emptyStateContainer}>
+              <ThemeText type="error">{emptyStateText}</ThemeText>
             </View>
           }
           ListHeaderComponent={
@@ -141,9 +153,17 @@ export default function OfferView() {
                   <View style={styles.infoGrid}>
                     <View style={styles.verticalInfo}>
                       <LabelWrapper label="Amount">
-                        <ThemeText type="defaultSemiBold">
-                          ${offerData?.offerAmount}
-                        </ThemeText>
+                        {isSignedIn ? (
+                          <ThemeText type="defaultSemiBold">
+                            ${offerData?.offerAmount}
+                          </ThemeText>
+                        ) : (
+                          <FontAwesome
+                            name="lock"
+                            size={18}
+                            color={colors.placeholder}
+                          />
+                        )}
                       </LabelWrapper>
 
                       <LabelWrapper label="Date">
@@ -207,7 +227,7 @@ export default function OfferView() {
                     </Pressable>
 
                     <ThemeText type="caption">
-                      By proceeding to book you agree to GigDogs{" "}
+                      By proceeding to apply you agree to GigDogs{" "}
                       <TermsPrivacyLinks />
                     </ThemeText>
                     <Pressable onPress={handleReport} style={styles.report}>
@@ -216,10 +236,17 @@ export default function OfferView() {
                   </View>
                 )}
               </View>
-              <ThemeText type="subtitle">Applied Artists</ThemeText>
-              <ThemeText type="caption" style={styles.listTop}>
-                Select an artist for this event
+              <ThemeText type="subtitle">
+                Applied Artists: {offerData?.appliedArtistIds.length}
               </ThemeText>
+
+              {role === "venue" && (
+                <>
+                  <ThemeText type="caption" style={styles.listTop}>
+                    Select an artist for this event
+                  </ThemeText>
+                </>
+              )}
             </View>
           }
         />
@@ -324,6 +351,10 @@ const styles = StyleSheet.create({
   //This is for the applied bands on the offer
   flatListContainer: {
     flex: 1,
+  },
+
+  emptyStateContainer: {
+    marginTop: 15,
   },
 
   listTop: {

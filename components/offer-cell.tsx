@@ -1,4 +1,5 @@
 //Show venue profile on feed page
+import { useAuthWithRole } from "@/hooks/use-auth-state";
 import { colors } from "@/utilities/colors";
 import {
   deleteOfferArtist,
@@ -35,6 +36,8 @@ export function OfferCell({
   setLoading,
 }: Props) {
   const router = useRouter();
+
+  const { isSignedIn } = useAuthWithRole();
 
   const openProfile = () => {
     router.push({
@@ -127,10 +130,15 @@ export function OfferCell({
           <ThemeText type="defaultSemiBold">{formatTimeRange(time)}</ThemeText>
         </ThemeText>
         <ThemeText type="default">
-          Amount: <ThemeText type="defaultSemiBold">${offerAmount}</ThemeText>
+          Amount:{" "}
+          {isSignedIn ? (
+            <ThemeText type="defaultSemiBold">${offerAmount}</ThemeText>
+          ) : (
+            <FontAwesome name="lock" size={14} color={colors.placeholder} />
+          )}
         </ThemeText>
         <ThemeText type="default">
-          Bands Applied:{" "}
+          Artists Applied:{" "}
           <ThemeText type="defaultSemiBold">{artistsApplied}</ThemeText>
         </ThemeText>
       </View>

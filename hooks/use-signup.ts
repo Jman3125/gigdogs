@@ -91,11 +91,9 @@ export function useSignupArtist() {
 
       return { success: true };
     } catch (error: any) {
-      console.error("Signup error:", {
-        code: error.code,
-        message: error.message,
-        fullError: error,
-      });
+      if ("auth/email-already-in-use" === error.code) {
+        throw new Error("An account with this email already exists.");
+      }
       throw new Error(error.message || "Signup failed");
     }
   };
@@ -178,11 +176,9 @@ export function useSignupVenue() {
 
       return { success: true };
     } catch (error: any) {
-      console.error("Signup error:", {
-        code: error.code,
-        message: error.message,
-        fullError: error,
-      });
+      if ("auth/email-already-in-use" === error.code) {
+        throw new Error("An account with this email already exists.");
+      }
       throw new Error(error.message || "Signup failed");
     }
   };

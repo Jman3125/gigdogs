@@ -37,6 +37,10 @@ export function useLogin() {
 
       return { success: true, user };
     } catch (error: any) {
+      //If error message was "Firebase: Error (auth/invalid-credential)" Return custom error message instead
+      if (error.message.includes("auth/invalid-credential")) {
+        throw new Error("Invalid email or password.");
+      }
       throw new Error(error.message || "Login failed.");
     }
   };

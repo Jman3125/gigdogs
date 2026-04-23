@@ -8,16 +8,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function AuthLanding() {
   const navigator = useRouter();
   const openVenueAuth = () => {
-    navigator.push("/auth/(venue)/venue-signup");
+    navigator.push("/auth/venue-signup");
   };
 
   const openArtistAuth = () => {
-    navigator.push("/auth/(artist)/artist-signup");
+    navigator.push("/auth/artist-signup");
   };
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <ThemeText type="subtitle">Start Using GigDogs</ThemeText>
       <View style={styles.infoContainer}>
+        <ThemeText type="subtitle">Start Using GigDogs</ThemeText>
         <View style={styles.section}>
           <ThemeText></ThemeText>
           <Pressable onPress={openVenueAuth} style={styles.button}>
@@ -37,10 +37,15 @@ export default function AuthLanding() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15 },
+  container: {
+    flex: 1,
+    padding: 15,
+  },
   infoContainer: {
     flex: 1,
     flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
   },
   section: {
     width: "100%",

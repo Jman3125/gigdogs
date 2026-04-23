@@ -1,35 +1,17 @@
-import Loading from "@/components/loading";
 import { useAuthWithRole } from "@/hooks/use-auth-state";
-import {
-  Ubuntu_300Light,
-  Ubuntu_400Regular,
-  Ubuntu_500Medium,
-  Ubuntu_700Bold,
-  useFonts,
-} from "@expo-google-fonts/ubuntu";
 import { FontAwesome } from "@expo/vector-icons";
 
-import { colors } from "@/utilities/colors";
-import { DynaPuff_500Medium } from "@expo-google-fonts/dynapuff";
-import { Tabs } from "expo-router";
-
+import Loading from "@/components/loading";
 import { ReloadFeedContext } from "@/context/reload-feed";
+import { colors } from "@/utilities/colors";
+import { Tabs } from "expo-router";
 import { useState } from "react";
 
 const TabsLayout = () => {
-  const [loaded] = useFonts({
-    Ubuntu_300Light,
-    Ubuntu_400Regular,
-    Ubuntu_500Medium,
-    Ubuntu_700Bold,
-    DynaPuff_500Medium,
-  });
-
   const { role, isSignedIn } = useAuthWithRole();
 
   const [reload, setReload] = useState(false);
-
-  if (!loaded) {
+  if (reload) {
     return <Loading />;
   }
   return (
@@ -38,13 +20,13 @@ const TabsLayout = () => {
         <Tabs.Screen
           name="(main)"
           options={{
-            title: "Feed",
+            title: "Find",
             headerShown: false,
             headerStyle: {
               backgroundColor: colors.primary,
             },
             tabBarIcon: ({ color }) => (
-              <FontAwesome name="home" size={24} color={color} />
+              <FontAwesome name="search" size={24} color={color} />
             ),
             tabBarActiveTintColor: colors.primary,
             tabBarInactiveTintColor: colors.placeholder,
@@ -58,11 +40,10 @@ const TabsLayout = () => {
             href: isSignedIn && role === "artist" ? undefined : null,
             //This is the actions page for authenticated artists
             tabBarIcon: ({ color }) => (
-              <FontAwesome name="send" size={24} color={color} />
+              <FontAwesome name="user" size={24} color={color} />
             ),
             tabBarActiveTintColor: colors.primary,
             tabBarInactiveTintColor: colors.placeholder,
-            tabBarBadge: 2,
           }}
         />
 
@@ -74,11 +55,10 @@ const TabsLayout = () => {
             href: isSignedIn && role === "venue" ? undefined : null,
 
             tabBarIcon: ({ color }) => (
-              <FontAwesome name="send" size={24} color={color} />
+              <FontAwesome name="user" size={24} color={color} />
             ),
             tabBarActiveTintColor: colors.primary,
             tabBarInactiveTintColor: colors.placeholder,
-            tabBarBadge: 2,
           }}
         />
 
