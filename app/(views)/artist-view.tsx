@@ -2,13 +2,15 @@
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { ThemeText } from "@/components/theme-text";
+import { ReloadFeedContext } from "@/context/reload-feed";
 import { useApproveOffer } from "@/hooks/use-approve-offer";
 import { Artist } from "@/models/artist";
+import { Offer } from "@/models/offer";
 import { colors } from "@/utilities/colors";
 import { getOneItem } from "@/utilities/firebase/fetch-data";
 import { getGenre } from "@/utilities/getGenreLabel";
-import { useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -21,6 +23,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ArtistView() {
+  //Will use context after applying to an offer and update home feed so user sees changes
+  const { setReload } = useContext(ReloadFeedContext);
+  const navigator = useRouter();
   // Going to match the id to a band and get attributes so I don't pass them all through URL
   const { artistId, offerId } = useLocalSearchParams<{
     artistId: string;
@@ -33,9 +38,17 @@ export default function ArtistView() {
   //show error on failure
   const [error, setError] = useState("");
 
+  //Is this an accepted offer? If it is, then remove the select artist button
+  const [offerAccepted, setOfferAccepted] = useState(false);
+
   //fetch the selected bands data
   const fetchArtistData = useCallback(async () => {
     try {
+      const offerStatus = await getOneItem<Offer>(offerId, "offers");
+      if (offerStatus?.status !== "open") {
+        setOfferAccepted(true);
+      }
+
       const data = await getOneItem<Artist>(artistId, "users");
       setData(data);
       setLoading(false);
@@ -77,7 +90,22 @@ export default function ArtistView() {
 
   const handleConfirm = async () => {
     try {
+      setLoading(true);
       await approve(offerId, artistId);
+      setLoading(false);
+      Alert.alert(
+        "Success!",
+        "You are now locked in with that artist. See more information in your profile!",
+        [
+          {
+            text: "Ok",
+            onPress: () => {
+              navigator.dismissAll();
+              setReload(true);
+            },
+          },
+        ],
+      );
     } catch (err) {
       console.error("Error:", err);
     }
@@ -164,20 +192,32 @@ export default function ArtistView() {
                 <ThemeText type="defaultSemiBold">{artistData?.bio}</ThemeText>
               </LabelWrapper>
             </View>
+            {!offerAccepted && (
+              <>
+                <Pressable onPress={selectArtist} style={styles.selectButton}>
+                  <ThemeText
+                    type="defaultSemiBold"
+                    style={styles.selectButtonText}
+                  >
+                    Select This Artist
+                  </ThemeText>
+                </Pressable>
+                <ThemeText type="caption">
+                  Lock this artist in for your event
+                </ThemeText>
+              </>
+            )}
 
-            <View>
-              <Pressable onPress={selectArtist} style={styles.selectButton}>
+            {offerAccepted && (
+              <Pressable style={styles.selectButton}>
                 <ThemeText
                   type="defaultSemiBold"
                   style={styles.selectButtonText}
                 >
-                  Select This Artist
+                  You have already selected this artist.
                 </ThemeText>
               </Pressable>
-              <ThemeText type="caption">
-                Lock this artist in for your event
-              </ThemeText>
-            </View>
+            )}
 
             <Pressable onPress={handleReport} style={styles.report}>
               <ThemeText type="link">Report Account</ThemeText>

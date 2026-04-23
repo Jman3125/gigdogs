@@ -3,36 +3,51 @@ import Loading from "@/components/loading";
 import { OfferCell } from "@/components/offer-cell";
 import { ThemeText } from "@/components/theme-text";
 import { auth } from "@/config/firebaseConfig";
+import { ReloadFeedContext } from "@/context/reload-feed";
 import { Offer } from "@/models/offer";
 import { Venue } from "@/models/venue";
 import { colors } from "@/utilities/colors";
-import { getItemsByIds, getOneItem } from "@/utilities/firebase/fetch-data";
+import {
+  getOffersByIdsDescending,
+  getOneItem,
+} from "@/utilities/firebase/fetch-data";
 import { FontAwesome } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account() {
+  //Reload context variable
+  const { reload, setReload } = useContext(ReloadFeedContext);
+
   const navigator = useRouter();
   const openModal = () => {
     navigator.navigate("/venue/create-offer");
   };
-  //Get the offers that this artist has applied to through appliedOfferIds
-  const [offersData, setOffersData] = useState<Offer[]>([]);
+  //Get the offers that the venue has public
+  const [offersDataOpen, setOffersDataOpen] = useState<Offer[]>([]);
+
+  //Get the offers that the venue has closed
+  const [offersDataAccepted, setOffersDataAccepted] = useState<Offer[]>([]);
 
   //loading state
   const [loading, setLoading] = useState(true);
 
-  const fetchArtistData = async () => {
+  const fetchOffersdata = async () => {
     try {
       const currentVenue = await getOneItem<Venue>(
         auth.currentUser?.uid || "",
         "venues",
       );
       const offerIds = currentVenue?.offers || [];
-      const data = await getItemsByIds<Offer>(offerIds, "offers");
-      setOffersData(data);
+      const dataOpen = await getOffersByIdsDescending<Offer>(offerIds, "open");
+      const dataAccepted = await getOffersByIdsDescending<Offer>(
+        offerIds,
+        "accepted",
+      );
+      setOffersDataOpen(dataOpen);
+      setOffersDataAccepted(dataAccepted);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching artist data:", error);
@@ -40,15 +55,26 @@ export default function Account() {
   };
 
   useEffect(() => {
-    fetchArtistData();
-  }, [fetchArtistData]);
+    fetchOffersdata();
+  }, [fetchOffersdata]);
+
+  //if user updated account refresh page with context variable
+  useFocusEffect(
+    useCallback(() => {
+      //If we needed to manually refresh from another page
+      if (reload) {
+        fetchOffersdata();
+        setReload(false);
+      }
+    }, [reload, fetchOffersdata, setReload]),
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       {loading && <Loading />}
       {!loading && (
         <FlatList
-          data={offersData}
+          data={offersDataOpen}
           keyExtractor={(offer) => offer.id}
           renderItem={({ item }) => (
             <OfferCell
@@ -86,6 +112,30 @@ export default function Account() {
 
               <View>
                 <ThemeText type="subtitle">Your Offers</ThemeText>
+              </View>
+
+              <View>
+                {/* This is where we put all of the accepted offers in a list */}
+                <ThemeText type="subtitle">Accepted Offers</ThemeText>
+
+                {offersDataAccepted.map((item) => (
+                  <OfferCell
+                    key={item.id}
+                    offerId={item.id}
+                    name={item.eventName}
+                    showDelete={false}
+                    type="venue"
+                    date={item.date}
+                    time={item.time}
+                    offerAmount={item.offerAmount}
+                    artistsApplied={
+                      item.appliedArtistIds ? item.appliedArtistIds.length : 0
+                    }
+                    setLoading={setLoading}
+                  />
+                ))}
+
+                <ThemeText type="subtitle">Open Offers</ThemeText>
               </View>
             </View>
           }

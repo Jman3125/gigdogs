@@ -128,7 +128,7 @@ export default function Account() {
     try {
       await logout();
       //return to feed
-      navigator.dismissAll();
+      navigator.replace("/");
     } catch (error: any) {
       Alert.alert("Error", error.message);
     }

@@ -4,7 +4,7 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
-import { auth } from "@/config/firebaseConfig";
+import { useAuthWithRole } from "@/hooks/use-auth-state";
 import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
 import { colors } from "@/utilities/colors";
@@ -36,22 +36,16 @@ export default function OfferView() {
   //These are the applied artists on this offer
   const [artists, setArtists] = useState<Artist[]>([]);
 
-  //Is the current user a venue who owns this offer? If so show actions to accept an artist and see artists that have applied
-  const [showActions, setShowActions] = useState(false);
+  //Check if user is signed in and if they are an artist or venue to determine what actions they can take on this offer
+  const { role } = useAuthWithRole();
 
   //fetch the selected bands data
   const populateData = useCallback(async () => {
     if (!offerId) return;
 
-    const currentUserId = auth.currentUser?.uid;
-
     const data = await getOneItem<Offer>(offerId, "offers");
 
     setOfferData(data);
-
-    if (currentUserId == data?.parentVenueId) {
-      setShowActions(true);
-    }
 
     //Get all of the artists on the offer object
     const appliedArtists = data?.appliedArtistIds ?? [];
@@ -74,17 +68,27 @@ export default function OfferView() {
     populateData();
   }, [populateData]);
 
-  const openBookingForm = () => {
-    applyToOffer(offerId!)
-      .then(() => {
-        Alert.alert(
-          "Success",
-          "You have successfully applied to this offer! The venue may contact you. Offers you have applied to will show up on your profile page.",
-        );
-      })
-      .catch((error) => {
-        Alert.alert("Error", error.message);
-      });
+  const openBookingForm = async () => {
+    if (!role) {
+      Alert.alert("Error", "You must be signed in to apply to offers.");
+      navigator.replace("/auth");
+      return;
+    }
+
+    if (role !== "artist") {
+      return;
+    }
+
+    try {
+      await applyToOffer(offerId!);
+      Alert.alert(
+        "Success",
+        "You have successfully applied to this offer! The venue may contact you. Offers you have applied to will show up on your profile page.",
+      );
+      navigator.dismissAll();
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+    }
   };
 
   const openVenuePage = () => {
@@ -190,9 +194,9 @@ export default function OfferView() {
                     </LabelWrapper>
                   )}
                 </View>
-                {!showActions && (
+                {/* User is not a venue, show apply for offer button */}
+                {!(role === "venue") && (
                   <View style={styles.contactContainer}>
-                    {/* THIS WILL NEED TO BE DYNAMIC IF CURRENT USER IS NOT AN ARTIST */}
                     <Pressable
                       onPress={openBookingForm}
                       style={styles.contactButton}

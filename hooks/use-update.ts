@@ -50,11 +50,11 @@ export function useUpdateArtist() {
 
       await updateDoc(doc(db, "users", user.uid), {
         artistName,
-        location,
         genre,
         bio,
         picture: imageURL,
         instagram,
+        facebook,
         phone,
       });
 

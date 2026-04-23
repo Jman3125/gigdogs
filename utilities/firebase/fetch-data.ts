@@ -50,6 +50,41 @@ export async function getOneItem<T>(
   }
 }
 
+// Get a list of offers and return them sorted by date ASC (earliest → latest)
+// Returns offeres with status "open" or "accepted"
+export async function getOffersByIdsDescending<Offer>(
+  ids: string[],
+  status: string,
+) {
+  try {
+    const items: Offer[] = [];
+
+    for (const id of ids) {
+      const ref = doc(db, "offers", id);
+      const snap = await getDoc(ref);
+
+      if (snap.exists()) {
+        const data = snap.data() as any;
+
+        // Filter by status
+        if (data.status === status) {
+          items.push({ id: snap.id, ...data } as Offer);
+        }
+      }
+    }
+
+    // Sort by date ascending (earliest → latest)
+    items.sort((a: any, b: any) => {
+      return new Date(a.date).getTime() - new Date(b.date).getTime();
+    });
+
+    return items;
+  } catch (error) {
+    console.error("Error fetching items by IDs:", error);
+    return [];
+  }
+}
+
 //Get list of items by an array of IDs. Will use to get offers for a venue and artists that applied to an offer
 export async function getItemsByIds<T>(
   ids: string[],

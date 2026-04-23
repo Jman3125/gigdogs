@@ -5,7 +5,10 @@ import { OfferCell } from "@/components/offer-cell";
 import { ThemeText } from "@/components/theme-text";
 import { Offer } from "@/models/offer";
 import { Venue } from "@/models/venue";
-import { getItemsByIds, getOneItem } from "@/utilities/firebase/fetch-data";
+import {
+  getOffersByIdsDescending,
+  getOneItem,
+} from "@/utilities/firebase/fetch-data";
 import { useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -37,7 +40,10 @@ export default function VenueView() {
       //Offers this venue has
       //Get all of the artists on the offer object
       if (data?.offers && data.offers.length > 0) {
-        const offerData = await getItemsByIds<Offer>(data.offers, "offers");
+        const offerData = await getOffersByIdsDescending<Offer>(
+          data.offers,
+          "open",
+        );
         setVenueOffers(offerData);
       }
 

@@ -97,10 +97,7 @@ export default function Index() {
       //If we needed to manually refresh main feed from another page
       if (reload) {
         loadOffersFromState(state);
-        Alert.alert(
-          "Success",
-          "See your information in the feed. Thanks for using GigDogs!",
-        );
+        Alert.alert("Success", "Thanks for using GigDogs!");
         setReload(false);
       }
     }, [reload, loadOffersFromState, setReload]),
