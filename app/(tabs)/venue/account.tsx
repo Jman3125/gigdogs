@@ -5,7 +5,6 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { ThemeText } from "@/components/theme-text";
 import { auth } from "@/config/firebaseConfig";
-import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useLogout } from "@/hooks/use-logout";
 import { useUpdateVenue } from "@/hooks/use-update";
@@ -14,7 +13,7 @@ import { colors } from "@/utilities/colors";
 import { fetchAuthVenue } from "@/utilities/firebase/fetch-auth-venue";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -30,9 +29,6 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account() {
-  //Will use context after update to update home feed so user sees changes
-  const { setReload } = useContext(ReloadFeedContext);
-
   //loading state
   const [loading, setLoading] = useState(true);
 
@@ -65,9 +61,6 @@ export default function Account() {
 
   //For facebook username
   const [facebook, setFacebook] = useState("");
-
-  //For Phone
-  const [phone, setPhone] = useState("");
 
   //For Image File Upload
   const [image, setImage] = useState("");
@@ -103,7 +96,6 @@ export default function Account() {
         setVenueName(venueAuthData?.venueName);
         setAddress(venueAuthData?.address);
         setSelectedState(venueAuthData?.state);
-        setPhone(venueAuthData?.phone);
         setWebsite(venueAuthData?.website);
         setInstagram(venueAuthData?.instagram);
         setImage(venueAuthData?.picture);
@@ -127,6 +119,7 @@ export default function Account() {
   const handleLogout = async () => {
     try {
       await logout();
+      navigator.dismissAll();
       //return to feed
       navigator.replace("/");
     } catch (error: any) {
@@ -139,18 +132,18 @@ export default function Account() {
     setLoading(true);
     try {
       await update(
-        venueName.trim(),
-        address.trim(),
+        (venueName || "").trim(),
+        (address || "").trim(),
         selectedState,
         image,
-        website.trim(),
-        instagram.trim(),
-        facebook.trim(),
-        phone.trim(),
+        (website || "").trim(),
+        (instagram || "").trim(),
+        (facebook || "").trim(),
       );
-      setLoading(false);
-      setReload(true);
+      Alert.alert("Success", "Information has been updated");
       navigator.dismissAll();
+      setLoading(false);
+      navigator.replace("/");
     } catch (error: any) {
       Alert.alert("Error", error.message);
       setError(error.message);
@@ -212,19 +205,6 @@ export default function Account() {
                   placeholder="Select a state"
                   listMode="MODAL"
                   style={styles.picker}
-                />
-              </LabelWrapper>
-
-              <LabelWrapper label="Phone Number">
-                <TextInput
-                  placeholder="1234567890"
-                  inputMode="numeric"
-                  style={styles.input}
-                  placeholderTextColor={"#464141cb"}
-                  value={phone}
-                  onChangeText={(value) => {
-                    setPhone(value);
-                  }}
                 />
               </LabelWrapper>
 

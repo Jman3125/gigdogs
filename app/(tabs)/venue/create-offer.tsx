@@ -8,12 +8,11 @@ import IconInput from "@/components/icon-input";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { auth } from "@/config/firebaseConfig";
-import { ReloadFeedContext } from "@/context/reload-feed";
 import { useCreateOffer } from "@/hooks/use-create-offer";
 import { fetchAuthVenue } from "@/utilities/firebase/fetch-auth-venue";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -28,9 +27,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Modal() {
   const { create } = useCreateOffer();
-
-  //To refresh venue account page after creating an offer
-  const { reload, setReload } = useContext(ReloadFeedContext);
 
   //For nav
   const navigator = useRouter();
@@ -117,14 +113,12 @@ export default function Modal() {
         providedEquipment,
         extraNotes,
       );
+      navigator.dismissAll();
       setLoading(false);
       Alert.alert(
         "Success!",
         "Your offer is now public, all updates will display on your account page",
       );
-      setReload(true);
-
-      navigator.dismissAll();
     } catch (error: any) {
       setLoading(false);
       Alert.alert("Error", error.message);

@@ -3,12 +3,11 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { ThemeText } from "@/components/theme-text";
 import { auth } from "@/config/firebaseConfig";
-import { ReloadFeedContext } from "@/context/reload-feed";
 import { useLogin } from "@/hooks/use-login";
 import { colors } from "@/utilities/colors";
 import { useRouter } from "expo-router";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Modal,
@@ -20,8 +19,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function VenueLogin() {
-  //Will use context after login to update home feed so user sees changes
-  const { setReload } = useContext(ReloadFeedContext);
   //router
   const navigator = useRouter();
 
@@ -72,9 +69,6 @@ export default function VenueLogin() {
 
       //return to feed but delay so reload state updates
       navigator.replace("/");
-
-      //reload home page
-      setReload(true);
     } catch (error: any) {
       setLoading(false);
       Alert.alert("Error", error.message);

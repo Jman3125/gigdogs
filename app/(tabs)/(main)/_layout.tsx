@@ -30,20 +30,6 @@ const StackLayout = () => {
           headerTitle: () => <LogoTitle />,
         }}
       />
-      <Stack.Screen
-        name="privacy"
-        options={{
-          title: "",
-          headerTitle: () => <LogoTitle />,
-        }}
-      />
-      <Stack.Screen
-        name="terms"
-        options={{
-          title: "",
-          headerTitle: () => <LogoTitle />,
-        }}
-      />
     </Stack>
   );
 };

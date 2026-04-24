@@ -20,6 +20,7 @@ import {
   Linking,
   Pressable,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -33,7 +34,7 @@ export default function OfferView() {
   // Find the band in the db that matches the id passed through the URL params
   const [offerData, setOfferData] = useState<Offer | null>();
 
-  //Emtpy state text for applied artists. If it's a venue, show that no artists have applied. If it's an artist or user not signed in, tell them only venues can see applied artists.
+  //Empty state text for applied artists. If it's a venue, show that no artists have applied. If it's an artist or user not signed in, tell them only venues can see applied artists.
   const [emptyStateText, setEmptyStateText] = useState("");
 
   const [loading, setLoading] = useState(true);
@@ -65,7 +66,7 @@ export default function OfferView() {
       setArtists(artistsData);
     } else {
       setEmptyStateText(
-        "Only venues can see artists that have applied to offers.",
+        "Only venues can see the list of artists that have applied.",
       );
     }
 
@@ -101,7 +102,7 @@ export default function OfferView() {
         "Success",
         "You have successfully applied to this offer! The venue may contact you. Offers you have applied to will show up on your profile page.",
       );
-      navigator.dismissAll();
+      navigator.back();
     } catch (error: any) {
       Alert.alert("Error", error.message);
     }
@@ -136,15 +137,17 @@ export default function OfferView() {
             style={styles.flatListContainer}
             ListEmptyComponent={
               <View style={styles.emptyStateContainer}>
-                <ThemeText type="error">{emptyStateText}</ThemeText>
+                <ThemeText type="caption">{emptyStateText}</ThemeText>
               </View>
             }
             ListHeaderComponent={
               <View style={styles.main}>
-                <ThemeText type="title">Offer</ThemeText>
+                <ThemeText type="subtitle">Offer</ThemeText>
 
                 <View style={styles.infoContainerMain}>
-                  <ThemeText type="subtitle">{offerData?.eventName}</ThemeText>
+                  <ThemeText type="subtitle" style={{ textAlign: "center" }}>
+                    {offerData?.eventName}
+                  </ThemeText>
 
                   <View style={styles.profileContainerSub}>
                     <View style={styles.infoGrid}>
@@ -155,11 +158,14 @@ export default function OfferView() {
                               ${offerData?.offerAmount}
                             </ThemeText>
                           ) : (
-                            <FontAwesome
-                              name="lock"
-                              size={18}
-                              color={colors.placeholder}
-                            />
+                            <View style={styles.horizontalWrap}>
+                              <FontAwesome
+                                name="lock"
+                                size={18}
+                                color={colors.placeholder}
+                              />
+                              <ThemeText type="caption">Signup</ThemeText>
+                            </View>
                           )}
                         </LabelWrapper>
 
@@ -212,7 +218,9 @@ export default function OfferView() {
                   </View>
                   {role == "artist" && offerData?.status == "accepted" && (
                     <View style={styles.accepted}>
-                      <ThemeText type="defaultSemiBold">Accepted</ThemeText>
+                      <ThemeText type="defaultSemiBold">
+                        You have been selected!
+                      </ThemeText>
 
                       <ThemeText type="default">
                         This venue has approved your application. All
@@ -222,16 +230,16 @@ export default function OfferView() {
                     </View>
                   )}
                   {/* User is not a venue, show apply for offer button */}
-                  {!(role === "venue") && (
+                  {!(role === "venue") && offerData?.status !== "accepted" && (
                     <View style={styles.contactContainer}>
-                      <Pressable
+                      <TouchableOpacity
                         onPress={openBookingForm}
                         style={styles.contactButton}
                       >
                         <ThemeText type="defaultSemiBold">
                           Apply For Gig
                         </ThemeText>
-                      </Pressable>
+                      </TouchableOpacity>
 
                       <ThemeText type="caption">
                         By proceeding to apply you agree to GigDogs{" "}
@@ -328,8 +336,15 @@ const styles = StyleSheet.create({
   },
   accepted: {
     width: "100%",
-    backgroundColor: "rgba(96, 192, 99, 0.7)",
+    backgroundColor: "rgba(96, 192, 99, 0.86)",
+    borderRadius: 8,
+
     padding: 10,
+  },
+  horizontalWrap: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
   },
   contactButton: {
     width: "100%",
@@ -370,6 +385,9 @@ const styles = StyleSheet.create({
   },
 
   emptyStateContainer: {
+    backgroundColor: "white",
+    borderRadius: 5,
+    padding: 5,
     marginTop: 15,
     marginBottom: 25,
   },

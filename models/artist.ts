@@ -6,12 +6,12 @@ export interface Artist {
   artistName: string;
   email: string;
   genre: string;
+  originalsCovers: string;
   bio: string;
   picture: string;
   facebook?: string;
   instagram?: string;
   phone: string;
-  originalCover: string;
   //The events the artist has applied to
   appliedOfferIds: string[];
 }

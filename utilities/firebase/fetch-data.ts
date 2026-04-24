@@ -9,22 +9,81 @@ import {
   where,
 } from "firebase/firestore";
 
-//Takes in a state and gets all offers from that state to populate search
+// Takes in a state and gets all venues from that state,
+// but only returns offers with status === "open"
 export async function getAllVenuesByState(state: string): Promise<Venue[]> {
   try {
-    const q = await query(
+    // 1. Fetch venues in the state
+    const venueQuery = query(
       collection(db, "venues"),
       where("state", "==", state),
     );
-    const offerCollection = await getDocs(q);
+
+    const venueSnap = await getDocs(venueQuery);
+
     const venues: Venue[] = [];
-    offerCollection.forEach((doc) => {
-      venues.push({ id: doc.id, ...doc.data() } as Venue);
+    const allOfferIds: string[] = [];
+
+    // 2. Collect all offer IDs across all venues
+    venueSnap.forEach((docSnap) => {
+      const data = docSnap.data() as Venue;
+      const offerIds = data.offers ?? [];
+
+      allOfferIds.push(...offerIds);
+
+      venues.push({
+        ...data,
+        id: docSnap.id,
+        offers: offerIds, // temporarily store IDs
+      });
     });
-    return venues;
+
+    if (allOfferIds.length === 0) {
+      return venues.map((v) => ({ ...v, offers: [] }));
+    }
+
+    // 3. Batch fetch all offers using "in" query (max 10 per batch)
+    const offerChunks = chunkArray(allOfferIds, 10);
+    const offerMap: Record<string, any> = {};
+
+    for (const chunk of offerChunks) {
+      const offerQuery = query(
+        collection(db, "offers"),
+        where("__name__", "in", chunk),
+      );
+
+      const offerSnap = await getDocs(offerQuery);
+
+      offerSnap.forEach((offerDoc) => {
+        offerMap[offerDoc.id] = { id: offerDoc.id, ...offerDoc.data() };
+      });
+    }
+
+    // 4. Attach only open offers to each venue
+    const venuesWithOpenOffers = venues.map((venue) => {
+      const openOffers = venue.offers
+        .map((id) => offerMap[id])
+        .filter((offer) => offer && offer.status === "open");
+
+      return {
+        ...venue,
+        offers: openOffers.map((offer) => offer.id),
+      };
+    });
+
+    return venuesWithOpenOffers;
   } catch (error: any) {
     throw new Error(error.message);
   }
+}
+
+// Helper: split array into chunks of size N
+function chunkArray<T>(arr: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
 }
 
 //Just get data from one item.

@@ -59,7 +59,7 @@ export default function CredentialsResetPage() {
           "An email verification link has been sent to you. Please open it and verify your email.",
         );
         setLoading(false);
-        navigator.dismissAll();
+        navigator.replace("/");
       } catch (error: any) {
         setEmail(`${user?.email}`);
         setLoading(false);

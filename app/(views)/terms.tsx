@@ -1,322 +1,279 @@
-import { ThemeText } from "@/components/theme-text";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-export default function About() {
+export default function TermsAndConditionsScreen() {
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView>
-        <View style={{ padding: 20, gap: 12 }}>
-          <ThemeText type="title">TERMS AND CONDITIONS</ThemeText>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Text style={styles.title}>TERMS AND CONDITIONS</Text>
+      <Text style={styles.meta}>Effective Date: April 23, 2026</Text>
 
-          <ThemeText type="default">Effective Date: 2/9/2026</ThemeText>
+      {/* 1. INTRODUCTION */}
+      <SectionTitle>1. INTRODUCTION</SectionTitle>
+      <BodyText>
+        These Terms and Conditions (“Terms”) govern the use of the live music
+        hiring application GigDogs (the “App”) operated by Jack Manfredi
+        (“Company,” “we,” “us,” or “our”). By accessing or using the App, users
+        (“Users,” including both artists and venues) agree to be bound by these
+        Terms.
+      </BodyText>
 
-          <ThemeText type="default">Welcome to GigDogs.</ThemeText>
+      {/* 2. DESCRIPTION OF SERVICES */}
+      <SectionTitle>2. DESCRIPTION OF SERVICES</SectionTitle>
+      <BodyText>
+        GigDogs provides a platform that connects musical artists (“Artists”)
+        with venues (“Venues”) for the purpose of booking live performances.
+        Venues may create and publish performance opportunities (“Offers”), and
+        Artists may apply to such Offers.
+      </BodyText>
 
-          <ThemeText type="default">
-            {
-              'These Terms and Conditions ("Terms") govern your access to and use of the GigDogs mobile application and any related services (collectively, the "Platform").'
-            }
-          </ThemeText>
+      {/* 3. USER ACCOUNTS AND INFORMATION COLLECTION */}
+      <SectionTitle>3. USER ACCOUNTS AND INFORMATION COLLECTION</SectionTitle>
 
-          <ThemeText type="default">
-            {
-              'GigDogs is owned and operated by Jacomo Manfredi, a sole proprietor ("GigDogs," "we," "us," or "our").'
-            }
-          </ThemeText>
+      <SubTitle>3.1 Artist Information</SubTitle>
+      <BulletList
+        items={[
+          "Name",
+          "Email address",
+          "Genre",
+          "Artist type",
+          "Biography",
+          "Profile picture",
+          "Social media links (Facebook, Instagram)",
+          "Phone number",
+        ]}
+      />
 
-          <ThemeText type="default">
-            By accessing or using GigDogs, you agree to be bound by these Terms.
-            If you do not agree, do not use the Platform.
-          </ThemeText>
+      <SubTitle>3.2 Venue Information</SubTitle>
+      <BulletList
+        items={[
+          "Name",
+          "Profile picture",
+          "State and physical address",
+          "Email address",
+          "Phone number",
+          "Website",
+          "Social media links (Instagram, Facebook)",
+        ]}
+      />
 
-          {/* 1. Eligibility */}
-          <ThemeText type="subtitle">1. Eligibility</ThemeText>
-          <ThemeText type="default">
-            GigDogs is intended solely for individuals who are 18 years of age
-            or older. By using the Platform, you represent and warrant that you
-            are at least 18 years old.
-          </ThemeText>
+      <SubTitle>3.3 Accuracy of Information</SubTitle>
+      <BodyText>
+        All Users represent and warrant that the information they provide is
+        accurate, complete, and current. The Company is not responsible for
+        verifying User-provided information.
+      </BodyText>
 
-          {/* 2. Nature of the Platform */}
-          <ThemeText type="subtitle">2. Nature of the Platform</ThemeText>
-          <ThemeText type="default">
-            GigDogs is a listing and discovery platform that allows musical
-            bands to create profiles and publish information including, but not
-            limited to:
-          </ThemeText>
+      {/* 4. DATA STORAGE */}
+      <SectionTitle>4. DATA STORAGE</SectionTitle>
+      <BodyText>
+        All User data is stored using Firebase infrastructure. The Company does
+        not currently share User data with third parties beyond this service
+        provider. Users acknowledge and agree that data storage is subject to
+        Firebase’s systems and security practices.
+      </BodyText>
 
-          <ThemeText type="default">• Band name</ThemeText>
-          <ThemeText type="default">• Photos</ThemeText>
-          <ThemeText type="default">• Biography</ThemeText>
-          <ThemeText type="default">• Music genre</ThemeText>
-          <ThemeText type="default">• Location</ThemeText>
-          <ThemeText type="default">
-            • Instagram or social media links
-          </ThemeText>
-          <ThemeText type="default">• Phone number</ThemeText>
-          <ThemeText type="default">• Email address</ThemeText>
-          <ThemeText type="default">• Price per hour</ThemeText>
-          <ThemeText type="default">• Total set time</ThemeText>
+      {/* 5. OFFERS AND APPLICATIONS */}
+      <SectionTitle>5. OFFERS AND APPLICATIONS</SectionTitle>
 
-          <ThemeText type="default">
-            GigDogs does not employ, manage, supervise, control, or endorse any
-            band listed on the Platform.
-          </ThemeText>
+      <SubTitle>5.1 Offer Creation</SubTitle>
+      <BodyText>Venues may create Offers that include:</BodyText>
+      <BulletList
+        items={[
+          "Event name",
+          "Date",
+          "Start time, arrival time, and end time",
+          "Description",
+          "Provided equipment",
+          "Additional notes",
+        ]}
+      />
+      <BodyText>All Offers are displayed publicly within the App.</BodyText>
 
-          <ThemeText type="default">
-            GigDogs does not book performances, negotiate contracts, process
-            payments, or participate in any agreements between users and bands.
-          </ThemeText>
+      <SubTitle>5.2 Compensation Visibility</SubTitle>
+      <BodyText>
+        Compensation details associated with Offers are visible only to
+        authenticated Users.
+      </BodyText>
 
-          <ThemeText type="default">
-            GigDogs acts solely as a passive platform for information display.
-          </ThemeText>
+      <SubTitle>5.3 Applications by Artists</SubTitle>
+      <BodyText>
+        Artists may apply to Offers. By applying, an Artist represents that they
+        are available and willing to perform:
+      </BodyText>
+      <BulletList
+        items={[
+          "On the specified date",
+          "At the specified times",
+          "For the specified compensation",
+        ]}
+      />
 
-          {/* 3. No Responsibility */}
-          <ThemeText type="subtitle">
-            3. No Responsibility for Band Performance or Events
-          </ThemeText>
+      {/* 6. BOOKING AND BINDING AGREEMENT */}
+      <SectionTitle>6. BOOKING AND BINDING AGREEMENT</SectionTitle>
 
-          <ThemeText type="default">GigDogs is not responsible for:</ThemeText>
+      <SubTitle>6.1 Venue Acceptance</SubTitle>
+      <BodyText>
+        When a Venue selects an Artist for an Offer, the Venue agrees to all
+        terms and details provided in the Offer.
+      </BodyText>
 
-          <ThemeText type="default">
-            {"• The quality of any band’s performance"}
-          </ThemeText>
-          <ThemeText type="default">• Cancellation of performances</ThemeText>
-          <ThemeText type="default">• No-shows</ThemeText>
-          <ThemeText type="default">• Property damage</ThemeText>
-          <ThemeText type="default">• Personal injury</ThemeText>
-          <ThemeText type="default">• Theft</ThemeText>
-          <ThemeText type="default">• Misconduct</ThemeText>
-          <ThemeText type="default">
-            • Disputes between users and bands
-          </ThemeText>
-          <ThemeText type="default">• Pricing disagreements</ThemeText>
-          <ThemeText type="default">• Contract disputes</ThemeText>
-          <ThemeText type="default">• Unsatisfactory experiences</ThemeText>
-          <ThemeText type="default">• Safety issues at events</ThemeText>
-          <ThemeText type="default">
-            • Any outcome arising from a booking
-          </ThemeText>
+      <SubTitle>6.2 Artist Commitment</SubTitle>
+      <BodyText>
+        By applying to an Offer and not withdrawing their application prior to
+        acceptance, the Artist agrees to perform under the stated terms if
+        selected.
+      </BodyText>
 
-          <ThemeText type="default">
-            All bookings, communications, negotiations, and agreements occur
-            entirely outside the Platform and are solely between the user and
-            the band.
-          </ThemeText>
+      <SubTitle>6.3 Binding Nature</SubTitle>
+      <BodyText>
+        Once a Venue selects an Artist and the Artist has not withdrawn their
+        application:
+      </BodyText>
+      <BulletList
+        items={[
+          "The booking is considered final and binding between the Venue and the Artist.",
+          "Neither party may cancel, withdraw, or otherwise back out of the agreement.",
+        ]}
+      />
 
-          <ThemeText type="default">
-            You use the Platform at your own risk.
-          </ThemeText>
+      {/* 7. USER RESPONSIBILITIES */}
+      <SectionTitle>7. USER RESPONSIBILITIES</SectionTitle>
+      <BodyText>Users agree to:</BodyText>
+      <BulletList
+        items={[
+          "Act in good faith in all interactions",
+          "Honor all accepted bookings",
+          "Provide accurate and truthful information",
+          "Comply with all applicable laws and regulations",
+        ]}
+      />
 
-          {/* 4. No Guarantee of Accuracy */}
-          <ThemeText type="subtitle">4. No Guarantee of Accuracy</ThemeText>
+      {/* 8. LIMITATION OF LIABILITY */}
+      <SectionTitle>8. LIMITATION OF LIABILITY</SectionTitle>
+      <BodyText>
+        The Company acts solely as a platform provider and is not a party to
+        agreements between Artists and Venues. The Company is not responsible
+        for:
+      </BodyText>
+      <BulletList
+        items={[
+          "Performance quality",
+          "Payment disputes",
+          "Cancellations or no-shows",
+          "Any damages arising from interactions between Users",
+        ]}
+      />
+      <BodyText>
+        To the fullest extent permitted by law, the Company disclaims all
+        liability arising from User interactions.
+      </BodyText>
 
-          <ThemeText type="default">GigDogs does not guarantee:</ThemeText>
+      {/* 9. TERMINATION */}
+      <SectionTitle>9. TERMINATION</SectionTitle>
+      <BodyText>
+        The Company reserves the right to suspend or terminate any User account
+        at its discretion, including for violations of these Terms.
+      </BodyText>
 
-          <ThemeText type="default">• The accuracy of band profiles</ThemeText>
-          <ThemeText type="default">
-            • That contact information is correct
-          </ThemeText>
-          <ThemeText type="default">• That pricing is accurate</ThemeText>
-          <ThemeText type="default">• That availability is accurate</ThemeText>
-          <ThemeText type="default">
-            • That communications will be delivered or received
-          </ThemeText>
-          <ThemeText type="default">• That any band will respond</ThemeText>
+      {/* 10. MODIFICATIONS TO TERMS */}
+      <SectionTitle>10. MODIFICATIONS TO TERMS</SectionTitle>
+      <BodyText>
+        The Company may update these Terms at any time. Continued use of the App
+        constitutes acceptance of any revised Terms.
+      </BodyText>
 
-          <ThemeText type="default">
-            Bands are solely responsible for the information they provide.
-          </ThemeText>
+      {/* 11. GOVERNING LAW */}
+      <SectionTitle>11. GOVERNING LAW</SectionTitle>
+      <BodyText>
+        These Terms shall be governed by and construed in accordance with
+        applicable laws, to be specified by the Company.
+      </BodyText>
 
-          {/* 5. Independent Parties */}
-          <ThemeText type="subtitle">5. Independent Parties</ThemeText>
-          <ThemeText type="default">
-            All bands are independent third parties and are not employees,
-            contractors, agents, partners, or representatives of GigDogs.
-          </ThemeText>
-          <ThemeText type="default">
-            Nothing in these Terms creates a partnership, joint venture, or
-            employment relationship.
-          </ThemeText>
-
-          {/* 6. Assumption of Risk */}
-          <ThemeText type="subtitle">6. Assumption of Risk</ThemeText>
-          <ThemeText type="default">
-            By using GigDogs, you acknowledge that hiring live performers
-            involves inherent risks, including but not limited to:
-          </ThemeText>
-
-          <ThemeText type="default">• Equipment failure</ThemeText>
-          <ThemeText type="default">• Crowd-related incidents</ThemeText>
-          <ThemeText type="default">• Injury</ThemeText>
-          <ThemeText type="default">• Alcohol-related incidents</ThemeText>
-          <ThemeText type="default">• Venue-related hazards</ThemeText>
-          <ThemeText type="default">• Event disruption</ThemeText>
-
-          <ThemeText type="default">
-            You voluntarily assume all risks associated with contacting, hiring,
-            or interacting with any band listed on the Platform.
-          </ThemeText>
-
-          {/* 7. Release and Waiver */}
-          <ThemeText type="subtitle">
-            7. Release and Waiver of Liability
-          </ThemeText>
-          <ThemeText type="default">
-            To the fullest extent permitted by law, you release and hold
-            harmless Jacomo Manfredi and GigDogs from any and all claims,
-            damages, liabilities, losses, costs, and expenses arising out of or
-            related to:
-          </ThemeText>
-
-          <ThemeText type="default">
-            • Any interaction between users and bands
-          </ThemeText>
-          <ThemeText type="default">
-            • Any event at which a band performs
-          </ThemeText>
-          <ThemeText type="default">• Any communication errors</ThemeText>
-          <ThemeText type="default">• Any failure of performance</ThemeText>
-          <ThemeText type="default">
-            • Any injury, loss, or damage of any kind
-          </ThemeText>
-
-          <ThemeText type="default">
-            {"GigDogs’ total liability, if any, shall not exceed $100."}
-          </ThemeText>
-
-          {/* 8. Indemnification */}
-          <ThemeText type="subtitle">8. Indemnification</ThemeText>
-          <ThemeText type="default">
-            {
-              "You agree to indemnify, defend, and hold harmless Jacomo Manfredi and GigDogs from any claims, lawsuits, damages, losses, liabilities, or expenses (including attorney’s fees) arising out of:"
-            }
-          </ThemeText>
-
-          <ThemeText type="default">• Your use of the Platform</ThemeText>
-          <ThemeText type="default">• Your booking of a band</ThemeText>
-          <ThemeText type="default">• Your event</ThemeText>
-          <ThemeText type="default">• Your violation of these Terms</ThemeText>
-          <ThemeText type="default">• Content you submit or publish</ThemeText>
-
-          {/* 9. Band Content */}
-          <ThemeText type="subtitle">9. Band Content and License</ThemeText>
-          <ThemeText type="default">
-            By creating an account, bands grant GigDogs a non-exclusive,
-            worldwide, royalty-free license to display, reproduce, and
-            distribute the information and content they upload for the purpose
-            of operating and promoting the Platform.
-          </ThemeText>
-
-          <ThemeText type="default">
-            Bands represent that they have the right to upload all content
-            submitted.
-          </ThemeText>
-
-          <ThemeText type="default">
-            GigDogs reserves the right to remove any content at its sole
-            discretion.
-          </ThemeText>
-
-          {/* 10. Prohibited Conduct */}
-          <ThemeText type="subtitle">10. Prohibited Conduct</ThemeText>
-          <ThemeText type="default">Users and bands may not:</ThemeText>
-
-          <ThemeText type="default">
-            • Submit false or misleading information
-          </ThemeText>
-          <ThemeText type="default">• Harass other users</ThemeText>
-          <ThemeText type="default">
-            • Use the Platform for unlawful purposes
-          </ThemeText>
-          <ThemeText type="default">
-            • Upload infringing or illegal content
-          </ThemeText>
-          <ThemeText type="default">
-            • Attempt to hack, disrupt, or interfere with the Platform
-          </ThemeText>
-
-          <ThemeText type="default">
-            GigDogs may suspend or terminate access at any time.
-          </ThemeText>
-
-          {/* 11. Account Termination */}
-          <ThemeText type="subtitle">11. Account Termination</ThemeText>
-          <ThemeText type="default">
-            GigDogs reserves the right to suspend or permanently terminate any
-            account for any reason, including violation of these Terms.
-          </ThemeText>
-
-          {/* 12. No Warranty */}
-          <ThemeText type="subtitle">12. No Warranty</ThemeText>
-          <ThemeText type="default">
-            {
-              'The Platform is provided "AS IS" and "AS AVAILABLE" without warranties of any kind, either express or implied.'
-            }
-          </ThemeText>
-
-          <ThemeText type="default">
-            GigDogs disclaims all warranties, including:
-          </ThemeText>
-
-          <ThemeText type="default">• Merchantability</ThemeText>
-          <ThemeText type="default">
-            • Fitness for a particular purpose
-          </ThemeText>
-          <ThemeText type="default">• Non-infringement</ThemeText>
-          <ThemeText type="default">• Reliability</ThemeText>
-          <ThemeText type="default">• Availability</ThemeText>
-
-          <ThemeText type="default">
-            We do not guarantee uninterrupted or error-free service.
-          </ThemeText>
-
-          {/* 13. Governing Law */}
-          <ThemeText type="subtitle">13. Governing Law</ThemeText>
-          <ThemeText type="default">
-            These Terms shall be governed by and construed in accordance with
-            the laws of the Commonwealth of Virginia, without regard to conflict
-            of law principles.
-          </ThemeText>
-
-          <ThemeText type="default">
-            Any legal action must be filed exclusively in courts located in
-            Virginia.
-          </ThemeText>
-
-          {/* 14. Changes */}
-          <ThemeText type="subtitle">14. Changes to Terms</ThemeText>
-          <ThemeText type="default">
-            GigDogs may update these Terms at any time. Continued use of the
-            Platform after changes constitutes acceptance of the revised Terms.
-          </ThemeText>
-
-          {/* 15. Contact */}
-          <ThemeText type="subtitle">15. Contact Information</ThemeText>
-          <ThemeText type="default">GigDogs</ThemeText>
-          <ThemeText type="default">Owner: Jacomo Manfredi</ThemeText>
-          <ThemeText type="default">Email: gigdogscontact@gmail.com</ThemeText>
-
-          <ThemeText type="default">
-            By using GigDogs, you acknowledge that you have read, understood,
-            and agreed to these Terms and Conditions.
-          </ThemeText>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      {/* 12. CONTACT INFORMATION */}
+      <SectionTitle>12. CONTACT INFORMATION</SectionTitle>
+      <BodyText>
+        For questions regarding these Terms, Users may contact:
+      </BodyText>
+      <BodyText>Jack Manfredi</BodyText>
+      <BodyText>Email: gigdogscontact@gmail.com</BodyText>
+    </ScrollView>
   );
 }
 
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <Text style={styles.sectionTitle}>{children}</Text>
+);
+
+const SubTitle = ({ children }: { children: React.ReactNode }) => (
+  <Text style={styles.subTitle}>{children}</Text>
+);
+
+const BodyText = ({ children }: { children: React.ReactNode }) => (
+  <Text style={styles.body}>{children}</Text>
+);
+
+const BulletList = ({ items }: { items: string[] }) => (
+  <View style={styles.listContainer}>
+    {items.map((item, index) => (
+      <View key={index} style={styles.listItem}>
+        <Text style={styles.bullet}>•</Text>
+        <Text style={styles.listText}>{item}</Text>
+      </View>
+    ))}
+  </View>
+);
+
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 8 },
-  headerButton: {
-    alignItems: "center",
-    marginRight: 10,
-    flexDirection: "row",
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
   },
-  headerText: {
-    color: "white",
+  content: {
+    padding: 16,
+    paddingBottom: 32,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  meta: {
+    fontSize: 14,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginTop: 16,
+    marginBottom: 6,
+  },
+  subTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginTop: 10,
+    marginBottom: 4,
+  },
+  body: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 6,
+  },
+  listContainer: {
+    marginVertical: 4,
+  },
+  listItem: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 2,
+  },
+  bullet: {
+    fontSize: 14,
+    marginRight: 6,
+    lineHeight: 20,
+  },
+  listText: {
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 20,
   },
 });

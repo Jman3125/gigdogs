@@ -81,9 +81,13 @@ export default function VenueView() {
 
   //Open venues website
   const linkWebsite = () => {
-    Linking.openURL(
-      `https://instagram.com/${venue?.instagram?.trimEnd().toLowerCase()}`,
-    );
+    let url = venue?.website?.trim().toLowerCase();
+
+    if (url && !url.startsWith("http://") && !url.startsWith("https://")) {
+      url = `https://${url}`;
+    }
+
+    Linking.openURL(`${url}`);
   };
   //User wants to report content
   const handleReport = () => {
@@ -119,52 +123,19 @@ export default function VenueView() {
           }
           ListHeaderComponent={
             <View>
-              <View style={styles.headerContainer}>
-                <ThemeText
-                  type="title"
-                  style={styles.venueNameStyle}
-                  numberOfLines={(venue?.venueName?.length ?? 0) < 20 ? 1 : 2}
-                  adjustsFontSizeToFit
-                >
-                  {venue?.venueName}
-                </ThemeText>
-              </View>
-
+              <ThemeText
+                type="subtitle"
+                style={styles.venueNameStyle}
+                numberOfLines={(venue?.venueName?.length ?? 0) < 20 ? 1 : 2}
+                adjustsFontSizeToFit
+              >
+                {venue?.venueName}
+              </ThemeText>
               <View style={styles.infoContainerMain}>
-                <ThemeText type="subtitle">Info</ThemeText>
+                <ThemeText type="subtitle">About</ThemeText>
                 <Image source={{ uri: venue?.picture }} style={styles.image} />
 
                 <View style={styles.profileContainerSub}>
-                  <LabelWrapper label="Email:">
-                    <Pressable onPress={openEmail}>
-                      <ThemeText type="defaultSemiBold">
-                        {venue?.email}
-                      </ThemeText>
-                    </Pressable>
-                  </LabelWrapper>
-
-                  {venue?.instagram && (
-                    <LabelWrapper label="Instagram:">
-                      <Pressable onPress={linkInstagram}>
-                        <ThemeText type="link">@{venue?.instagram}</ThemeText>
-                      </Pressable>
-                    </LabelWrapper>
-                  )}
-                  {venue?.facebook && (
-                    <LabelWrapper label="Facebook:">
-                      <Pressable onPress={linkFacebook}>
-                        <ThemeText type="link">@{venue?.facebook}</ThemeText>
-                      </Pressable>
-                    </LabelWrapper>
-                  )}
-                  {venue?.website && (
-                    <LabelWrapper label="Website:">
-                      <Pressable onPress={linkWebsite}>
-                        <ThemeText type="link">{venue?.website}</ThemeText>
-                      </Pressable>
-                    </LabelWrapper>
-                  )}
-
                   <LabelWrapper label="State">
                     <ThemeText type="defaultSemiBold">{venue?.state}</ThemeText>
                   </LabelWrapper>
@@ -174,13 +145,45 @@ export default function VenueView() {
                       {venue?.address}
                     </ThemeText>
                   </LabelWrapper>
+
+                  <View style={styles.horizontalRow}>
+                    <ThemeText type="defaultSemiBold">Email: </ThemeText>
+                    <Pressable onPress={openEmail}>
+                      <ThemeText type="link">{venue?.email}</ThemeText>
+                    </Pressable>
+                  </View>
+
+                  {venue?.instagram && (
+                    <View style={styles.horizontalRow}>
+                      <ThemeText type="defaultSemiBold">Instagram: </ThemeText>
+                      <Pressable onPress={linkInstagram}>
+                        <ThemeText type="link">@{venue?.instagram}</ThemeText>
+                      </Pressable>
+                    </View>
+                  )}
+                  {venue?.facebook && (
+                    <View style={styles.horizontalRow}>
+                      <ThemeText type="defaultSemiBold">Facebook: </ThemeText>
+                      <Pressable onPress={linkFacebook}>
+                        <ThemeText type="link">@{venue?.facebook}</ThemeText>
+                      </Pressable>
+                    </View>
+                  )}
+                  {venue?.website && (
+                    <View style={styles.horizontalRow}>
+                      <ThemeText type="defaultSemiBold">Website: </ThemeText>
+                      <Pressable onPress={linkWebsite}>
+                        <ThemeText type="link">{venue?.website}</ThemeText>
+                      </Pressable>
+                    </View>
+                  )}
                 </View>
 
                 <Pressable onPress={handleReport} style={styles.report}>
                   <ThemeText type="link">Report Account</ThemeText>
                 </Pressable>
               </View>
-              <ThemeText type="subtitle">Offers from this Venue</ThemeText>
+              <ThemeText type="subtitle">Play At This Venue</ThemeText>
             </View>
           }
         />
@@ -194,11 +197,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
   },
-  headerContainer: {
-    width: "100%",
-    height: "auto",
-    justifyContent: "center",
-    alignItems: "center",
+  mainContainer: {
+    textAlign: "center",
   },
   infoContainerMain: {
     padding: 15,
@@ -219,12 +219,16 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
   },
+  horizontalRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   image: {
     position: "absolute",
     top: 10,
     right: 10,
-    width: 180,
-    height: 180,
+    width: 120,
+    height: 120,
     borderRadius: 8,
   },
   headerButton: {
@@ -237,6 +241,7 @@ const styles = StyleSheet.create({
   },
   venueNameStyle: {
     fontSize: 35,
+    textAlign: "center",
   },
   report: {
     marginTop: 15,

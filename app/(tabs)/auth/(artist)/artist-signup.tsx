@@ -5,7 +5,6 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
-import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useSignupArtist } from "@/hooks/use-signup";
 import { Genres, OriginalCoverOptions } from "@/models/artist";
@@ -13,7 +12,7 @@ import { colors } from "@/utilities/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
 import { useRouter } from "expo-router";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Image,
@@ -29,8 +28,6 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ArtistSingup() {
-  //Will use context after signup to update home feed so user sees changes
-  const { setReload } = useContext(ReloadFeedContext);
   //Navigator
   const navigator = useRouter();
 
@@ -119,7 +116,6 @@ export default function ArtistSingup() {
             text: "Ok",
             onPress: async () => {
               setLoading(false);
-              setReload(true);
               navigator.replace("/");
             },
           },

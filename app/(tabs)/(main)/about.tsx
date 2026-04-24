@@ -23,12 +23,12 @@ export default function About() {
           <View style={styles.section}>
             <ThemeText type="logo">What is it?</ThemeText>
             <ThemeText type="defaultSemiBold">
-              GigDogs is an app that makes live music more accessible to the
-              everyday person.
+              GigDogs is an app that makes live music easier for venues and
+              artists of any type.
             </ThemeText>
             <ThemeText type="default">
               {
-                "People love live music, and there should be no reason musicians and music lovers shouldn't be able to connect in a simple and meaningful way."
+                "GigDogs cuts out the cold calls, the planning, and the headaches, putting everything in one place so the whole experience feels fun and effortless."
               }
             </ThemeText>
           </View>
@@ -36,11 +36,11 @@ export default function About() {
           <View style={styles.section}>
             <ThemeText type="logo">Our Goal</ThemeText>
             <ThemeText type="defaultSemiBold">
-              Our goal is to foster connection.
+              Our goal is the community.
             </ThemeText>
             <ThemeText type="default">
               {
-                "We want live music to be at every party and event. We aim to be a platform that stays out of the way and lets anyone hire amazing musicians. No middleman. No booking agencies. Hassle-free."
+                "We help venues find incredible local talent and help artists land more gigs, all hassle-free. GigDogs is made by the community, for the community."
               }
             </ThemeText>
           </View>
@@ -50,7 +50,7 @@ export default function About() {
             <ThemeText type="defaultSemiBold">Communities.</ThemeText>
             <ThemeText type="default">
               {
-                "College parties, community events, backyard cookouts. GigDogs is for musicians who just want to play and for people who just want a simple and centralized way to find a local band for their party."
+                "From bars and nightclubs to backyard events, GigDogs makes finding the right act effortless. It’s for musicians who want to play and for people who want one simple place to book everything."
               }
             </ThemeText>
           </View>
@@ -60,7 +60,7 @@ export default function About() {
               <View style={styles.horizontalWrap}>
                 <FontAwesome name="send" size={22} color={"rgb(31, 31, 31)"} />
                 <Pressable onPress={handleEmail}>
-                  <ThemeText type="link">Contact Us</ThemeText>
+                  <ThemeText type="link">Contact us</ThemeText>
                 </Pressable>
               </View>
             </LabelWrapper>

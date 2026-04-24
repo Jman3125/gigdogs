@@ -3,6 +3,7 @@
 export function validateUpdateFieldsArtist(
   artistName: string,
   genre: string,
+  originalsCovers: string,
   bio: string,
   picture: string,
   instagram: string,
@@ -16,6 +17,10 @@ export function validateUpdateFieldsArtist(
 
   if (!genre.trim()) {
     return { valid: false, message: "Please add a genre." };
+  }
+
+  if (!originalsCovers.trim()) {
+    return { valid: false, message: "Please select originals/covers." };
   }
 
   if (!picture || !picture.trim()) {
@@ -50,7 +55,6 @@ export function validateUpdateFieldsVenue(
   website: string,
   instagram: string,
   facebook: string,
-  phone: string,
 ) {
   //ensure no fields are empty
   if (!venueName.trim()) {
@@ -67,10 +71,6 @@ export function validateUpdateFieldsVenue(
 
   if (!picture || !picture.trim()) {
     return { valid: false, message: "Please add a profile picture." };
-  }
-
-  if (!phone.trim()) {
-    return { valid: false, message: "Please add a phone number." };
   }
 
   if (!website.trim() && !instagram.trim() && !facebook.trim()) {

@@ -1,8 +1,8 @@
 //Navigates to this page after a user clicks 'View' on a bands profile. adds band ID to url to get specific data.
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
+import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
-import { ReloadFeedContext } from "@/context/reload-feed";
 import { useApproveOffer } from "@/hooks/use-approve-offer";
 import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
@@ -10,7 +10,7 @@ import { colors } from "@/utilities/colors";
 import { getOneItem } from "@/utilities/firebase/fetch-data";
 import { getGenre } from "@/utilities/getGenreLabel";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -18,13 +18,12 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ArtistView() {
-  //Will use context after applying to an offer and update home feed so user sees changes
-  const { setReload } = useContext(ReloadFeedContext);
   const navigator = useRouter();
   // Going to match the id to a band and get attributes so I don't pass them all through URL
   const { artistId, offerId } = useLocalSearchParams<{
@@ -100,8 +99,7 @@ export default function ArtistView() {
           {
             text: "Ok",
             onPress: () => {
-              navigator.dismissAll();
-              setReload(true);
+              navigator.back();
             },
           },
         ],
@@ -194,16 +192,20 @@ export default function ArtistView() {
             </View>
             {!offerAccepted && (
               <>
-                <Pressable onPress={selectArtist} style={styles.selectButton}>
+                <TouchableOpacity
+                  onPress={selectArtist}
+                  style={styles.selectButton}
+                >
                   <ThemeText
                     type="defaultSemiBold"
                     style={styles.selectButtonText}
                   >
                     Select This Artist
                   </ThemeText>
-                </Pressable>
+                </TouchableOpacity>
                 <ThemeText type="caption">
-                  Lock this artist in for your event
+                  Lock this artist in for your event. By proceeding you agree to{" "}
+                  <TermsPrivacyLinks />
                 </ThemeText>
               </>
             )}
@@ -290,6 +292,7 @@ const styles = StyleSheet.create({
   },
   artistName: {
     fontSize: 35,
+    textAlign: "center",
   },
   report: {
     marginTop: 15,

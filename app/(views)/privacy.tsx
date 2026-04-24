@@ -1,278 +1,246 @@
-import { ThemeText } from "@/components/theme-text";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-export default function Privacy() {
+export default function PrivacyPolicyScreen() {
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView>
-        <View style={{ padding: 20, gap: 12 }}>
-          <ThemeText type="title">PRIVACY POLICY</ThemeText>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Text style={styles.title}>PRIVACY POLICY</Text>
+      <Text style={styles.meta}>Effective Date: April 23, 2026</Text>
 
-          <ThemeText type="default">Effective Date: 2/9/2026</ThemeText>
+      {/* 1. INTRODUCTION */}
+      <SectionTitle>1. INTRODUCTION</SectionTitle>
+      <BodyText>
+        This Privacy Policy describes how GigDogs (the “App”), operated by Jack
+        Manfredi (“Company,” “we,” “us,” or “our”), collects, uses, and protects
+        information from users (“Users,” including Artists and Venues). By using
+        the App, you agree to the collection and use of information in
+        accordance with this Privacy Policy.
+      </BodyText>
 
-          <ThemeText type="default">
-            {
-              'This Privacy Policy describes how GigDogs, owned and operated by Jacomo Manfredi, Sole Proprietor ("GigDogs," "we," "us," or "our"), collects, uses, and discloses information when you use the GigDogs mobile application (the "Platform").'
-            }
-          </ThemeText>
+      {/* 2. INFORMATION WE COLLECT */}
+      <SectionTitle>2. INFORMATION WE COLLECT</SectionTitle>
 
-          <ThemeText type="default">
-            By using GigDogs, you agree to the collection and use of information
-            in accordance with this Privacy Policy.
-          </ThemeText>
+      <SubTitle>2.1 Information Provided by Artists</SubTitle>
+      <BulletList
+        items={[
+          "Name",
+          "Email address",
+          "Genre",
+          "Artist type",
+          "Biography",
+          "Profile picture",
+          "Social media links (Facebook, Instagram)",
+          "Phone number",
+        ]}
+      />
 
-          {/* 1. Eligibility */}
-          <ThemeText type="subtitle">1. Eligibility</ThemeText>
-          <ThemeText type="default">
-            GigDogs is intended for individuals 18 years of age or older. We do
-            not knowingly collect personal information from anyone under 18.
-          </ThemeText>
+      <SubTitle>2.2 Information Provided by Venues</SubTitle>
+      <BulletList
+        items={[
+          "Name",
+          "Profile picture",
+          "State and physical address",
+          "Email address",
+          "Phone number",
+          "Website",
+          "Social media links (Instagram, Facebook)",
+        ]}
+      />
 
-          {/* 2. Information We Collect */}
-          <ThemeText type="subtitle">2. Information We Collect</ThemeText>
+      <SubTitle>2.3 Offer Information</SubTitle>
+      <BodyText>Venues may create Offers that include:</BodyText>
+      <BulletList
+        items={[
+          "Event name",
+          "Date",
+          "Start time, arrival time, and end time",
+          "Description",
+          "Provided equipment",
+          "Additional notes",
+        ]}
+      />
 
-          <ThemeText type="subtitle">
-            A. Information Provided by Bands
-          </ThemeText>
-          <ThemeText type="default">
-            When bands create an account, we collect and display the following
-            information:
-          </ThemeText>
+      <SubTitle>2.4 User-Provided Content</SubTitle>
+      <BodyText>
+        All information collected through the App is provided directly by Users.
+        We do not independently verify this information.
+      </BodyText>
 
-          <ThemeText type="default">• Band name</ThemeText>
-          <ThemeText type="default">• Photos</ThemeText>
-          <ThemeText type="default">• Biography</ThemeText>
-          <ThemeText type="default">• Music genre</ThemeText>
-          <ThemeText type="default">• Location</ThemeText>
-          <ThemeText type="default">
-            • Instagram or other social media links
-          </ThemeText>
-          <ThemeText type="default">• Phone number</ThemeText>
-          <ThemeText type="default">• Email address</ThemeText>
-          <ThemeText type="default">• Price per hour</ThemeText>
-          <ThemeText type="default">• Total set time</ThemeText>
+      {/* 3. HOW WE USE INFORMATION */}
+      <SectionTitle>3. HOW WE USE INFORMATION</SectionTitle>
+      <BodyText>We use the information collected to:</BodyText>
+      <BulletList
+        items={[
+          "Operate and maintain the App",
+          "Display Artist and Venue profiles to other Users",
+          "Publish Offers and facilitate applications",
+          "Enable communication and booking between Users",
+          "Improve App functionality and user experience",
+        ]}
+      />
 
-          <ThemeText type="default">
-            By submitting this information, bands consent to its public display
-            within the Platform.
-          </ThemeText>
+      {/* 4. DATA STORAGE AND SECURITY */}
+      <SectionTitle>4. DATA STORAGE AND SECURITY</SectionTitle>
+      <BodyText>
+        User data is stored using Firebase infrastructure. We implement
+        reasonable administrative and technical safeguards to protect
+        information; however, no method of transmission or storage is completely
+        secure, and we cannot guarantee absolute security.
+      </BodyText>
 
-          <ThemeText type="subtitle">
-            B. Information Provided by Users
-          </ThemeText>
-          <ThemeText type="default">
-            Users who browse the Platform may provide limited information such
-            as:
-          </ThemeText>
+      {/* 5. INFORMATION SHARING */}
+      <SectionTitle>5. INFORMATION SHARING</SectionTitle>
 
-          <ThemeText type="default">• Search location data</ThemeText>
-          <ThemeText type="default">
-            {"• Communications sent through the app (if applicable)"}
-          </ThemeText>
+      <SubTitle>5.1 No Sale of Data</SubTitle>
+      <BodyText>
+        We do not sell, rent, or trade User personal information to third
+        parties.
+      </BodyText>
 
-          <ThemeText type="subtitle">
-            C. Automatically Collected Information
-          </ThemeText>
-          <ThemeText type="default">
-            We may automatically collect certain technical information when the
-            Platform is used, including:
-          </ThemeText>
+      <SubTitle>5.2 Limited Sharing</SubTitle>
+      <BodyText>We do not share User data with third parties except:</BodyText>
+      <BulletList
+        items={[
+          "As necessary to operate the App through Firebase",
+          "When required by law or legal process",
+        ]}
+      />
 
-          <ThemeText type="default">• Device type</ThemeText>
-          <ThemeText type="default">• Operating system</ThemeText>
-          <ThemeText type="default">• App usage data</ThemeText>
-          <ThemeText type="default">• IP address</ThemeText>
-          <ThemeText type="default">• Log data</ThemeText>
-          <ThemeText type="default">
-            {"• Approximate location (if enabled)"}
-          </ThemeText>
+      <SubTitle>5.3 Public Information</SubTitle>
+      <BodyText>
+        Certain User information (such as profiles and Offers) is visible to
+        other Users within the App.
+      </BodyText>
 
-          <ThemeText type="default">
-            This information helps us improve functionality and security.
-          </ThemeText>
+      {/* 6. DATA RETENTION */}
+      <SectionTitle>6. DATA RETENTION</SectionTitle>
+      <BodyText>
+        We retain User information for as long as necessary to operate the App
+        and fulfill its purposes, unless a longer retention period is required
+        or permitted by law.
+      </BodyText>
 
-          {/* 3. How We Use Information */}
-          <ThemeText type="subtitle">3. How We Use Information</ThemeText>
-          <ThemeText type="default">We use collected information to:</ThemeText>
+      {/* 7. USER RIGHTS AND CHOICES */}
+      <SectionTitle>7. USER RIGHTS AND CHOICES</SectionTitle>
+      <BodyText>Users may:</BodyText>
+      <BulletList
+        items={[
+          "Update or correct their account information within the App",
+          "Remove applications before acceptance (as applicable under the Terms and Conditions)",
+          "Request account deletion by contacting us",
+        ]}
+      />
+      <BodyText>
+        We will make reasonable efforts to honor such requests, subject to legal
+        and operational requirements.
+      </BodyText>
 
-          <ThemeText type="default">
-            • Operate and maintain the Platform
-          </ThemeText>
-          <ThemeText type="default">• Display band profiles</ThemeText>
-          <ThemeText type="default">• Improve user experience</ThemeText>
-          <ThemeText type="default">• Respond to inquiries</ThemeText>
-          <ThemeText type="default">• Monitor usage trends</ThemeText>
-          <ThemeText type="default">• Prevent fraud or misuse</ThemeText>
-          <ThemeText type="default">
-            • Enforce our Terms and Conditions
-          </ThemeText>
+      {/* 8. CHILDREN’S PRIVACY */}
+      <SectionTitle>8. CHILDREN’S PRIVACY</SectionTitle>
+      <BodyText>
+        The App is not intended for individuals under the age of 13. We do not
+        knowingly collect personal information from children under 13.
+      </BodyText>
 
-          {/* 4. Public Information */}
-          <ThemeText type="subtitle">4. Public Information</ThemeText>
-          <ThemeText type="default">
-            All information submitted by bands for profile creation is intended
-            for public display within the app.
-          </ThemeText>
+      {/* 9. CHANGES TO THIS PRIVACY POLICY */}
+      <SectionTitle>9. CHANGES TO THIS PRIVACY POLICY</SectionTitle>
+      <BodyText>
+        We may update this Privacy Policy from time to time. Continued use of
+        the App after changes are posted constitutes acceptance of the revised
+        policy.
+      </BodyText>
 
-          <ThemeText type="default">
-            This includes phone numbers and email addresses. Bands voluntarily
-            provide this information with the understanding that it will be
-            visible to users.
-          </ThemeText>
+      {/* 10. CONTACT INFORMATION */}
+      <SectionTitle>10. CONTACT INFORMATION</SectionTitle>
+      <BodyText>If you have any questions about this Privacy Policy:</BodyText>
+      <BodyText>Jack Manfredi</BodyText>
+      <BodyText>Email: gigdogscontact@gmail.com</BodyText>
 
-          <ThemeText type="default">
-            GigDogs is not responsible for how third parties use publicly
-            displayed information.
-          </ThemeText>
-
-          {/* 5. How We Share Information */}
-          <ThemeText type="subtitle">5. How We Share Information</ThemeText>
-          <ThemeText type="default">
-            We do not sell personal information.
-          </ThemeText>
-
-          <ThemeText type="default">We may share information:</ThemeText>
-
-          <ThemeText type="default">
-            {
-              "• With service providers who assist in operating the Platform (e.g., hosting providers)"
-            }
-          </ThemeText>
-          <ThemeText type="default">
-            • If required by law, subpoena, or legal process
-          </ThemeText>
-          <ThemeText type="default">
-            • To protect our rights, property, or safety
-          </ThemeText>
-          <ThemeText type="default">
-            {"• In connection with a business transfer (e.g., sale of the app)"}
-          </ThemeText>
-
-          {/* 6. No Responsibility for Third-Party Communications */}
-          <ThemeText type="subtitle">
-            6. No Responsibility for Third-Party Communications
-          </ThemeText>
-
-          <ThemeText type="default">GigDogs is not responsible for:</ThemeText>
-
-          <ThemeText type="default">
-            • Communications between users and bands
-          </ThemeText>
-          <ThemeText type="default">• Misuse of contact information</ThemeText>
-          <ThemeText type="default">
-            • Spam, harassment, or unsolicited contact
-          </ThemeText>
-          <ThemeText type="default">
-            • Any disputes arising from shared information
-          </ThemeText>
-
-          <ThemeText type="default">
-            {
-              "All communication outside the Platform is at the user’s own risk."
-            }
-          </ThemeText>
-
-          {/* 7. Data Retention */}
-          <ThemeText type="subtitle">7. Data Retention</ThemeText>
-          <ThemeText type="default">We retain information:</ThemeText>
-
-          <ThemeText type="default">
-            • For as long as an account remains active
-          </ThemeText>
-          <ThemeText type="default">
-            • As necessary to comply with legal obligations
-          </ThemeText>
-          <ThemeText type="default">
-            • As needed to resolve disputes or enforce agreements
-          </ThemeText>
-
-          <ThemeText type="default">
-            Bands may request deletion of their account and associated data by
-            contacting us.
-          </ThemeText>
-
-          {/* 8. Data Security */}
-          <ThemeText type="subtitle">8. Data Security</ThemeText>
-          <ThemeText type="default">
-            We implement reasonable technical and administrative safeguards to
-            protect information. However, no system is completely secure.
-          </ThemeText>
-
-          <ThemeText type="default">
-            We cannot guarantee absolute security of data transmitted through
-            the internet.
-          </ThemeText>
-
-          {/* 9. Your Rights */}
-          <ThemeText type="subtitle">
-            {"9. Your Rights (United States)"}
-          </ThemeText>
-          <ThemeText type="default">
-            Depending on your state of residence, you may have rights to:
-          </ThemeText>
-
-          <ThemeText type="default">
-            • Request access to personal information
-          </ThemeText>
-          <ThemeText type="default">
-            • Request correction of inaccurate information
-          </ThemeText>
-          <ThemeText type="default">
-            • Request deletion of personal information
-          </ThemeText>
-          <ThemeText type="default">
-            {"• Opt out of certain data uses (where applicable)"}
-          </ThemeText>
-
-          <ThemeText type="default">
-            To exercise these rights, contact us using the information below.
-          </ThemeText>
-
-          {/* 10. Third-Party Links */}
-          <ThemeText type="subtitle">10. Third-Party Links</ThemeText>
-          <ThemeText type="default">
-            {
-              "The Platform may contain links to third-party websites (e.g., Instagram). We are not responsible for the privacy practices of third-party sites."
-            }
-          </ThemeText>
-
-          {/* 11. Changes */}
-          <ThemeText type="subtitle">11. Changes to This Policy</ThemeText>
-          <ThemeText type="default">
-            We may update this Privacy Policy from time to time. Updates will be
-            posted within the app with a revised effective date.
-          </ThemeText>
-
-          <ThemeText type="default">
-            Continued use of the Platform after changes constitutes acceptance
-            of the revised policy.
-          </ThemeText>
-
-          {/* 12. Contact */}
-          <ThemeText type="subtitle">12. Contact Information</ThemeText>
-          <ThemeText type="default">GigDogs</ThemeText>
-          <ThemeText type="default">Owner: Jacomo Manfredi</ThemeText>
-          <ThemeText type="default">Email: gigdogscontact@gmail.com</ThemeText>
-
-          <ThemeText type="default">
-            By using GigDogs, you acknowledge that you have read and understood
-            this Privacy Policy.
-          </ThemeText>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      {/* IMPORTANT NOTICE */}
+      <SectionTitle>IMPORTANT NOTICE</SectionTitle>
+      <BodyText>
+        This Privacy Policy is a general template and must be reviewed and
+        approved by a licensed attorney to ensure compliance with applicable
+        privacy laws and regulations.
+      </BodyText>
+    </ScrollView>
   );
 }
 
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <Text style={styles.sectionTitle}>{children}</Text>
+);
+
+const SubTitle = ({ children }: { children: React.ReactNode }) => (
+  <Text style={styles.subTitle}>{children}</Text>
+);
+
+const BodyText = ({ children }: { children: React.ReactNode }) => (
+  <Text style={styles.body}>{children}</Text>
+);
+
+const BulletList = ({ items }: { items: string[] }) => (
+  <View style={styles.listContainer}>
+    {items.map((item, index) => (
+      <View key={index} style={styles.listItem}>
+        <Text style={styles.bullet}>•</Text>
+        <Text style={styles.listText}>{item}</Text>
+      </View>
+    ))}
+  </View>
+);
+
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 5 },
-  headerButton: {
-    alignItems: "center",
-    marginRight: 10,
-    flexDirection: "row",
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
   },
-  headerText: {
-    color: "white",
+  content: {
+    padding: 16,
+    paddingBottom: 32,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  meta: {
+    fontSize: 14,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginTop: 16,
+    marginBottom: 6,
+  },
+  subTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginTop: 10,
+    marginBottom: 4,
+  },
+  body: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 6,
+  },
+  listContainer: {
+    marginVertical: 4,
+  },
+  listItem: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 2,
+  },
+  bullet: {
+    fontSize: 14,
+    marginRight: 6,
+    lineHeight: 20,
+  },
+  listText: {
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 20,
   },
 });

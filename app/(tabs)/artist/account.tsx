@@ -5,16 +5,15 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { ThemeText } from "@/components/theme-text";
 import { auth } from "@/config/firebaseConfig";
-import { ReloadFeedContext } from "@/context/reload-feed";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useLogout } from "@/hooks/use-logout";
 import { useUpdateArtist } from "@/hooks/use-update";
-import { Genres } from "@/models/artist";
+import { Genres, OriginalCoverOptions } from "@/models/artist";
 import { colors } from "@/utilities/colors";
 import { fetchAuthArtist } from "@/utilities/firebase/fetch-auth-artist";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -30,9 +29,6 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account() {
-  //Will use context after update to update home feed so user sees changes
-  const { setReload } = useContext(ReloadFeedContext);
-
   //loading state
   const [loading, setLoading] = useState(true);
 
@@ -53,6 +49,11 @@ export default function Account() {
   const [openGenre, setOpenGenre] = useState(false);
   const [selectedGenre, selectGenre] = useState("");
   const [genres, setGenres] = useState(Genres);
+
+  //For Orignals/Covers picker selection
+  const [openType, setOpenType] = useState(false);
+  const [selectedType, selectType] = useState("");
+  const [types, setTypes] = useState(OriginalCoverOptions);
 
   //For bio
   const [bio, setBio] = useState("");
@@ -99,6 +100,7 @@ export default function Account() {
         setSignedInArtist(artistAuthData);
         setArtistName(artistAuthData?.artistName);
         selectGenre(artistAuthData?.genre);
+        selectType(artistAuthData?.originalsCovers);
         setBio(artistAuthData?.bio);
         setPhone(artistAuthData?.phone);
         setInstagram(artistAuthData?.instagram);
@@ -124,6 +126,8 @@ export default function Account() {
   const handleLogout = async () => {
     try {
       await logout();
+      navigator.dismissAll();
+
       //return to feed
       navigator.replace("/");
     } catch (error: any) {
@@ -136,17 +140,19 @@ export default function Account() {
     setLoading(true);
     try {
       await update(
-        artistName.trim(),
+        (artistName || "").trim(),
         selectedGenre,
-        bio.trim(),
+        selectedType,
+        (bio || "").trim(),
         image,
-        instagram.trim(),
-        facebook.trim(),
-        phone.trim(),
+        (instagram || "").trim(),
+        (facebook || "").trim(),
+        phone,
       );
-      setLoading(false);
-      setReload(true);
+      Alert.alert("Success", "Information has been updated");
       navigator.dismissAll();
+      setLoading(false);
+      navigator.replace("/");
     } catch (error: any) {
       Alert.alert("Error", error.message);
       setError(error.message);
@@ -192,7 +198,12 @@ export default function Account() {
                     <ThemeText type="defaultSemiBold">
                       Email & Password
                     </ThemeText>
-                    <FontAwesome name="chevron-right" size={25} color="black" />
+                    <FontAwesome
+                      name="chevron-right"
+                      size={15}
+                      color="black"
+                      style={{ marginLeft: 5 }}
+                    />
                   </Pressable>
                 </Link>
               </LabelWrapper>
@@ -206,6 +217,20 @@ export default function Account() {
                   setValue={selectGenre}
                   setItems={setGenres}
                   placeholder="Select a genre"
+                  listMode="MODAL"
+                  style={styles.picker}
+                />
+              </LabelWrapper>
+
+              <LabelWrapper label="Covers, Originals, or Both?">
+                <DropDownPicker
+                  open={openType}
+                  value={selectedType}
+                  items={types}
+                  setOpen={setOpenType}
+                  setValue={selectType}
+                  setItems={setTypes}
+                  placeholder="Select a type"
                   listMode="MODAL"
                   style={styles.picker}
                 />
@@ -267,7 +292,7 @@ export default function Account() {
               <Pressable onPress={onPickImage}>
                 <View style={styles.horizontalWrap}>
                   <ThemeText type="subtitle">Change Profile Picture</ThemeText>
-                  <FontAwesome name="plus" size={42} color="black" />
+                  <FontAwesome name="plus" size={32} color="black" />
                 </View>
 
                 {image && (

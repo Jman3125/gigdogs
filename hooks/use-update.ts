@@ -11,6 +11,7 @@ export function useUpdateArtist() {
   const update = async (
     artistName: string,
     genre: string,
+    originalsCovers: string,
     bio: string,
     picture: string,
     instagram: string,
@@ -23,6 +24,7 @@ export function useUpdateArtist() {
     const result = validateUpdateFieldsArtist(
       artistName,
       genre,
+      originalsCovers,
       bio,
       picture,
       instagram,
@@ -51,6 +53,7 @@ export function useUpdateArtist() {
       await updateDoc(doc(db, "users", user.uid), {
         artistName,
         genre,
+        originalsCovers,
         bio,
         picture: imageURL,
         instagram,
@@ -77,7 +80,6 @@ export function useUpdateVenue() {
     website: string,
     instagram: string,
     facebook: string,
-    phone: string,
   ) => {
     // Validation
     //ensure no fields are empty
@@ -90,7 +92,6 @@ export function useUpdateVenue() {
       website,
       instagram,
       facebook,
-      phone,
     );
 
     if (!result.valid) {
@@ -120,7 +121,6 @@ export function useUpdateVenue() {
         website,
         instagram,
         facebook,
-        phone,
       });
 
       return { success: true };

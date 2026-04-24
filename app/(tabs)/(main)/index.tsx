@@ -150,7 +150,7 @@ export default function Index() {
             )}
             keyboardShouldPersistTaps="always"
             style={styles.flatListContainer}
-            ListEmptyComponent={<BlankSearch />}
+            ListEmptyComponent={<BlankSearch noneSelected={state == "xyz"} />}
             ListHeaderComponent={
               <View>
                 {error && (

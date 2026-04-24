@@ -37,6 +37,7 @@ const TabsLayout = () => {
           options={{
             title: "Account",
             headerShown: false,
+            popToTopOnBlur: true,
             href: isSignedIn && role === "artist" ? undefined : null,
             //This is the actions page for authenticated artists
             tabBarIcon: ({ color }) => (
@@ -52,6 +53,7 @@ const TabsLayout = () => {
           options={{
             title: "Account",
             headerShown: false,
+            popToTopOnBlur: true,
             href: isSignedIn && role === "venue" ? undefined : null,
 
             tabBarIcon: ({ color }) => (
@@ -66,7 +68,6 @@ const TabsLayout = () => {
           name="auth"
           options={{
             title: "Account",
-            popToTopOnBlur: true,
             headerShown: false,
             href: !isSignedIn ? undefined : null,
 

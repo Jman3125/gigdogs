@@ -3,7 +3,6 @@ import Loading from "@/components/loading";
 import { OfferCell } from "@/components/offer-cell";
 import { ThemeText } from "@/components/theme-text";
 import { auth } from "@/config/firebaseConfig";
-import { ReloadFeedContext } from "@/context/reload-feed";
 import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
 import { colors } from "@/utilities/colors";
@@ -11,9 +10,17 @@ import {
   getOffersByIdsDescending,
   getOneItem,
 } from "@/utilities/firebase/fetch-data";
-import { useFocusEffect } from "expo-router";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { Alert, FlatList, StyleSheet, View } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
+import {
+  Alert,
+  FlatList,
+  Image,
+  Linking,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Account() {
@@ -22,9 +29,6 @@ export default function Account() {
 
   //Get the offers that this artist has ben accepted to through appliedOfferIds
   const [offersDataAccepted, setOffersDataAccepted] = useState<Offer[]>([]);
-
-  //Reload context variable
-  const { reload, setReload } = useContext(ReloadFeedContext);
 
   //Loading state
   const [loading, setLoading] = useState(true);
@@ -49,6 +53,7 @@ export default function Account() {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching offer data:", error);
+      setLoading(false);
     }
   };
 
@@ -56,17 +61,18 @@ export default function Account() {
     fetchOffersData();
   }, [fetchOffersData]);
 
-  //if user updated account refresh page with context variable
-  useFocusEffect(
-    useCallback(() => {
-      //If we needed to manually refresh from another page
-      if (reload) {
-        fetchOffersData();
-        Alert.alert("Success", "Thanks for using GigDogs!");
-        setReload(false);
-      }
-    }, [reload, fetchOffersData, setReload]),
-  );
+  //User wants information about the page
+  const openInfoAlert = () => {
+    Alert.alert(
+      "Information",
+      "This page is where you'll see and manage all offers you've applied to on GigDogs. You will also see offers you have been accepted to here.",
+    );
+  };
+
+  //Open support contact
+  const openSupportContact = () => {
+    Linking.openURL(`mailto:gigdogscontact@gmail.com`);
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
@@ -91,43 +97,67 @@ export default function Account() {
             />
           )}
           keyboardShouldPersistTaps="always"
-          ListEmptyComponent={
-            <View>
-              <ThemeText type="subtitle">
-                You have not applied to any offers yet.
-              </ThemeText>
-            </View>
-          }
           ListHeaderComponent={
-            <View>
-              <ThemeText type="title">Offers</ThemeText>
+            <View style={styles.mainHeaderContainer}>
+              <Pressable onPress={openInfoAlert} style={{ marginBottom: 15 }}>
+                <ThemeText type="subtitle">
+                  Events Dashboard{" "}
+                  <FontAwesome name="info-circle" size={25} color={"gray"} />
+                </ThemeText>
+              </Pressable>
 
-              <ThemeText type="default">
-                To apply to offers, go to the search page and click on an offer
-                to see details and apply.
-              </ThemeText>
+              {offersDataAccepted.length === 0 &&
+                offersDataOpen.length === 0 && (
+                  <View style={styles.emptyStateView}>
+                    <Image
+                      source={require("@/assets/images/logo.png")}
+                      style={styles.logo}
+                    />
+                    <ThemeText type="subtitle">Nothing to see here!</ThemeText>
+                    <ThemeText type="defaultSemiBold">
+                      Go apply to your first offer on the search page!
+                    </ThemeText>
+                  </View>
+                )}
 
               {/* This is where we put all of the accepted offers in a list */}
-              <ThemeText type="subtitle">Accepted Offers</ThemeText>
+              {offersDataAccepted.length !== 0 && (
+                <View style={styles.acceptedContainer}>
+                  <ThemeText type="subtitle" style={{ marginBottom: 10 }}>
+                    Coming up{" "}
+                    <FontAwesome name="calendar" size={28} color={"black"} />
+                  </ThemeText>
+                  <ThemeText type="caption" style={{ marginBottom: 5 }}>
+                    You have been accepted for the following offers:
+                  </ThemeText>
+                  {offersDataAccepted.map((item) => (
+                    <OfferCell
+                      key={item.id}
+                      offerId={item.id}
+                      name={item.eventName}
+                      showDelete={false}
+                      type="venue"
+                      date={item.date}
+                      time={item.time}
+                      offerAmount={item.offerAmount}
+                      artistsApplied={"Locked In"}
+                      setLoading={setLoading}
+                    />
+                  ))}
+                  <View style={styles.horizontalWrap}>
+                    <Pressable onPress={openSupportContact}>
+                      <ThemeText type="link">Contact us</ThemeText>
+                    </Pressable>
+                    <ThemeText type="caption">
+                      for cancellations & questions
+                    </ThemeText>
+                  </View>
+                </View>
+              )}
 
-              {offersDataAccepted.map((item) => (
-                <OfferCell
-                  key={item.id}
-                  offerId={item.id}
-                  name={item.eventName}
-                  showDelete={false}
-                  type="venue"
-                  date={item.date}
-                  time={item.time}
-                  offerAmount={item.offerAmount}
-                  artistsApplied={
-                    item.appliedArtistIds ? item.appliedArtistIds.length : 0
-                  }
-                  setLoading={setLoading}
-                />
-              ))}
-
-              <ThemeText type="subtitle">Open Offers</ThemeText>
+              {offersDataOpen.length !== 0 && (
+                <ThemeText type="subtitle">Open Offers</ThemeText>
+              )}
             </View>
           }
         />
@@ -141,8 +171,26 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
+  mainHeaderContainer: {
+    alignItems: "center",
+  },
   title: {
     marginBottom: 20,
+  },
+  acceptedContainer: {
+    width: "100%",
+    padding: 10,
+    backgroundColor: "white",
+    borderRadius: 15,
+    marginTop: 15,
+    marginBottom: 25,
+    // iOS
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    // Android
+    elevation: 6,
   },
   input: {
     height: 50,
@@ -160,6 +208,11 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 15,
   },
+  horizontalWrap: {
+    flexDirection: "row",
+    gap: 2,
+    alignItems: "center",
+  },
   headerButton: {
     alignItems: "center",
     marginRight: 10,
@@ -173,5 +226,14 @@ const styles = StyleSheet.create({
     padding: 5,
     backgroundColor: "rgb(236, 236, 236)",
     borderRadius: 10,
+  },
+  emptyStateView: {
+    marginTop: 50,
+    alignItems: "center",
+  },
+  logo: {
+    height: 150,
+    resizeMode: "contain",
+    marginLeft: 15,
   },
 });
