@@ -20,8 +20,8 @@ export interface Artist {
 
 export const OriginalCoverOptions = [
   { label: "Originals/Covers", value: "original_covers" },
-  { label: "Original", value: "original" },
-  { label: "Cover", value: "cover" },
+  { label: "Originals", value: "original" },
+  { label: "Covers", value: "cover" },
 ];
 
 //Genres

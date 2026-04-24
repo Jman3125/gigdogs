@@ -154,6 +154,7 @@ export default function Account() {
       setLoading(false);
       navigator.replace("/");
     } catch (error: any) {
+      setLoading(false);
       Alert.alert("Error", error.message);
       setError(error.message);
     }

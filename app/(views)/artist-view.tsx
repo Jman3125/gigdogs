@@ -126,6 +126,13 @@ export default function ArtistView() {
       ],
     );
   };
+
+  //open venues facebook account
+  const linkFacebook = () => {
+    Linking.openURL(
+      `https://facebook.com/${artistData?.facebook?.trimEnd().toLowerCase()}`,
+    );
+  };
   return (
     <SafeAreaView style={styles.viewContainer} edges={[]}>
       {loading && <Loading />}
@@ -160,18 +167,12 @@ export default function ArtistView() {
                 </ThemeText>
               </LabelWrapper>
               {artistData?.originalsCovers && (
-                <LabelWrapper label="Type:">
+                <LabelWrapper label="Music Type:">
                   <ThemeText type="defaultSemiBold">
                     {getType(artistData?.originalsCovers || "")}
                   </ThemeText>
                 </LabelWrapper>
               )}
-              <LabelWrapper label="Applied to:">
-                <ThemeText type="defaultSemiBold">
-                  {artistData?.appliedOfferIds?.length ?? 0} offer
-                  {artistData?.appliedOfferIds?.length === 1 ? "" : "s"}
-                </ThemeText>
-              </LabelWrapper>
               {artistData?.instagram && (
                 <LabelWrapper label="Instagram:">
                   <Pressable onPress={linkInstagram}>
@@ -182,7 +183,7 @@ export default function ArtistView() {
 
               {artistData?.facebook && (
                 <LabelWrapper label="Facebook:">
-                  <Pressable onPress={linkInstagram}>
+                  <Pressable onPress={linkFacebook}>
                     <ThemeText type="link">{artistData?.facebook}</ThemeText>
                   </Pressable>
                 </LabelWrapper>

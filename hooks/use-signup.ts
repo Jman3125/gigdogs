@@ -1,12 +1,12 @@
 import { auth, db } from "@/config/firebaseConfig";
 import { uploadImageAsync } from "@/utilities/upload-image";
 import {
-  validateSignupFieldsArtist,
-  validateSignupFieldsVenue,
+    validateSignupFieldsArtist,
+    validateSignupFieldsVenue,
 } from "@/utilities/validate/authenticate-signup";
 import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
 } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
@@ -82,6 +82,7 @@ export function useSignupArtist() {
         picture: imageURL,
         instagram,
         facebook,
+        phone,
         createdAt: serverTimestamp(),
       });
 

@@ -8,15 +8,15 @@ import { Tabs } from "expo-router";
 import { useState } from "react";
 
 const TabsLayout = () => {
-  const { role, isSignedIn } = useAuthWithRole();
+  const { role, isSignedIn, loading } = useAuthWithRole();
 
   const [reload, setReload] = useState(false);
-  if (reload) {
+  if (reload || loading) {
     return <Loading />;
   }
   return (
     <ReloadFeedContext.Provider value={{ reload, setReload }}>
-      <Tabs>
+      <Tabs key={role}>
         <Tabs.Screen
           name="(main)"
           options={{

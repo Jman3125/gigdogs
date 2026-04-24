@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     flexDirection: "column",
     justifyContent: "space-evenly",
-    width: 230,
+    width: "100%",
   },
 
   name: { fontSize: 18, lineHeight: 25 },

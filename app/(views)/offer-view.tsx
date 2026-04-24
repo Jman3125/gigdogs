@@ -4,6 +4,7 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
+import { auth } from "@/config/firebaseConfig";
 import { useAuthWithRole } from "@/hooks/use-auth-state";
 import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
@@ -42,6 +43,9 @@ export default function OfferView() {
   //These are the applied artists on this offer
   const [artists, setArtists] = useState<Artist[]>([]);
 
+  //Track if the current artist has already applied
+  const [hasApplied, setHasApplied] = useState(false);
+
   //Check if user is signed in and if they are an artist or venue to determine what actions they can take on this offer
   const { role, isSignedIn } = useAuthWithRole();
 
@@ -56,6 +60,12 @@ export default function OfferView() {
     const data = await getOneItem<Offer>(offerId, "offers");
 
     setOfferData(data);
+
+    // Check if current user has already applied
+    const currentUser = auth.currentUser;
+    if (currentUser && role === "artist" && data?.appliedArtistIds) {
+      setHasApplied(data.appliedArtistIds.includes(currentUser.uid));
+    }
 
     if (role === "venue") {
       setEmptyStateText("Artists that apply will display here.");
@@ -97,13 +107,16 @@ export default function OfferView() {
     }
 
     try {
+      setLoading(true);
       await applyToOffer(offerId!);
       Alert.alert(
         "Success",
         "You have successfully applied to this offer! The venue may contact you. Offers you have applied to will show up on your profile page.",
       );
+      setLoading(false);
       navigator.back();
     } catch (error: any) {
+      setLoading(false);
       Alert.alert("Error", error.message);
     }
   };
@@ -234,10 +247,11 @@ export default function OfferView() {
                     <View style={styles.contactContainer}>
                       <TouchableOpacity
                         onPress={openBookingForm}
-                        style={styles.contactButton}
+                        disabled={hasApplied}
+                        style={[styles.contactButton]}
                       >
                         <ThemeText type="defaultSemiBold">
-                          Apply For Gig
+                          {hasApplied ? "Applied" : "Apply For Gig"}
                         </ThemeText>
                       </TouchableOpacity>
 
@@ -354,6 +368,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 10,
     borderRadius: 25,
+  },
+  appliedButton: {
+    backgroundColor: "#cccccc",
   },
   contactButtonSecondary: {
     width: "100%",

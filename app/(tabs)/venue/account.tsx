@@ -77,7 +77,6 @@ export default function Account() {
       const venue = await fetchAuthVenue(uid);
       return venue;
     } catch (error: any) {
-      setLoading(false);
       setError(error.message);
       Alert.alert(
         "Error",
@@ -98,10 +97,12 @@ export default function Account() {
         setSelectedState(venueAuthData?.state);
         setWebsite(venueAuthData?.website);
         setInstagram(venueAuthData?.instagram);
+        setFacebook(venueAuthData?.facebook);
         setImage(venueAuthData?.picture);
 
         setLoading(false);
       } else {
+        setLoading(false);
         Alert.alert(
           "Error",
           "Unable to fetch account data at this time, please try again.",
@@ -145,6 +146,7 @@ export default function Account() {
       setLoading(false);
       navigator.replace("/");
     } catch (error: any) {
+      setLoading(false);
       Alert.alert("Error", error.message);
       setError(error.message);
     }

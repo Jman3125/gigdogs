@@ -7,11 +7,12 @@ import VerifyEmailAlert from "@/components/verify-email-alert";
 import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
 import { States, Venue } from "@/models/venue";
+import { colors } from "@/utilities/colors";
 import { getAllVenuesByState } from "@/utilities/firebase/fetch-data";
 import { CheckVerification } from "@/utilities/validate/verify-email";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Alert, FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -36,6 +37,9 @@ export default function Index() {
 
   //Show alert for user to update their email address
   const [verifyEmail, setVerifyEmail] = useState(false);
+
+  //refreshing state for pull-to-refresh
+  const [refreshing, setRefreshing] = useState(false);
 
   //Fetch all of the offers from selected state to display
   const fetchOffers = async (filterState: string) => {
@@ -80,10 +84,16 @@ export default function Index() {
     try {
       setLoading(true);
       await fetchOffers(state);
+      setRefreshing(false);
     } finally {
       setLoading(false);
     }
   }, []);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    loadOffersFromState(state);
+  };
 
   //On page load get all data
   useEffect(() => {
@@ -149,6 +159,13 @@ export default function Index() {
               />
             )}
             keyboardShouldPersistTaps="always"
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                tintColor={colors.primary}
+              />
+            }
             style={styles.flatListContainer}
             ListEmptyComponent={<BlankSearch noneSelected={state === "xyz"} />}
             ListHeaderComponent={

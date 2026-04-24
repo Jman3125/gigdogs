@@ -11,13 +11,15 @@ import {
   getOneItem,
 } from "@/utilities/firebase/fetch-data";
 import { FontAwesome } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
   Image,
   Linking,
   Pressable,
+  RefreshControl,
   StyleSheet,
   View,
 } from "react-native";
@@ -33,7 +35,10 @@ export default function Account() {
   //Loading state
   const [loading, setLoading] = useState(true);
 
-  const fetchOffersData = async () => {
+  //refreshing state for pull-to-refresh
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchOffersData = useCallback(async () => {
     try {
       const currentArtist = await getOneItem<Artist>(
         auth.currentUser?.uid || "",
@@ -51,15 +56,29 @@ export default function Account() {
       setOffersDataOpen(dataOpen);
       setOffersDataAccepted(dataAccepted);
       setLoading(false);
+      setRefreshing(false);
     } catch (error) {
       console.error("Error fetching offer data:", error);
       setLoading(false);
+      setRefreshing(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchOffersData();
   }, [fetchOffersData]);
+
+  //Refresh data when tab is focused
+  useFocusEffect(
+    useCallback(() => {
+      fetchOffersData();
+    }, [fetchOffersData]),
+  );
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchOffersData();
+  };
 
   //User wants information about the page
   const openInfoAlert = () => {
@@ -97,6 +116,13 @@ export default function Account() {
             />
           )}
           keyboardShouldPersistTaps="always"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              tintColor={colors.primary}
+            />
+          }
           ListHeaderComponent={
             <View style={styles.mainHeaderContainer}>
               <Pressable onPress={openInfoAlert} style={{ marginBottom: 15 }}>
