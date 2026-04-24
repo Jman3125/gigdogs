@@ -226,6 +226,7 @@ export default function VenueSingup() {
                   items={states}
                   setOpen={setOpenState}
                   setValue={selectState}
+                  setItems={setStates}
                   placeholder="Select a State"
                   listMode="MODAL"
                   style={styles.picker}

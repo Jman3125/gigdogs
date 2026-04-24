@@ -143,7 +143,7 @@ export function OfferCell({
         </ThemeText>
       </View>
 
-      {showDelete && type == "artist" && (
+      {showDelete && type === "artist" && (
         <Pressable
           onPress={confirmDeleteOfferArtist}
           style={styles.deleteButton}
@@ -155,7 +155,7 @@ export function OfferCell({
         </Pressable>
       )}
 
-      {showDelete && type == "venue" && (
+      {showDelete && type === "venue" && (
         <Pressable
           onPress={confirmDeleteOfferVenue}
           style={styles.deleteButton}

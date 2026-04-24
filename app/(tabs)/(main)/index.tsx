@@ -89,7 +89,7 @@ export default function Index() {
   useEffect(() => {
     //will be the initial data load
     loadOffersFromState(state);
-  }, [state]);
+  }, [loadOffersFromState, state]);
 
   //if user updated account refresh page with context variable
   useFocusEffect(
@@ -100,7 +100,7 @@ export default function Index() {
         Alert.alert("Success", "Thanks for using GigDogs!");
         setReload(false);
       }
-    }, [reload, loadOffersFromState, setReload]),
+    }, [reload, state, loadOffersFromState, setReload]),
   );
 
   return (
@@ -150,7 +150,7 @@ export default function Index() {
             )}
             keyboardShouldPersistTaps="always"
             style={styles.flatListContainer}
-            ListEmptyComponent={<BlankSearch noneSelected={state == "xyz"} />}
+            ListEmptyComponent={<BlankSearch noneSelected={state === "xyz"} />}
             ListHeaderComponent={
               <View>
                 {error && (

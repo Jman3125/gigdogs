@@ -216,7 +216,7 @@ export default function OfferView() {
                       </LabelWrapper>
                     )}
                   </View>
-                  {role == "artist" && offerData?.status == "accepted" && (
+                  {role === "artist" && offerData?.status === "accepted" && (
                     <View style={styles.accepted}>
                       <ThemeText type="defaultSemiBold">
                         You have been selected!
