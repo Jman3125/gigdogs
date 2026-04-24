@@ -8,7 +8,7 @@ import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
 import { colors } from "@/utilities/colors";
 import { getOneItem } from "@/utilities/firebase/fetch-data";
-import { getGenre } from "@/utilities/getGenreLabel";
+import { getGenre, getType } from "@/utilities/getGenreLabel";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -159,6 +159,13 @@ export default function ArtistView() {
                   {getGenre(artistData?.genre || "All")}
                 </ThemeText>
               </LabelWrapper>
+              {artistData?.originalsCovers && (
+                <LabelWrapper label="Type:">
+                  <ThemeText type="defaultSemiBold">
+                    {getType(artistData?.originalsCovers || "")}
+                  </ThemeText>
+                </LabelWrapper>
+              )}
               <LabelWrapper label="Applied to:">
                 <ThemeText type="defaultSemiBold">
                   {artistData?.appliedOfferIds?.length ?? 0} offer
