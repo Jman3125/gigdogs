@@ -1,6 +1,6 @@
 import { auth, db } from "@/config/firebaseConfig";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 //Will return true if there is a user and determine if the role is venue or artist
@@ -13,18 +13,24 @@ export function useAuthWithRole() {
     const unsub = onAuthStateChanged(auth, async (authUser) => {
       setUser(authUser);
 
-      if (authUser) {
-        const refArtist = doc(db, "users", authUser.uid);
-        const refVenue = doc(db, "venues", authUser.uid);
-        const snapArtist = await getDoc(refArtist);
-        const snapVenue = await getDoc(refVenue);
+      if (!authUser) {
+        setRole(null);
+        setLoading(false);
+        return;
+      }
 
-        if (snapArtist.exists()) {
-          setRole("artist");
-        }
-        if (snapVenue.exists()) {
-          setRole("venue");
-        }
+      setLoading(true);
+      const refArtist = doc(db, "users", authUser.uid);
+      const refVenue = doc(db, "venues", authUser.uid);
+      const snapArtist = await getDoc(refArtist);
+      const snapVenue = await getDoc(refVenue);
+
+      if (snapArtist.exists()) {
+        setRole("artist");
+      } else if (snapVenue.exists()) {
+        setRole("venue");
+      } else {
+        setRole(null);
       }
 
       setLoading(false);
@@ -32,6 +38,32 @@ export function useAuthWithRole() {
 
     return unsub;
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    const refArtist = doc(db, "users", user.uid);
+    const refVenue = doc(db, "venues", user.uid);
+
+    const unsubscribeArtist = onSnapshot(refArtist, (snap) => {
+      if (snap.exists()) {
+        setRole("artist");
+      }
+    });
+
+    const unsubscribeVenue = onSnapshot(refVenue, (snap) => {
+      if (snap.exists()) {
+        setRole("venue");
+      }
+    });
+
+    return () => {
+      unsubscribeArtist();
+      unsubscribeVenue();
+    };
+  }, [user]);
 
   return {
     role,

@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
 
   deleteButton: {
     position: "absolute",
-    top: 15,
+    bottom: 15,
     right: 5,
     flexDirection: "row",
     gap: 5,

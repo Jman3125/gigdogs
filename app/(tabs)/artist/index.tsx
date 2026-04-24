@@ -84,7 +84,7 @@ export default function Account() {
   const openInfoAlert = () => {
     Alert.alert(
       "Information",
-      "This page is where you'll see and manage all offers you've applied to on GigDogs. You will also see offers you have been accepted to here.",
+      "This page is where you'll see and manage all offers you've applied to on GigDogs. Once a venue accepts your offer, it will also show up here.",
     );
   };
 
@@ -182,7 +182,7 @@ export default function Account() {
               )}
 
               {offersDataOpen.length !== 0 && (
-                <ThemeText type="subtitle">Open Offers</ThemeText>
+                <ThemeText type="subtitle">Applied</ThemeText>
               )}
             </View>
           }
