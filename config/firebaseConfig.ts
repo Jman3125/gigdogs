@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Analytics from "expo-firebase-analytics";
+import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import {
   // @ts-ignore: getReactNativePersistence exists in the RN bundle
@@ -34,13 +34,7 @@ const auth = initializeAuth(app, {
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-export const logEvent = async (name: string, params?: object) => {
-  try {
-    await Analytics.logEvent(name, params);
-  } catch (err) {
-    console.log("Analytics error:", err);
-  }
-};
+const analytics = getAnalytics(app);
 
-export { app, auth, db, storage };
+export { analytics, app, auth, db, storage };
 

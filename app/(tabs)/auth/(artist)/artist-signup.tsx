@@ -5,14 +5,15 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
+import { analytics } from "@/config/firebaseConfig";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useSignupArtist } from "@/hooks/use-signup";
 import { Genres, OriginalCoverOptions } from "@/models/artist";
 import { colors } from "@/utilities/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
-import { logEvent } from "expo-firebase-analytics";
 import { useRouter } from "expo-router";
+import { logEvent } from "firebase/analytics";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -131,7 +132,7 @@ export default function ArtistSingup() {
 
   //Log that a signup form was opened
   useEffect(() => {
-    logEvent("signup_openend");
+    logEvent(analytics, "signup_openend");
   }, []);
 
   //For picking the profile image
