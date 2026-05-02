@@ -12,7 +12,7 @@ export function validateUpdateFieldsArtist(
 ) {
   //ensure no fields are empty
   if (!artistName.trim()) {
-    return { valid: false, message: "Please add your band name." };
+    return { valid: false, message: "Please add your artist name." };
   }
 
   if (!genre.trim()) {
@@ -58,14 +58,14 @@ export function validateUpdateFieldsVenue(
 ) {
   //ensure no fields are empty
   if (!venueName.trim()) {
-    return { valid: false, message: "Please add your band name." };
+    return { valid: false, message: "Please add your venue name." };
   }
 
   if (!address.trim()) {
     return { valid: false, message: "Please add an address for the venue." };
   }
 
-  if (!state.trim()) {
+  if (state === "xyz") {
     return { valid: false, message: "Please select the venues state." };
   }
 

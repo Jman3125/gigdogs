@@ -133,7 +133,7 @@ export function validateSignupFieldsVenue(
     return { valid: false, message: "Passwords do not match." };
   }
 
-  if (!state.trim()) {
+  if (state === "xyz") {
     return { valid: false, message: "Please select a state." };
   }
 

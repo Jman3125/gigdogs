@@ -8,7 +8,7 @@ import { auth } from "@/config/firebaseConfig";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useLogout } from "@/hooks/use-logout";
 import { useUpdateVenue } from "@/hooks/use-update";
-import { States } from "@/models/venue";
+import { StatesDropDown } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { fetchAuthVenue } from "@/utilities/firebase/fetch-auth-venue";
 import { FontAwesome } from "@expo/vector-icons";
@@ -51,7 +51,7 @@ export default function Account() {
   //For state picker selection
   const [openState, setOpenState] = useState(false);
   const [selectedState, setSelectedState] = useState("");
-  const [states, setStates] = useState(States);
+  const [states, setStates] = useState(StatesDropDown);
 
   //For Website
   const [website, setWebsite] = useState("");

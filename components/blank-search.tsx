@@ -36,8 +36,7 @@ export default function BlankSearch({ noneSelected }: Props) {
             Let&apos;s Search
           </ThemeText>
           <ThemeText type="default" style={styles.text}>
-            Select a state from the drop-down menu to see venues looking for
-            live artists near you.
+            Search your state to see venues looking for live artists.
           </ThemeText>
         </>
       )}

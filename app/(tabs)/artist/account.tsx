@@ -79,8 +79,8 @@ export default function Account() {
   // fetch signed in artists data
   const fetchAuthArtistData = async (uid: string) => {
     try {
-      const band = await fetchAuthArtist(uid);
-      return band;
+      const artist = await fetchAuthArtist(uid);
+      return artist;
     } catch (error: any) {
       setLoading(false);
       setError(error.message);

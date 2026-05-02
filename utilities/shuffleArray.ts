@@ -1,4 +1,4 @@
-//use to shuffle bands on index page
+//use to shuffle artists on index page
 
 export function shuffleArray<T>(array: T[]): T[] {
   const result = [...array];

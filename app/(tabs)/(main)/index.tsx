@@ -1,30 +1,36 @@
 // Main feed page
 import BlankSearch from "@/components/blank-search";
 import Loading from "@/components/loading";
+import SearchLocation from "@/components/search-location";
 import { ThemeText } from "@/components/theme-text";
 import { VenueCell } from "@/components/venue-cell";
 import VerifyEmailAlert from "@/components/verify-email-alert";
 import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
-import { States, Venue } from "@/models/venue";
+import { Venue } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { getAllVenuesByState } from "@/utilities/firebase/fetch-data";
 import { CheckVerification } from "@/utilities/validate/verify-email";
+import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Alert, FlatList, RefreshControl, StyleSheet, View } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
+import {
+  Alert,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   //Will use context to know when user updated account to reload feed
   const { reload, setReload } = useContext(ReloadFeedContext);
 
-  //For State selection Drop down picker
-  //For Genre picker selection
-  const [openState, setOpenState] = useState(false);
-  const [states, setStates] = useState(States);
-  const [state, setState] = useState("xyz");
+  //For State searching
+  const [searchInput, setSearchInput] = useState("");
+  const [state, setState] = useState("");
 
   //state to populate offers
   const [venuesData, setData] = useState<Venue[]>([]);
@@ -131,19 +137,16 @@ export default function Index() {
             <View style={styles.searchFilterHeaders}>
               <ThemeText type="defaultSemiBold">Enter a State</ThemeText>
             </View>
-
-            {/* Filter search */}
-            <DropDownPicker
-              open={openState}
-              value={state}
-              items={states}
-              setOpen={setOpenState}
-              setValue={setState}
-              setItems={setStates}
-              placeholder="Choose State"
-              // listMode="MODAL"
-              style={styles.picker}
-            />
+            {/* Search Bar */}
+            <View style={styles.searchBar}>
+              <SearchLocation state={searchInput} setState={setSearchInput} />
+              <Pressable
+                style={styles.searchButton}
+                onPress={() => setState(searchInput)}
+              >
+                <FontAwesome name="search" size={28} color={"white"} />
+              </Pressable>
+            </View>
           </View>
 
           <FlatList
@@ -167,7 +170,7 @@ export default function Index() {
               />
             }
             style={styles.flatListContainer}
-            ListEmptyComponent={<BlankSearch noneSelected={state === "xyz"} />}
+            ListEmptyComponent={<BlankSearch noneSelected={state === ""} />}
             ListHeaderComponent={
               <View>
                 {error && (
@@ -221,11 +224,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  searchFilterHeadersRight: {
-    backgroundColor: "#bebebe96",
-    paddingLeft: 5,
-    paddingRight: 5,
+  searchBar: {
+    flexDirection: "row",
+    gap: 5,
+  },
+  searchButton: {
+    alignItems: "center",
+    backgroundColor: colors.primary,
+    padding: 10,
     borderRadius: 5,
+    height: 50,
+    width: "15%",
+    marginTop: 4,
   },
   input: {
     height: 50,

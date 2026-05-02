@@ -11,8 +11,9 @@ import { Genres, OriginalCoverOptions } from "@/models/artist";
 import { colors } from "@/utilities/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
+import { logEvent } from "expo-firebase-analytics";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -39,8 +40,8 @@ export default function ArtistSingup() {
 
   const { pickImage } = useImagePicker();
 
-  //For band name
-  const [bandName, setBandName] = useState("");
+  //For artist name
+  const [artistName, setArtistName] = useState("");
 
   //For email
   const [email, setEmail] = useState("");
@@ -92,7 +93,7 @@ export default function ArtistSingup() {
     try {
       setLoading(true);
       await signup(
-        bandName,
+        artistName,
         email,
         password,
         password2,
@@ -128,6 +129,11 @@ export default function ArtistSingup() {
     }
   };
 
+  //Log that a signup form was opened
+  useEffect(() => {
+    logEvent("signup_openend");
+  }, []);
+
   //For picking the profile image
   const onPickImage = async () => {
     const uri = await pickImage();
@@ -154,9 +160,9 @@ export default function ArtistSingup() {
                   maxLength={35}
                   style={styles.input}
                   placeholderTextColor={colors.placeholder}
-                  value={bandName}
+                  value={artistName}
                   onChangeText={(value) => {
-                    setBandName(value);
+                    setArtistName(value);
                   }}
                 />
               </LabelWrapper>

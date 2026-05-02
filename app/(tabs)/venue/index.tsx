@@ -1,4 +1,4 @@
-//Signed in bands booking offers page
+//Signed in venue booking offers page
 import Loading from "@/components/loading";
 import { OfferCell } from "@/components/offer-cell";
 import { ThemeText } from "@/components/theme-text";

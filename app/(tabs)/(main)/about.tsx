@@ -78,7 +78,7 @@ export default function About() {
           </View>
 
           <View style={styles.section}>
-            <ThemeText type="subtitle">Welcome!</ThemeText>
+            <ThemeText type="logo">Welcome!</ThemeText>
             <ThemeText type="default">
               View our <TermsPrivacyLinks />
             </ThemeText>

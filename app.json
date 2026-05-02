@@ -2,7 +2,7 @@
   "expo": {
     "name": "MyAgent",
     "slug": "myagent",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myagent",
@@ -13,7 +13,7 @@
       "bundleIdentifier": "com.jman2376.myagent",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSPhotoLibraryUsageDescription": "GigDogs uses your photo library so you can upload band photos and update your musician profile."
+        "NSPhotoLibraryUsageDescription": "GigDogs uses your photo library so you can upload photos and update your profile."
       }
     },
     "android": {
@@ -47,7 +47,8 @@
           "backgroundColor": "#3eb54a"
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

@@ -7,12 +7,13 @@ import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useSignupVenue } from "@/hooks/use-signup";
-import { States } from "@/models/venue";
+import { StatesDropDown } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
+import { logEvent } from "expo-firebase-analytics";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -57,7 +58,7 @@ export default function VenueSingup() {
   //For State picker selection
   const [openState, setOpenState] = useState(false);
   const [selectedState, selectState] = useState("xyz");
-  const [states, setStates] = useState(States);
+  const [states, setStates] = useState(StatesDropDown);
 
   //LINKS
   //For venue website username
@@ -122,6 +123,11 @@ export default function VenueSingup() {
       setError(error.message);
     }
   };
+
+  //Log that a signup form was opened
+  useEffect(() => {
+    logEvent("signup_openend");
+  }, []);
 
   //For picking the profile image
   const onPickImage = async () => {

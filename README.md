@@ -1,14 +1,14 @@
 # GigDogs
 
-This is an app that connects bands with hosts.
+This is an app that connects artists with venues.
 
 ## Our goal
 
 1. Make music accessible to everyone
 
-2. Simplify the process of hiring a band
+2. Simplify the process of hiring an artist
 
-3. Get live music at every party and event
+3. Allow venue owners to fill their nights with great artists with a quarter of the work
 
 ## Codebase
 

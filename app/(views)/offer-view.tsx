@@ -1,4 +1,4 @@
-//Navigates to this page after a user clicks 'View' on a bands profile. adds band ID to url to get specific data.
+//This page is the offer view from a venue
 import { ArtistCell } from "@/components/artist-cell";
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
@@ -13,6 +13,7 @@ import { applyToOffer } from "@/utilities/firebase/apply-offer";
 import { getItemsByIds, getOneItem } from "@/utilities/firebase/fetch-data";
 import { formatTimeRange } from "@/utilities/format-time-range";
 import { FontAwesome } from "@expo/vector-icons";
+import { logEvent } from "expo-firebase-analytics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -28,11 +29,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function OfferView() {
   const navigator = useRouter();
-  // Going to match the id to a band and get attributes so I don't pass them all through URL
+  // Going to match the id to an artist and get attributes so I don't pass them all through URL
   const { offerId } = useLocalSearchParams<{
     offerId: string;
   }>();
-  // Find the band in the db that matches the id passed through the URL params
+  // Find the artist in the db that matches the id passed through the URL params
   const [offerData, setOfferData] = useState<Offer | null>();
 
   //Empty state text for applied artists. If it's a venue, show that no artists have applied. If it's an artist or user not signed in, tell them only venues can see applied artists.
@@ -49,7 +50,7 @@ export default function OfferView() {
   //Check if user is signed in and if they are an artist or venue to determine what actions they can take on this offer
   const { role, isSignedIn } = useAuthWithRole();
 
-  //fetch the selected bands data
+  //fetch the selected artists data
   const populateData = useCallback(async () => {
     setLoading(true);
     if (!offerId) {
@@ -67,7 +68,7 @@ export default function OfferView() {
       setHasApplied(data.appliedArtistIds.includes(currentUser.uid));
     }
 
-    if (role === "venue") {
+    if (role === "venue" && currentUser?.uid === data?.parentVenueId) {
       setEmptyStateText("Artists that apply will display here.");
       //Get all of the artists on the offer object
       const appliedArtists = data?.appliedArtistIds ?? [];
@@ -76,7 +77,7 @@ export default function OfferView() {
       setArtists(artistsData);
     } else {
       setEmptyStateText(
-        "Only venues can see the list of artists that have applied.",
+        "Only this venue can see the list of artists that have applied.",
       );
     }
 
@@ -90,9 +91,12 @@ export default function OfferView() {
     setLoading(false);
   }, [offerId, role]);
 
-  //fetch bands data on load
+  //fetch artists data on load
   useEffect(() => {
     populateData();
+
+    //Log that an offer is being viewed
+    logEvent("offer_viewed", { user_type: role });
   }, [populateData]);
 
   const openBookingForm = async () => {
@@ -395,7 +399,7 @@ const styles = StyleSheet.create({
   report: {
     marginTop: 15,
   },
-  //This is for the applied bands on the offer
+  //This is for the applied artists on the offer
   flatListContainer: {
     flex: 1,
     marginBottom: 25,

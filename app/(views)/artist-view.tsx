@@ -1,4 +1,4 @@
-//Navigates to this page after a user clicks 'View' on a bands profile. adds band ID to url to get specific data.
+//Navigates to this page after a user clicks 'View' on an artists profile. adds artist UID to url to get specific data.
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
@@ -9,6 +9,7 @@ import { Offer } from "@/models/offer";
 import { colors } from "@/utilities/colors";
 import { getOneItem } from "@/utilities/firebase/fetch-data";
 import { getGenre, getType } from "@/utilities/getGenreLabel";
+import { logEvent } from "expo-firebase-analytics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -25,12 +26,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ArtistView() {
   const navigator = useRouter();
-  // Going to match the id to a band and get attributes so I don't pass them all through URL
+  // Going to match the id to an artist and get attributes so I don't pass them all through URL
   const { artistId, offerId } = useLocalSearchParams<{
     artistId: string;
     offerId: string;
   }>();
-  // Find the band in the db that matches the id passed through the URL params
+  // Find the artist in the db that matches the id passed through the URL params
   const [artistData, setData] = useState<Artist | null>();
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +41,7 @@ export default function ArtistView() {
   //Is this an accepted offer? If it is, then remove the select artist button
   const [offerAccepted, setOfferAccepted] = useState(false);
 
-  //fetch the selected bands data
+  //fetch the selected artist data
   const fetchArtistData = useCallback(async () => {
     try {
       const offerStatus = await getOneItem<Offer>(offerId, "offers");
@@ -61,7 +62,7 @@ export default function ArtistView() {
     }
   }, [artistId, offerId]);
 
-  //fetch bands data on load
+  //fetch artists data on load
   useEffect(() => {
     fetchArtistData();
   }, [fetchArtistData]);
@@ -72,7 +73,7 @@ export default function ArtistView() {
     );
   };
 
-  //Open bands instagram account
+  //Open artists instagram account
   const linkInstagram = () => {
     Linking.openURL(
       `https://instagram.com/${artistData?.instagram?.trimEnd().toLowerCase()}`,
@@ -99,7 +100,13 @@ export default function ArtistView() {
           {
             text: "Ok",
             onPress: () => {
-              navigator.back();
+              //Log the event
+              (logEvent("artist_selected", {
+                offer: offerId,
+                artistEmal: artistData?.email,
+                artistPhone: artistData?.phone,
+              }),
+                navigator.back());
             },
           },
         ],

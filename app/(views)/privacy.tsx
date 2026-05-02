@@ -4,10 +4,9 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 export default function PrivacyPolicyScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>PRIVACY POLICY</Text>
-      <Text style={styles.meta}>Effective Date: April 23, 2026</Text>
+      <SectionTitle>PRIVACY POLICY</SectionTitle>
+      <BodyText>Effective Date: May 02, 2026</BodyText>
 
-      {/* 1. INTRODUCTION */}
       <SectionTitle>1. INTRODUCTION</SectionTitle>
       <BodyText>
         This Privacy Policy describes how GigDogs (the “App”), operated by Jack
@@ -17,10 +16,10 @@ export default function PrivacyPolicyScreen() {
         accordance with this Privacy Policy.
       </BodyText>
 
-      {/* 2. INFORMATION WE COLLECT */}
       <SectionTitle>2. INFORMATION WE COLLECT</SectionTitle>
 
       <SubTitle>2.1 Information Provided by Artists</SubTitle>
+      <BodyText>Artists may provide the following information:</BodyText>
       <BulletList
         items={[
           "Name",
@@ -35,6 +34,7 @@ export default function PrivacyPolicyScreen() {
       />
 
       <SubTitle>2.2 Information Provided by Venues</SubTitle>
+      <BodyText>Venues may provide the following information:</BodyText>
       <BulletList
         items={[
           "Name",
@@ -66,7 +66,27 @@ export default function PrivacyPolicyScreen() {
         We do not independently verify this information.
       </BodyText>
 
-      {/* 3. HOW WE USE INFORMATION */}
+      <SubTitle>2.5 Analytics & Behavioral Information</SubTitle>
+      <BodyText>
+        To improve App functionality, understand user engagement, and enhance
+        user experience, we collect certain behavioral and interaction data.
+        This includes:
+      </BodyText>
+      <BulletList
+        items={[
+          "Signup Form Interactions: When a user opens a signup form or begins typing into signup fields.",
+          "Offer Creation Interactions (Venues): When a venue opens the offer creation screen and when they begin typing into offer fields.",
+          "Artist Selection Actions (Venues): When a venue selects an artist for an offer, we log the associated artist’s email, phone number, and the offer ID.",
+          "Offer View Interactions (Artists): When an artist opens or views a venue’s offer.",
+        ]}
+      />
+      <BodyText>
+        This information is collected through analytics tools and event tracking
+        within the App. It is used solely to understand user behavior, improve
+        App performance, and enhance the overall user experience. We do not sell
+        this information.
+      </BodyText>
+
       <SectionTitle>3. HOW WE USE INFORMATION</SectionTitle>
       <BodyText>We use the information collected to:</BodyText>
       <BulletList
@@ -79,16 +99,61 @@ export default function PrivacyPolicyScreen() {
         ]}
       />
 
-      {/* 4. DATA STORAGE AND SECURITY */}
       <SectionTitle>4. DATA STORAGE AND SECURITY</SectionTitle>
+
+      <SubTitle>3.1 To Provide and Improve the App</SubTitle>
+      <BulletList
+        items={[
+          "Creating and managing User accounts",
+          "Enabling Artists and Venues to interact, apply to Offers, and complete bookings",
+          "Improving App performance, reliability, and usability",
+        ]}
+      />
+
+      <SubTitle>3.2 To Facilitate Offers and Bookings</SubTitle>
+      <BulletList
+        items={[
+          "Allowing Venues to create Offers",
+          "Allowing Artists to view, apply to, and accept Offers",
+          "Enabling Venues to select Artists for events",
+        ]}
+      />
+
+      <SubTitle>3.3 To Communicate With Users</SubTitle>
+      <BulletList
+        items={[
+          "Sending confirmations, updates, and notifications",
+          "Providing customer support",
+          "Responding to inquiries",
+        ]}
+      />
+
+      <SubTitle>3.4 To Analyze Usage and Improve User Experience</SubTitle>
+      <BodyText>We use analytics data to:</BodyText>
+      <BulletList
+        items={[
+          "Understand how Users interact with signup flows",
+          "Identify friction points in Offer creation",
+          "Measure engagement with Offers",
+          "Improve the design and functionality of the App",
+          "Monitor feature usage and optimize performance",
+        ]}
+      />
       <BodyText>
-        User data is stored using Firebase infrastructure. We implement
-        reasonable administrative and technical safeguards to protect
-        information; however, no method of transmission or storage is completely
-        secure, and we cannot guarantee absolute security.
+        Analytics data may include event timestamps, device information, and
+        interaction patterns. We do not use analytics data to personally
+        identify Users beyond the information they voluntarily provide.
       </BodyText>
 
-      {/* 5. INFORMATION SHARING */}
+      <SubTitle>3.5 To Maintain Safety and Integrity</SubTitle>
+      <BulletList
+        items={[
+          "Detecting and preventing fraud or misuse",
+          "Enforcing our Terms of Service",
+          "Ensuring a safe and trustworthy platform",
+        ]}
+      />
+
       <SectionTitle>5. INFORMATION SHARING</SectionTitle>
 
       <SubTitle>5.1 No Sale of Data</SubTitle>
@@ -112,7 +177,47 @@ export default function PrivacyPolicyScreen() {
         other Users within the App.
       </BodyText>
 
-      {/* 6. DATA RETENTION */}
+      <SubTitle>5.4 With Other Users</SubTitle>
+      <BulletList
+        items={[
+          "When a Venue selects an Artist, the Artist’s email and phone number may be shared with the Venue as part of the booking process.",
+          "When an Artist applies to an Offer, the Venue may view the Artist’s profile information.",
+        ]}
+      />
+
+      <SubTitle>5.5 With Service Providers</SubTitle>
+      <BodyText>
+        We may share information with third-party service providers who assist
+        with:
+      </BodyText>
+      <BulletList
+        items={[
+          "Hosting and infrastructure",
+          "Analytics and event tracking",
+          "Authentication",
+          "Data storage",
+        ]}
+      />
+      <BodyText>
+        These providers are authorized to use information only as necessary to
+        provide services to us.
+      </BodyText>
+
+      <SubTitle>5.6 For Legal Compliance</SubTitle>
+      <BulletList
+        items={[
+          "Comply with applicable laws",
+          "Respond to legal requests",
+          "Protect the rights, safety, or property of the App, Users, or others",
+        ]}
+      />
+
+      <SubTitle>5.7 Aggregated or De-Identified Data</SubTitle>
+      <BodyText>
+        We may share aggregated or de-identified data for research, analytics,
+        or business purposes. This data does not identify individual Users.
+      </BodyText>
+
       <SectionTitle>6. DATA RETENTION</SectionTitle>
       <BodyText>
         We retain User information for as long as necessary to operate the App
@@ -120,7 +225,6 @@ export default function PrivacyPolicyScreen() {
         or permitted by law.
       </BodyText>
 
-      {/* 7. USER RIGHTS AND CHOICES */}
       <SectionTitle>7. USER RIGHTS AND CHOICES</SectionTitle>
       <BodyText>Users may:</BodyText>
       <BulletList
@@ -135,14 +239,52 @@ export default function PrivacyPolicyScreen() {
         and operational requirements.
       </BodyText>
 
-      {/* 8. CHILDREN’S PRIVACY */}
+      <BodyText>
+        Depending on your location, you may have the following rights regarding
+        your information:
+      </BodyText>
+
+      <SubTitle>7.1 Access and Correction</SubTitle>
+      <BodyText>
+        You may request access to or correction of your personal information.
+      </BodyText>
+
+      <SubTitle>7.2 Deletion</SubTitle>
+      <BodyText>
+        You may request deletion of your account or personal data, subject to
+        legal or operational requirements.
+      </BodyText>
+
+      <SubTitle>7.3 Opt-Out of Analytics</SubTitle>
+      <BodyText>
+        Users may opt out of certain analytics tracking through device settings
+        or by contacting us. Note: Some essential analytics (e.g., crash
+        reporting, security logs) may not be disabled.
+      </BodyText>
+
+      <SubTitle>7.4 Data Portability</SubTitle>
+      <BodyText>
+        You may request a copy of your data in a portable format.
+      </BodyText>
+
+      <SubTitle>7.5 Withdraw Consent</SubTitle>
+      <BodyText>
+        Where applicable, you may withdraw consent for data processing at any
+        time.
+      </BodyText>
+
+      <SubTitle>7.6 Limitations</SubTitle>
+      <BodyText>
+        Certain data (such as Offer history or booking records) may be retained
+        for legitimate business or legal purposes.
+      </BodyText>
+
       <SectionTitle>8. CHILDREN’S PRIVACY</SectionTitle>
       <BodyText>
         The App is not intended for individuals under the age of 13. We do not
         knowingly collect personal information from children under 13.
       </BodyText>
 
-      {/* 9. CHANGES TO THIS PRIVACY POLICY */}
       <SectionTitle>9. CHANGES TO THIS PRIVACY POLICY</SectionTitle>
       <BodyText>
         We may update this Privacy Policy from time to time. Continued use of
@@ -150,19 +292,13 @@ export default function PrivacyPolicyScreen() {
         policy.
       </BodyText>
 
-      {/* 10. CONTACT INFORMATION */}
       <SectionTitle>10. CONTACT INFORMATION</SectionTitle>
-      <BodyText>If you have any questions about this Privacy Policy:</BodyText>
-      <BodyText>Jack Manfredi</BodyText>
-      <BodyText>Email: gigdogscontact@gmail.com</BodyText>
-
-      {/* IMPORTANT NOTICE */}
-      <SectionTitle>IMPORTANT NOTICE</SectionTitle>
       <BodyText>
-        This Privacy Policy is a general template and must be reviewed and
-        approved by a licensed attorney to ensure compliance with applicable
-        privacy laws and regulations.
+        If you have any questions about this Privacy Policy or our data
+        practices, please contact:
       </BodyText>
+      <BodyText>Jack Manfredi</BodyText>
+      <BodyText>gigdogscontact@gmail.com</BodyText>
     </ScrollView>
   );
 }

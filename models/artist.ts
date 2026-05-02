@@ -1,4 +1,4 @@
-// Set up data model and mock data for bands in the application
+// Set up data model and mock data for artist in the application
 
 export interface Artist {
   id: string;
@@ -16,7 +16,7 @@ export interface Artist {
   appliedOfferIds: string[];
 }
 
-//Original or cover band selection
+//Original or cover artist selection
 
 export const OriginalCoverOptions = [
   { label: "Originals/Covers", value: "original_covers" },

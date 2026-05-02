@@ -11,6 +11,7 @@ import { auth } from "@/config/firebaseConfig";
 import { useCreateOffer } from "@/hooks/use-create-offer";
 import { fetchAuthVenue } from "@/utilities/firebase/fetch-auth-venue";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { logEvent } from "expo-firebase-analytics";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import {
@@ -194,7 +195,13 @@ export default function Modal() {
                       is24Hour={true}
                       accentColor="white"
                       onChange={(event, selectedTime) =>
-                        setEndTime(selectedTime || endTime)
+                        //IF a user interacts with this, they are probably starting an offer creation, log it
+                        (
+                          logEvent("offer_creation_started", {
+                            uid: auth?.currentUser?.uid,
+                          }),
+                          setEndTime(selectedTime || endTime)
+                        )
                       }
                     />
                   </LabelWrapper>

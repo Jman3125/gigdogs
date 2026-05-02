@@ -1,4 +1,4 @@
-//Navigates to this page after a user clicks 'View' on a bands profile. adds band ID to url to get specific data.
+//This is a venues profile. All offers and information from a venue are here
 import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { OfferCell } from "@/components/offer-cell";
@@ -23,16 +23,16 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function VenueView() {
-  // Going to match the id to a band and get attributes so I don't pass them all through URL
+  // Going to match the id to a artist and get attributes so I don't pass them all through URL
   const { id } = useLocalSearchParams<{ id: string }>();
-  // Find the band in the db that matches the id passed through the URL params
+  // Find the venue in the db that matches the id passed through the URL params
   const [venue, setData] = useState<Venue | null>();
   const [loading, setLoading] = useState(true);
 
   //Hold the offfers for this venue
   const [venueOffers, setVenueOffers] = useState<Offer[]>([]);
 
-  //fetch the selected bands data
+  //fetch the selected venues data
   const fetchvenue = useCallback(async () => {
     try {
       const data = await getOneItem<Venue>(id, "venues");
@@ -57,7 +57,7 @@ export default function VenueView() {
     }
   }, [id]);
 
-  //fetch bands data on load
+  //fetch venues data on load
   useEffect(() => {
     fetchvenue();
   }, [fetchvenue]);

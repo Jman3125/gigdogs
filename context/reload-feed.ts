@@ -1,4 +1,4 @@
-//use this context variabel to reload feed once band signed in
+//use this context variabel to reload feed once artist/venue signed in
 
 import { createContext } from "react";
 
