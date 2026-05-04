@@ -5,15 +5,14 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
-import { analytics } from "@/config/firebaseConfig";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { useSignupVenue } from "@/hooks/use-signup";
 import { StatesDropDown } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
+import * as Analytics from "expo-firebase-analytics";
 import { useRouter } from "expo-router";
-import { logEvent } from "firebase/analytics";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -125,9 +124,13 @@ export default function VenueSingup() {
     }
   };
 
+  const logOpen = async () => {
+    await Analytics.logEvent("signup_openend");
+  };
+
   //Log that a signup form was opened
   useEffect(() => {
-    logEvent(analytics, "signup_openend");
+    logOpen();
   }, []);
 
   //For picking the profile image

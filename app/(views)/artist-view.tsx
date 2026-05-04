@@ -3,15 +3,14 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
-import { analytics } from "@/config/firebaseConfig";
 import { useApproveOffer } from "@/hooks/use-approve-offer";
 import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
 import { colors } from "@/utilities/colors";
 import { getOneItem } from "@/utilities/firebase/fetch-data";
 import { getGenre, getType } from "@/utilities/getGenreLabel";
+import * as Analytics from "expo-firebase-analytics";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { logEvent } from "firebase/analytics";
 import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
@@ -100,9 +99,9 @@ export default function ArtistView() {
         [
           {
             text: "Ok",
-            onPress: () => {
+            onPress: async () => {
               //Log the event
-              (logEvent(analytics, "artist_selected", {
+              (await Analytics.logEvent("artist_selected", {
                 offer: offerId,
                 artistEmal: artistData?.email,
                 artistPhone: artistData?.phone,

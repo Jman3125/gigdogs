@@ -1,19 +1,17 @@
 //Create offer modal
-import { LabelWrapper } from "@/components/label-wrapper";
-import { ThemeText } from "@/components/theme-text";
-import { colors } from "@/utilities/colors";
-import { useState } from "react";
-
 import IconInput from "@/components/icon-input";
+import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
-import { analytics, auth } from "@/config/firebaseConfig";
+import { ThemeText } from "@/components/theme-text";
+import { auth } from "@/config/firebaseConfig";
 import { useCreateOffer } from "@/hooks/use-create-offer";
+import { colors } from "@/utilities/colors";
 import { fetchAuthVenue } from "@/utilities/firebase/fetch-auth-venue";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import * as Analytics from "expo-firebase-analytics";
 import { useRouter } from "expo-router";
-import { logEvent } from "firebase/analytics";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -88,6 +86,11 @@ export default function Modal() {
         const venueAuthData = await fetchAuthVenueData(user.uid);
         //Populate venue name
         setEventName(venueAuthData?.venueName);
+
+        //Log that an offer form has been opened
+        await Analytics.logEvent("offer_creation_started", {
+          uid: auth?.currentUser?.uid,
+        });
 
         setLoading(false);
       } else {
@@ -196,12 +199,7 @@ export default function Modal() {
                       accentColor="white"
                       onChange={(event, selectedTime) =>
                         //IF a user interacts with this, they are probably starting an offer creation, log it
-                        (
-                          logEvent(analytics, "offer_creation_started", {
-                            uid: auth?.currentUser?.uid,
-                          }),
-                          setEndTime(selectedTime || endTime)
-                        )
+                        setEndTime(selectedTime || endTime)
                       }
                     />
                   </LabelWrapper>

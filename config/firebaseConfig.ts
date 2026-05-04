@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import {
   // @ts-ignore: getReactNativePersistence exists in the RN bundle
@@ -34,7 +33,5 @@ const auth = initializeAuth(app, {
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-const analytics = getAnalytics(app);
-
-export { analytics, app, auth, db, storage };
+export { app, auth, db, storage };
 

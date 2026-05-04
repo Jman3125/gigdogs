@@ -4,7 +4,7 @@ import { LabelWrapper } from "@/components/label-wrapper";
 import Loading from "@/components/loading";
 import { TermsPrivacyLinks } from "@/components/terms-privacy";
 import { ThemeText } from "@/components/theme-text";
-import { analytics, auth } from "@/config/firebaseConfig";
+import { auth } from "@/config/firebaseConfig";
 import { useAuthWithRole } from "@/hooks/use-auth-state";
 import { Artist } from "@/models/artist";
 import { Offer } from "@/models/offer";
@@ -13,8 +13,8 @@ import { applyToOffer } from "@/utilities/firebase/apply-offer";
 import { getItemsByIds, getOneItem } from "@/utilities/firebase/fetch-data";
 import { formatTimeRange } from "@/utilities/format-time-range";
 import { FontAwesome } from "@expo/vector-icons";
+import * as Analytics from "expo-firebase-analytics";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { logEvent } from "firebase/analytics";
 import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
@@ -91,12 +91,16 @@ export default function OfferView() {
     setLoading(false);
   }, [offerId, role]);
 
+  const logOfferView = async () => {
+    await Analytics.logEvent("offer_viewed", { user_type: role });
+  };
+
   //fetch artists data on load
   useEffect(() => {
     populateData();
 
     //Log that an offer is being viewed
-    logEvent(analytics, "offer_viewed", { user_type: role });
+    logOfferView();
   }, [populateData]);
 
   const openBookingForm = async () => {

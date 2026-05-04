@@ -84,7 +84,7 @@ export default function SearchLocation({ state, setState }: Props) {
       )}
 
       {autocompleteErr ? (
-        <ThemeText type="error">{autocompleteErr}</ThemeText>
+        <ThemeText type="default">No States Found</ThemeText>
       ) : null}
     </View>
   );
