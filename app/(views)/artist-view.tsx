@@ -9,7 +9,6 @@ import { Offer } from "@/models/offer";
 import { colors } from "@/utilities/colors";
 import { getOneItem } from "@/utilities/firebase/fetch-data";
 import { getGenre, getType } from "@/utilities/getGenreLabel";
-import * as Analytics from "expo-firebase-analytics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -99,14 +98,8 @@ export default function ArtistView() {
         [
           {
             text: "Ok",
-            onPress: async () => {
-              //Log the event
-              (await Analytics.logEvent("artist_selected", {
-                offer: offerId,
-                artistEmal: artistData?.email,
-                artistPhone: artistData?.phone,
-              }),
-                navigator.back());
+            onPress: () => {
+              navigator.back();
             },
           },
         ],

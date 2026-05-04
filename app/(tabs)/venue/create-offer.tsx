@@ -9,7 +9,6 @@ import { useCreateOffer } from "@/hooks/use-create-offer";
 import { colors } from "@/utilities/colors";
 import { fetchAuthVenue } from "@/utilities/firebase/fetch-auth-venue";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import * as Analytics from "expo-firebase-analytics";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -86,11 +85,6 @@ export default function Modal() {
         const venueAuthData = await fetchAuthVenueData(user.uid);
         //Populate venue name
         setEventName(venueAuthData?.venueName);
-
-        //Log that an offer form has been opened
-        await Analytics.logEvent("offer_creation_started", {
-          uid: auth?.currentUser?.uid,
-        });
 
         setLoading(false);
       } else {

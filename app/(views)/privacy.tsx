@@ -66,27 +66,6 @@ export default function PrivacyPolicyScreen() {
         We do not independently verify this information.
       </BodyText>
 
-      <SubTitle>2.5 Analytics & Behavioral Information</SubTitle>
-      <BodyText>
-        To improve App functionality, understand user engagement, and enhance
-        user experience, we collect certain behavioral and interaction data.
-        This includes:
-      </BodyText>
-      <BulletList
-        items={[
-          "Signup Form Interactions: When a user opens a signup form or begins typing into signup fields.",
-          "Offer Creation Interactions (Venues): When a venue opens the offer creation screen and when they begin typing into offer fields.",
-          "Artist Selection Actions (Venues): When a venue selects an artist for an offer, we log the associated artist’s email, phone number, and the offer ID.",
-          "Offer View Interactions (Artists): When an artist opens or views a venue’s offer.",
-        ]}
-      />
-      <BodyText>
-        This information is collected through analytics tools and event tracking
-        within the App. It is used solely to understand user behavior, improve
-        App performance, and enhance the overall user experience. We do not sell
-        this information.
-      </BodyText>
-
       <SectionTitle>3. HOW WE USE INFORMATION</SectionTitle>
       <BodyText>We use the information collected to:</BodyText>
       <BulletList
@@ -128,24 +107,7 @@ export default function PrivacyPolicyScreen() {
         ]}
       />
 
-      <SubTitle>3.4 To Analyze Usage and Improve User Experience</SubTitle>
-      <BodyText>We use analytics data to:</BodyText>
-      <BulletList
-        items={[
-          "Understand how Users interact with signup flows",
-          "Identify friction points in Offer creation",
-          "Measure engagement with Offers",
-          "Improve the design and functionality of the App",
-          "Monitor feature usage and optimize performance",
-        ]}
-      />
-      <BodyText>
-        Analytics data may include event timestamps, device information, and
-        interaction patterns. We do not use analytics data to personally
-        identify Users beyond the information they voluntarily provide.
-      </BodyText>
-
-      <SubTitle>3.5 To Maintain Safety and Integrity</SubTitle>
+      <SubTitle>3.4 To Maintain Safety and Integrity</SubTitle>
       <BulletList
         items={[
           "Detecting and preventing fraud or misuse",
@@ -191,12 +153,7 @@ export default function PrivacyPolicyScreen() {
         with:
       </BodyText>
       <BulletList
-        items={[
-          "Hosting and infrastructure",
-          "Analytics and event tracking",
-          "Authentication",
-          "Data storage",
-        ]}
+        items={["Hosting and infrastructure", "Authentication", "Data storage"]}
       />
       <BodyText>
         These providers are authorized to use information only as necessary to
@@ -211,12 +168,6 @@ export default function PrivacyPolicyScreen() {
           "Protect the rights, safety, or property of the App, Users, or others",
         ]}
       />
-
-      <SubTitle>5.7 Aggregated or De-Identified Data</SubTitle>
-      <BodyText>
-        We may share aggregated or de-identified data for research, analytics,
-        or business purposes. This data does not identify individual Users.
-      </BodyText>
 
       <SectionTitle>6. DATA RETENTION</SectionTitle>
       <BodyText>
@@ -253,13 +204,6 @@ export default function PrivacyPolicyScreen() {
       <BodyText>
         You may request deletion of your account or personal data, subject to
         legal or operational requirements.
-      </BodyText>
-
-      <SubTitle>7.3 Opt-Out of Analytics</SubTitle>
-      <BodyText>
-        Users may opt out of certain analytics tracking through device settings
-        or by contacting us. Note: Some essential analytics (e.g., crash
-        reporting, security logs) may not be disabled.
       </BodyText>
 
       <SubTitle>7.4 Data Portability</SubTitle>

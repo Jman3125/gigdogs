@@ -13,7 +13,6 @@ import { applyToOffer } from "@/utilities/firebase/apply-offer";
 import { getItemsByIds, getOneItem } from "@/utilities/firebase/fetch-data";
 import { formatTimeRange } from "@/utilities/format-time-range";
 import { FontAwesome } from "@expo/vector-icons";
-import * as Analytics from "expo-firebase-analytics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -91,16 +90,9 @@ export default function OfferView() {
     setLoading(false);
   }, [offerId, role]);
 
-  const logOfferView = async () => {
-    await Analytics.logEvent("offer_viewed", { user_type: role });
-  };
-
   //fetch artists data on load
   useEffect(() => {
     populateData();
-
-    //Log that an offer is being viewed
-    logOfferView();
   }, [populateData]);
 
   const openBookingForm = async () => {

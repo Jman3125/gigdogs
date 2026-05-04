@@ -11,9 +11,8 @@ import { StatesDropDown } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Checkbox } from "expo-checkbox";
-import * as Analytics from "expo-firebase-analytics";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Image,
@@ -123,15 +122,6 @@ export default function VenueSingup() {
       setError(error.message);
     }
   };
-
-  const logOpen = async () => {
-    await Analytics.logEvent("signup_openend");
-  };
-
-  //Log that a signup form was opened
-  useEffect(() => {
-    logOpen();
-  }, []);
 
   //For picking the profile image
   const onPickImage = async () => {
