@@ -81,7 +81,7 @@ export default function VenueLogin() {
       {loading && <Loading />}
       {!loading && (
         <View>
-          <ThemeText type="title" style={styles.title}>
+          <ThemeText type="logoLarge" style={styles.title}>
             Venue Login
           </ThemeText>
 

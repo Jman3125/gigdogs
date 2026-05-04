@@ -15,18 +15,22 @@ export default function About() {
   const linkInstagram = () => {
     Linking.openURL(`https://instagram.com/gig_dogs`);
   };
+  const linkFacebook = () => {
+    Linking.openURL(`https://facebook.com/gigdogs`);
+  };
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView>
         <View style={styles.infoContainer}>
-          <ThemeText type="logoLarge">GigDogs</ThemeText>
           <View style={styles.section}>
-            <ThemeText type="logo">What is it?</ThemeText>
-            <ThemeText type="defaultSemiBold">
+            <ThemeText type="logo" style={{ color: "white" }}>
+              What is it?
+            </ThemeText>
+            <ThemeText type="defaultSemiBold" style={{ color: "white" }}>
               GigDogs is an app that makes live music easier for venues and
               artists of any type.
             </ThemeText>
-            <ThemeText type="default">
+            <ThemeText type="caption" style={{ color: "white" }}>
               {
                 "GigDogs cuts out the cold calls, the planning, and the headaches, putting everything in one place so the whole experience feels fun and effortless."
               }
@@ -34,11 +38,13 @@ export default function About() {
           </View>
 
           <View style={styles.section}>
-            <ThemeText type="logo">Our Goal</ThemeText>
-            <ThemeText type="defaultSemiBold">
+            <ThemeText type="logo" style={{ color: "white" }}>
+              Our Goal
+            </ThemeText>
+            <ThemeText type="defaultSemiBold" style={{ color: "white" }}>
               Our goal is the community.
             </ThemeText>
-            <ThemeText type="default">
+            <ThemeText type="default" style={{ color: "white" }}>
               {
                 "We help venues find incredible local talent and help artists land more gigs, all hassle-free. GigDogs is made by the community, for the community."
               }
@@ -46,25 +52,35 @@ export default function About() {
           </View>
 
           <View style={styles.section}>
-            <ThemeText type="logo">{"Who's it for?"}</ThemeText>
-            <ThemeText type="defaultSemiBold">Communities.</ThemeText>
-            <ThemeText type="default">
+            <ThemeText type="logo" style={{ color: "white" }}>
+              {"Who's it for?"}
+            </ThemeText>
+            <ThemeText type="defaultSemiBold" style={{ color: "white" }}>
+              Communities.
+            </ThemeText>
+            <ThemeText type="default" style={{ color: "white" }}>
               {
                 "From bars and nightclubs to backyard events, GigDogs makes finding the right act effortless. It’s for musicians who want to play and for people who want one simple place to book everything."
               }
             </ThemeText>
           </View>
+          <View style={styles.section}>
+            <ThemeText type="logo" style={{ color: "white" }}>
+              Welcome!
+            </ThemeText>
+          </View>
 
           <View style={styles.section}>
-            <LabelWrapper label="Please send us any feedback!">
-              <View style={styles.horizontalWrap}>
-                <FontAwesome name="send" size={22} color={"rgb(31, 31, 31)"} />
-                <Pressable onPress={handleEmail}>
-                  <ThemeText type="link">Contact us</ThemeText>
-                </Pressable>
-              </View>
-            </LabelWrapper>
-
+            <ThemeText type="defaultSemiBold">
+              <LabelWrapper label="Follow us on Facebook">
+                <View style={styles.horizontalWrap}>
+                  <FontAwesome name="facebook" size={22} color={"black"} />
+                  <Pressable onPress={() => linkFacebook()}>
+                    <ThemeText type="link">gigdogs</ThemeText>
+                  </Pressable>
+                </View>
+              </LabelWrapper>
+            </ThemeText>
             <ThemeText type="defaultSemiBold">
               <LabelWrapper label="Follow us on Instagram">
                 <View style={styles.horizontalWrap}>
@@ -75,10 +91,15 @@ export default function About() {
                 </View>
               </LabelWrapper>
             </ThemeText>
-          </View>
+            <LabelWrapper label="Please send us any feedback!">
+              <View style={styles.horizontalWrap}>
+                <FontAwesome name="send" size={22} color={"rgb(31, 31, 31)"} />
+                <Pressable onPress={handleEmail}>
+                  <ThemeText type="link">Contact us</ThemeText>
+                </Pressable>
+              </View>
+            </LabelWrapper>
 
-          <View style={styles.section}>
-            <ThemeText type="logo">Welcome!</ThemeText>
             <ThemeText type="default">
               View our <TermsPrivacyLinks />
             </ThemeText>
@@ -95,9 +116,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 10,
     flexDirection: "row",
-  },
-  headerText: {
-    color: "white",
   },
 
   infoContainer: {
@@ -122,5 +140,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
+    marginBottom: 5,
   },
 });

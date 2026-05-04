@@ -26,19 +26,32 @@ export default function BlankSearch({ noneSelected }: Props) {
           </ThemeText>
         </>
       )}
+
       {noneSelected && (
-        <>
-          <Image
-            source={require("../assets/images/logo.png")}
-            style={styles.image}
-          />
-          <ThemeText type="subtitle" style={styles.text}>
-            Let&apos;s Search
+        <View style={styles.noSearchContainer}>
+          <ThemeText type="logoMedium" style={styles.textHeader}>
+            Get Started
           </ThemeText>
-          <ThemeText type="default" style={styles.text}>
-            Search your state to see venues looking for live artists.
-          </ThemeText>
-        </>
+
+          <View style={styles.point}>
+            <ThemeText type="logo" style={{ color: "white" }}>
+              1.
+            </ThemeText>
+            <ThemeText type="defaultSemiBold" style={{ color: "white" }}>
+              Enter a state and tap the search button to explore venues and
+              offers
+            </ThemeText>
+          </View>
+          <View style={styles.point}>
+            <ThemeText type="logo" style={{ color: "white" }}>
+              2.
+            </ThemeText>
+            <ThemeText type="defaultSemiBold" style={{ color: "white" }}>
+              Create an account in the + tab to start booking as an artist or
+              venue
+            </ThemeText>
+          </View>
+        </View>
       )}
     </View>
   );
@@ -53,6 +66,25 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 10,
     textAlign: "center",
+  },
+  textHeader: {
+    textAlign: "center",
+    color: "white",
+  },
+  noSearchContainer: {
+    gap: 10,
+    backgroundColor: colors.primary,
+    padding: 15,
+    borderRadius: 15,
+    width: "100%",
+  },
+
+  point: {
+    padding: 10,
+    width: "90%",
+    flexDirection: "row",
+    gap: 8,
+    alignItems: "center",
   },
   image: {
     height: 120,

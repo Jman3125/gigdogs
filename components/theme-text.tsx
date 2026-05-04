@@ -13,7 +13,8 @@ export type ThemeTextProps = TextProps & {
     | "error"
     | "logo"
     | "caption"
-    | "logoLarge";
+    | "logoLarge"
+    | "logoMedium";
 };
 
 export function ThemeText({
@@ -67,6 +68,10 @@ const styles = StyleSheet.create({
   },
   logoLarge: {
     fontSize: 45,
+    fontFamily: "DynaPuff_500Medium",
+  },
+  logoMedium: {
+    fontSize: 35,
     fontFamily: "DynaPuff_500Medium",
   },
 });

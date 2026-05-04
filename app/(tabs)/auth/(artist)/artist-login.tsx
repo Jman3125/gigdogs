@@ -81,7 +81,7 @@ export default function ArtistLogin() {
       {loading && <Loading />}
       {!loading && (
         <View>
-          <ThemeText type="title" style={styles.title}>
+          <ThemeText type="logoLarge" style={styles.title}>
             Artist Login
           </ThemeText>
 

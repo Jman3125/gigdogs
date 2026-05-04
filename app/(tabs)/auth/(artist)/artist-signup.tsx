@@ -145,7 +145,7 @@ export default function ArtistSingup() {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
             <ScrollView>
-              <ThemeText type="title" style={styles.title}>
+              <ThemeText type="logoLarge" style={styles.title}>
                 Artist Signup
               </ThemeText>
               <LabelWrapper label="Artist Name" footnote="Max Length: 35">

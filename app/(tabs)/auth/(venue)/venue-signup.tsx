@@ -140,7 +140,7 @@ export default function VenueSingup() {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
             <ScrollView>
-              <ThemeText type="title" style={styles.title}>
+              <ThemeText type="logoLarge" style={styles.title}>
                 Venue Signup
               </ThemeText>
 

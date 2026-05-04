@@ -21,7 +21,7 @@ export default function AuthLanding() {
     >
       <SafeAreaView style={styles.container} edges={[]}>
         <ThemeText type="subtitle">Start Using GigDogs</ThemeText>
-        <ThemeText type="title">Who Are You?</ThemeText>
+        <ThemeText type="logoLarge">Who Are You?</ThemeText>
 
         <View style={styles.infoContainer}>
           <View style={styles.section}>
