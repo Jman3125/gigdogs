@@ -54,14 +54,11 @@ export default function Index() {
       setData(data);
     } catch (error: any) {
       setError(error.message);
-      Alert.alert(
-        "Error",
-        "Failed to fetch artist data. Please try again later.",
-      );
+      Alert.alert("Error", "Failed to fetch data. Please try again later.");
     }
   };
 
-  //Use effect function that watches to see if user has not verified email and shows
+  //Use effect function that watches to see if user has not verified email and shows verify email alert
   useFocusEffect(
     useCallback(() => {
       let isActive = true;

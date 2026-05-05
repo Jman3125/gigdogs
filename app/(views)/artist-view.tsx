@@ -72,6 +72,10 @@ export default function ArtistView() {
     );
   };
 
+  const openPhone = () => {
+    Linking.openURL(`sms:${artistData?.phone}`);
+  };
+
   //Open artists instagram account
   const linkInstagram = () => {
     Linking.openURL(
@@ -191,6 +195,12 @@ export default function ArtistView() {
               <LabelWrapper label="Email:">
                 <Pressable onPress={openEmail}>
                   <ThemeText type="link">{artistData?.email}</ThemeText>
+                </Pressable>
+              </LabelWrapper>
+
+              <LabelWrapper label="Phone:">
+                <Pressable onPress={openPhone}>
+                  <ThemeText type="link">{artistData?.phone}</ThemeText>
                 </Pressable>
               </LabelWrapper>
 

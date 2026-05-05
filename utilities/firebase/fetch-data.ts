@@ -1,5 +1,5 @@
 import { db } from "@/config/firebaseConfig";
-import { Venue } from "@/models/venue";
+import { StatesSearchBar, Venue } from "@/models/venue";
 import {
   collection,
   doc,
@@ -13,10 +13,16 @@ import {
 // but only returns offers with status === "open"
 export async function getAllVenuesByState(state: string): Promise<Venue[]> {
   try {
+    if (!state.trim()) {
+      return [];
+    }
+    const stateObj = StatesSearchBar.find((item) => item.label === state);
+    const state_label = stateObj?.value;
+    console.log("searching", state, "for", state_label);
     // 1. Fetch venues in the state
     const venueQuery = query(
       collection(db, "venues"),
-      where("state", "==", state),
+      where("state", "==", state_label),
     );
 
     const venueSnap = await getDocs(venueQuery);
