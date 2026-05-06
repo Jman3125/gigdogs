@@ -7,6 +7,7 @@ import { VenueCell } from "@/components/venue-cell";
 import VerifyEmailAlert from "@/components/verify-email-alert";
 import { auth } from "@/config/firebaseConfig";
 import { ReloadFeedContext } from "@/context/reload-feed";
+import { usePushNotifications } from "@/hooks/use-push-nofitications";
 import { Venue } from "@/models/venue";
 import { colors } from "@/utilities/colors";
 import { getAllVenuesByState } from "@/utilities/firebase/fetch-data";
@@ -27,6 +28,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Index() {
   //Will use context to know when user updated account to reload feed
   const { reload, setReload } = useContext(ReloadFeedContext);
+
+  //Load push notifications
+  usePushNotifications();
 
   //For State searching
   const [searchInput, setSearchInput] = useState("");
