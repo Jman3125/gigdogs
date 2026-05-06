@@ -4,6 +4,7 @@ import * as Notifications from "expo-notifications";
 import { doc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Platform } from "react-native";
+import { useAuthWithRole } from "./use-auth-state";
 
 // Optional: configure how notifications behave when received
 Notifications.setNotificationHandler({
@@ -18,6 +19,8 @@ Notifications.setNotificationHandler({
 export function usePushNotifications() {
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   const [permissionStatus, setPermissionStatus] = useState<string | null>(null);
+
+  const { role, isSignedIn } = useAuthWithRole();
 
   useEffect(() => {
     let isMounted = true;
@@ -66,11 +69,20 @@ export function usePushNotifications() {
         setExpoPushToken(token);
 
         // Save to Firebase
-        await setDoc(
-          doc(db, "users", user.uid),
-          { expoPushToken: token },
-          { merge: true },
-        );
+        if (role === "venue") {
+          await setDoc(
+            doc(db, "venues", user.uid),
+            { expoPushToken: token },
+            { merge: true },
+          );
+        }
+        if (role === "artist") {
+          await setDoc(
+            doc(db, "users", user.uid),
+            { expoPushToken: token },
+            { merge: true },
+          );
+        }
       } catch (err) {
         console.log("Push notification setup error:", err);
       }
